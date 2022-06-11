@@ -60,13 +60,16 @@ app.post('/bloggers', (req: Request, res: Response) => {
         })
         return
     }
-    const newBlogger = {
-        id: +(new Date()),
-        name: name,
-        youtubeUrl: youtubeUrl
+    if(name && youtubeUrl) {
+        const newBlogger = {
+            id: +(new Date()),
+            name: name,
+            youtubeUrl: youtubeUrl
+        }
+        bloggers.push(newBlogger)
+        res.status(201).send(newBlogger)
+        return
     }
-    bloggers.push(newBlogger)
-    res.status(201).send(newBlogger)
 })
 app.put('/bloggers/:id', (req: Request, res: Response) => {
     let name = req.body.name
