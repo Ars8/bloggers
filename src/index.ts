@@ -43,10 +43,6 @@ app.post('/bloggers', (req: Request, res: Response) => {
         res.status(400).send({
             errorsMessages: [
                 {
-                    'message': 'Incorrect youtubeUrl',
-                    'field': 'youtubeUrl'
-                },
-                {
                     'message': 'Incorrect name',
                     'field': 'name'
                 }
