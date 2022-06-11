@@ -76,8 +76,14 @@ app.put('/bloggers/:id', (req: Request, res: Response) => {
     }
 })
 app.delete('/bloggers/:id', (req: Request, res: Response) => {
-    const id = +req.params.videoId
+    const id = +req.params.id
+
+    if (!id) {
+        res.status(404)
+    }
+
     const newBloggers = bloggers.filter(item => { return item.id !== id })
+
     if (newBloggers.length < bloggers.length) {
         bloggers = newBloggers
         res.send(204)
