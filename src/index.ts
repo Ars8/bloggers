@@ -35,8 +35,8 @@ app.get('/bloggers/:id', (req: Request, res: Response) => {
     }
 })
 app.post('/bloggers', (req: Request, res: Response) => {
-    let name = req.body.title
-    if (!name || name == null ||  typeof name !== 'string' || !name.trim() || name.length > 40) {
+    let name = req.body.name
+    if (!name ||  typeof name !== 'string' || !name.trim() || name.length > 40) {
         res.status(400).send({
             errorsMessages: [{
                 'message': 'Incorrect title',
@@ -55,7 +55,7 @@ app.post('/bloggers', (req: Request, res: Response) => {
 })
 app.put('/bloggers/:id', (req: Request, res: Response) => {
     let name = req.body.name
-    if (!name || name == null || typeof name !== 'string' || !name.trim() || name.length > 40) {
+    if (!name || typeof name !== 'string' || !name.trim() || name.length > 40) {
         res.status(400).send({
             errorsMessages: [{
                 message: 'Incorrect title',
