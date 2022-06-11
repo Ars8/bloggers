@@ -48,7 +48,7 @@ app.post('/bloggers', (req: Request, res: Response) => {
         })
         return
     }
-    if (!youtubeUrl || typeof youtubeUrl !== 'string' || !youtubeUrl.trim() || youtubeUrl.length > 40 || !youtubeUrl.includes('youtube')) {
+    if (!youtubeUrl || typeof youtubeUrl !== 'string' || !youtubeUrl.trim()) {
         res.status(400).send({
             errorsMessages: [
                 {
