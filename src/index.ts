@@ -45,10 +45,6 @@ app.post('/bloggers', (req: Request, res: Response) => {
                     {
                         'message': 'Incorrect youtubeUrl',
                         'field': 'youtubeUrl'
-                    },
-                    {
-                        'message': 'Incorrect name',
-                        'field': 'name'
                     }
                 ]
         })
