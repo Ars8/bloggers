@@ -35,6 +35,7 @@ app.get('/bloggers/:id', (req: Request, res: Response) => {
     }
 })
 app.post('/bloggers', (req: Request, res: Response) => {
+    if(!req.body) {res.status(400)}
     let name = req.body.name
     let youtubeUrl = req.body.youtubeUrl
     if (!name || typeof name !== 'string' || !name.trim()) {
