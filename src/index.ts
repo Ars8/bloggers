@@ -39,7 +39,23 @@ app.post('/bloggers', (req: Request, res: Response) => {
     let name = req.body.name
     let youtubeUrl = req.body.youtubeUrl
 
-    if (!name || typeof name !== 'string' || !name.trim()  || name.length > 100 || !youtubeUrl || typeof youtubeUrl !== 'string' || !youtubeUrl.trim() || youtubeUrl.length > 100) {
+    if (!name || typeof name !== 'string' || !name.trim()  || name.length > 100) {
+        res.status(400).send({
+            errorsMessages: [
+                {
+                    'message': 'Incorrect youtubeUrl',
+                    'field': 'youtubeUrl'
+                },
+                {
+                    'message': 'Incorrect name',
+                    'field': 'name'
+                }
+            ]
+        })
+        return
+    }
+
+    if (!youtubeUrl || typeof youtubeUrl !== 'string' || !youtubeUrl.trim() || youtubeUrl.length > 100) {
         res.status(400).send({
             errorsMessages: [
                     {
