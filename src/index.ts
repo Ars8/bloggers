@@ -38,11 +38,9 @@ app.post('/bloggers', (req: Request, res: Response) => {
     if(!req.body) {res.status(400)}
     let name = req.body.name
     let youtubeUrl = req.body.youtubeUrl
+    const regex = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
 
-    const regex = '^https:\\/\\/([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$'
-    console.log(regex)
-
-    if (!name || youtubeUrl.match(regex)) {
+    if (!name || regex.test(youtubeUrl)) {
         res.status(400).send({
             errorsMessages: [
                 {
