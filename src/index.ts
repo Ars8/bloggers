@@ -36,13 +36,10 @@ app.get('/bloggers/:id', (req: Request, res: Response) => {
 })
 app.post('/bloggers', (req: Request, res: Response) => {
     let name = req.body.name
+    let youtubeUrl = req.body.youtubeUrl
     if (!name ||  typeof name !== 'string' || !name.trim() || name.length > 40) {
         res.status(400).send({
             errorsMessages: [
-                    {
-                    'message': 'Incorrect youtubeUrl',
-                    'field': 'youtubeUrl'
-                    },
                     {
                         'message': 'Incorrect name',
                         'field': 'name'
@@ -51,10 +48,21 @@ app.post('/bloggers', (req: Request, res: Response) => {
         })
         return
     }
+    if (!youtubeUrl ||  typeof youtubeUrl !== 'string' || !youtubeUrl.trim() || youtubeUrl.length > 40) {
+        res.status(400).send({
+            errorsMessages: [
+                {
+                    'message': 'Incorrect youtubeUrl',
+                    'field': 'youtubeUrl'
+                }
+            ]
+        })
+        return
+    }
     const newBlogger = {
         id: +(new Date()),
-        name: req.body.name,
-        youtubeUrl: 'it-incubator.eu'
+        name: name,
+        youtubeUrl: youtubeUrl
     }
     bloggers.push(newBlogger)
     res.status(201).send(newBlogger)
