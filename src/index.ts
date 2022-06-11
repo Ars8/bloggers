@@ -55,6 +55,7 @@ app.post('/bloggers', (req: Request, res: Response) => {
 })
 app.put('/bloggers/:id', (req: Request, res: Response) => {
     let name = req.body.name
+    let youtubeUrl = req.body.youtubeUrl
     if (!name || typeof name !== 'string' || !name.trim() || name.length > 40) {
         res.status(400).send({
             errorsMessages: [{
@@ -64,10 +65,11 @@ app.put('/bloggers/:id', (req: Request, res: Response) => {
         })
         return
     }
-    const id = +req.params.videoId
+    const id = +req.params.id
     const blogger = bloggers.find(item => item.id === id)
     if (blogger) {
-        blogger.name = name
+        blogger.name = name,
+        blogger.youtubeUrl = youtubeUrl
         res.status(204).send(bloggers)
     } else {
         res.send(404)
