@@ -39,7 +39,7 @@ app.post('/bloggers', (req: Request, res: Response) => {
     let name = req.body.name
     let youtubeUrl = req.body.youtubeUrl
 
-    if (!name || typeof name !== 'string' || !name.trim()  || name.length > 100) {
+    if (!name || typeof name !== 'string' || !name.trim() || name.length > 15) {
         res.status(400).send({
             errorsMessages: [
                 {
