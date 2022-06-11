@@ -26,7 +26,7 @@ app.get('/bloggers', (req: Request, res: Response) => {
     res.status(200).send(bloggers)
 })
 app.get('/bloggers/:id', (req: Request, res: Response) => {
-    const id = +req.params.videoId
+    const id = +req.params.id
     const blogger = bloggers.find(p => p.id === id)
     if (blogger) {
         res.status(200).send(blogger)
