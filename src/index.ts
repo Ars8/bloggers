@@ -142,11 +142,12 @@ app.post('/posts', (req: Request, res: Response) => {
         return
     }else {
         const newPost = {
+            bloggerId: 1,
+            bloggerName: req.body.title,
             id: +(new Date()),
             title: req.body.title,
             shortDescription: req.body.shortDescription,
-            content: req.body.content,
-            bloggerId: 1
+            content: req.body.content
         }
         posts.push(newPost)
         res.status(201).send(newPost)
