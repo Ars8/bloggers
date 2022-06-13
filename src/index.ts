@@ -46,14 +46,15 @@ app.post('/bloggers', (req: Request, res: Response) => {
             }]
         })
         return
+    }else {
+        const newBlogger = {
+            id: +(new Date()),
+            name: req.body.name,
+            youtubeUrl: req.body.youtubeUrl
+        }
+        bloggers.push(newBlogger)
+        res.status(201).send(newBlogger)
     }
-    const newBlogger = {
-        id: +(new Date()),
-        name: req.body.name,
-        youtubeUrl: 'it-incubator.eu'
-    }
-    bloggers.push(newBlogger)
-    res.status(201).send(newBlogger)
 })
 app.put('/bloggers/:id', (req: Request, res: Response) => {
     let name = req.body.name
