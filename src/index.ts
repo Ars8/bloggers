@@ -18,7 +18,7 @@ interface post {
     shortDescription: string,
     content: string,
     bloggerId: number,
-    bloggerName: string
+    bloggerName?: string
 }
 
 let bloggers: blogger[] = [
@@ -131,23 +131,25 @@ app.get('/posts/:id', (req: Request, res: Response) => {
     }
 })
 app.post('/posts', (req: Request, res: Response) => {
-    let name = req.body.name
-    if (!name || name == null ||  typeof name !== 'string' || !name.trim() || name.length > 15) {
+    let title = req.body.title
+    if (!title || title == null ||  typeof title !== 'string' || !title.trim() || title.length > 30) {
         res.status(400).send({
             errorsMessages: [{
                 'message': 'Incorrect name',
-                'field': 'name'
+                'field': 'title'
             }]
         })
         return
     }else {
-        const newBlogger = {
+        const newPost = {
             id: +(new Date()),
-            name: req.body.name,
-            youtubeUrl: req.body.youtubeUrl
+            title: req.body.title,
+            shortDescription: req.body.shortDescription,
+            content: req.body.content,
+            bloggerId: 1
         }
-        bloggers.push(newBlogger)
-        res.status(201).send(newBlogger)
+        posts.push(newPost)
+        res.status(201).send(newPost)
     }
 })
 app.put('/posts/:id', (req: Request, res: Response) => {
