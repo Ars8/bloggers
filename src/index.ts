@@ -25,7 +25,7 @@ interface post {
 const titleValidation = body('title').trim().isLength({max: 30}).notEmpty()
 const shortDescriptionValidation = body('shortDescription').trim().isLength({max: 100}).notEmpty()
 const contentValidation = body('content').trim().isLength({max: 1000}).notEmpty()
-const bloggerIdValidation = body('bloggerId').isNumeric()
+const bloggerIdValidation = body('bloggerId').isNumeric().isLength({ min: 0, max: 5 })
 
 let bloggers: blogger[] = [
     {id: 1, name: 'About JS - 01', youtubeUrl: 'it-incubator.eu'},
