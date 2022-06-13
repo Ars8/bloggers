@@ -37,26 +37,23 @@ app.get('/bloggers/:id', (req: Request, res: Response) => {
     }
 })
 app.post('/bloggers', (req: Request, res: Response) => {
-    let name = req.body.name
-    let youtubeUrl = req.body.youtubeUrl
-    if (!name || typeof name !== 'string' || !name.trim() || name.length > 15) {
+    let name = req.body.title
+    if (!name || name == null ||  typeof name !== 'string' || !name.trim() || name.length > 15) {
         res.status(400).send({
-            errorsMessages: [
-                {
-                    message: "Incorrect name",
-                    field: "name"
-                }
-            ]
+            errorsMessages: [{
+                'message': 'Incorrect name',
+                'field': 'name'
+            }]
         })
         return
     }
     const newBlogger = {
         id: +(new Date()),
-        name: name,
-        youtubeUrl: youtubeUrl
+        name: req.body.name,
+        youtubeUrl: 'it-incubator.eu'
     }
     bloggers.push(newBlogger)
-    res.status(201).send(bloggers)
+    res.status(201).send(newBlogger)
 })
 app.put('/bloggers/:id', (req: Request, res: Response) => {
     let name = req.body.name
