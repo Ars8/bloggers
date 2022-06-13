@@ -136,7 +136,7 @@ app.get('/posts/:id', (req: Request, res: Response) => {
         res.send(404)
     }
 })
-app.post('/posts', titleValidation, shortDescriptionValidation, contentValidation, (req: Request, res: Response) => {
+app.post('/posts', titleValidation, contentValidation, shortDescriptionValidation, (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).send({ errorsMessages: errors.array({onlyFirstError: true}).map(e => {
@@ -164,10 +164,10 @@ app.post('/posts', titleValidation, shortDescriptionValidation, contentValidatio
         res.status(201).send(newPost)
 
 })
-app.put('/posts/:id', titleValidation, shortDescriptionValidation, contentValidation, (req: Request, res: Response) => {
+app.put('/posts/:id', titleValidation, contentValidation, shortDescriptionValidation, (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).send({ errors: errors.array({onlyFirstError: true}).map(e => {
+        return res.status(400).send({ errorsMessages: errors.array({onlyFirstError: true}).map(e => {
             return {
                 message: e.msg,
                 field: e.param
