@@ -25,7 +25,6 @@ interface post {
 const titleValidation = body('title').trim().isLength({max: 30}).notEmpty()
 const shortDescriptionValidation = body('shortDescription').trim().isLength({max: 100}).notEmpty()
 const contentValidation = body('content').trim().isLength({max: 1000}).notEmpty()
-const bloggerIdValidation = check('bloggerId').isNumeric().isLength({ min: 0, max: 5 })
 
 let bloggers: blogger[] = [
     {id: 1, name: 'About JS - 01', youtubeUrl: 'it-incubator.eu'},
@@ -137,7 +136,7 @@ app.get('/posts/:id', (req: Request, res: Response) => {
         res.send(404)
     }
 })
-app.post('/posts', titleValidation, contentValidation, shortDescriptionValidation, bloggerIdValidation, (req: Request, res: Response) => {
+app.post('/posts', titleValidation, contentValidation, shortDescriptionValidation, (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).send({ errorsMessages: errors.array({onlyFirstError: true}).map(e => {
@@ -165,7 +164,7 @@ app.post('/posts', titleValidation, contentValidation, shortDescriptionValidatio
         res.status(201).send(newPost)
 
 })
-app.put('/posts/:id', titleValidation, contentValidation, shortDescriptionValidation, bloggerIdValidation, (req: Request, res: Response) => {
+app.put('/posts/:id', titleValidation, contentValidation, shortDescriptionValidation, (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).send({ errorsMessages: errors.array({onlyFirstError: true}).map(e => {
