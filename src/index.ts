@@ -22,7 +22,7 @@ interface post {
     bloggerName?: string
 }
 
-const titleValidation = body('title').trim().isLength({max: 40}).notEmpty()
+const titleValidation = body('title').trim().isLength({max: 30}).notEmpty()
 const shortDescriptionValidation = body('shortDescription').trim().isLength({max: 100}).notEmpty()
 const contentValidation = body('content').trim().isLength({max: 1000}).notEmpty()
 
