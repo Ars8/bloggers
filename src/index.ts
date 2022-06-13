@@ -25,6 +25,7 @@ interface post {
 const titleValidation = body('title').trim().isLength({max: 30}).notEmpty()
 const shortDescriptionValidation = body('shortDescription').trim().isLength({max: 100}).notEmpty()
 const contentValidation = body('content').trim().isLength({max: 1000}).notEmpty()
+const bloggerIdValidation = body('bloggerId').isNumeric()
 
 let bloggers: blogger[] = [
     {id: 1, name: 'About JS - 01', youtubeUrl: 'it-incubator.eu'},
@@ -136,7 +137,7 @@ app.get('/posts/:id', (req: Request, res: Response) => {
         res.send(404)
     }
 })
-app.post('/posts', titleValidation, contentValidation, shortDescriptionValidation, (req: Request, res: Response) => {
+app.post('/posts', titleValidation, contentValidation, shortDescriptionValidation, bloggerIdValidation, (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).send({ errorsMessages: errors.array({onlyFirstError: true}).map(e => {
@@ -152,7 +153,7 @@ app.post('/posts', titleValidation, contentValidation, shortDescriptionValidatio
     let content = req.body.content
 
         const newPost = {
-            bloggerId: req.body.bloggerId,
+            bloggerId: +req.body.bloggerId,
             bloggerName: req.body.title,
             id: +(new Date()),
             title: req.body.title,
@@ -164,7 +165,7 @@ app.post('/posts', titleValidation, contentValidation, shortDescriptionValidatio
         res.status(201).send(newPost)
 
 })
-app.put('/posts/:id', titleValidation, contentValidation, shortDescriptionValidation, (req: Request, res: Response) => {
+app.put('/posts/:id', titleValidation, contentValidation, shortDescriptionValidation, bloggerIdValidation, (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).send({ errorsMessages: errors.array({onlyFirstError: true}).map(e => {
@@ -177,7 +178,7 @@ app.put('/posts/:id', titleValidation, contentValidation, shortDescriptionValida
     let title = req.body.title
     let shortDescription = req.body.shortDescription
     let content = req.body.content
-    let bloggerId = req.body.bloggerId
+    let bloggerId = +req.body.bloggerId
 
     const id = +req.params.id
     const post = posts.find(item => item.id === id)
