@@ -37,7 +37,7 @@ app.get('/bloggers/:id', (req: Request, res: Response) => {
     }
 })
 app.post('/bloggers', (req: Request, res: Response) => {
-    let name = req.body.title
+    let name = req.body.name
     if (!name || name == null ||  typeof name !== 'string' || !name.trim() || name.length > 15) {
         res.status(400).send({
             errorsMessages: [{
