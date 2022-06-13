@@ -188,10 +188,10 @@ app.delete('/posts/:id', (req: Request, res: Response) => {
         res.status(404)
     }
 
-    const newBloggers = bloggers.filter(item => { return item.id !== id })
+    const newPosts = posts.filter(item => { return item.id !== id })
 
-    if (newBloggers.length < bloggers.length) {
-        bloggers = newBloggers
+    if (newPosts.length < posts.length) {
+        posts = newPosts
         res.send(204)
     } else {
         res.send(404)
