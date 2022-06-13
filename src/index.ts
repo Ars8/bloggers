@@ -165,7 +165,8 @@ app.put('/posts/:id', (req: Request, res: Response) => {
     let shortDescription = req.body.shortDescription
     let content = req.body.content
     let bloggerId = req.body.bloggerId
-    if (!title || typeof title !== 'string' || !title.trim() || title.length > 30 || shortDescription.length > 100 || content.length > 1000) {
+
+    if (!title || typeof title !== 'string' || !title.trim() || title.length > 30 || shortDescription.length > 100) {
         res.status(400).send({
             errorsMessages: [{
                 'message': 'Incorrect shortDescription',
@@ -178,6 +179,21 @@ app.put('/posts/:id', (req: Request, res: Response) => {
         })
         return
     }
+
+    if (!title || typeof title !== 'string' || !title.trim() || title.length > 30 || content.length > 1000) {
+        res.status(400).send({
+            errorsMessages: [{
+                'message': 'Incorrect title',
+                'field': 'title'
+            },
+                {
+                    'message': 'Incorrect content',
+                    'field': 'content'
+                }]
+        })
+        return
+    }
+
     const id = +req.params.id
     const post = posts.find(item => item.id === id)
     if (post) {
