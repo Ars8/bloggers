@@ -35,69 +35,26 @@ app.get('/bloggers/:id', (req: Request, res: Response) => {
     }
 })
 app.post('/bloggers', (req: Request, res: Response) => {
-    if(!req.body) {res.status(400)}
     let name = req.body.name
     let youtubeUrl = req.body.youtubeUrl
-    const regex = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
-
-    if (!name) {
-        res.status(400).send({
-            errorsMessages: [
-                {
-                    'message': 'Incorrect name',
-                    'field': 'name'
-                }
-            ]
-        })
-        return
-    }
-
     if (!name || typeof name !== 'string' || !name.trim() || name.length > 15) {
         res.status(400).send({
             errorsMessages: [
                 {
-                    'message': 'Incorrect name',
-                    'field': 'name'
+                    message: "Incorrect name",
+                    field: "name"
                 }
             ]
         })
         return
     }
-
-    if (!youtubeUrl || typeof youtubeUrl !== 'string' || !youtubeUrl.trim() || youtubeUrl.length > 100) {
-        res.status(400).send({
-            errorsMessages: [
-                    {
-                        'message': 'Incorrect youtubeUrl',
-                        'field': 'youtubeUrl'
-                    }
-                ]
-        })
-        return
+    const newBlogger = {
+        id: +(new Date()),
+        name: name,
+        youtubeUrl: youtubeUrl
     }
-
-    if (regex.test(youtubeUrl)) {
-        res.status(400).send({
-            errorsMessages: [
-                {
-                    'message': 'Incorrect youtubeUrl',
-                    'field': 'youtubeUrl'
-                }
-            ]
-        })
-        return
-    }
-
-    if(name && youtubeUrl) {
-        const newBlogger = {
-            id: +(new Date()),
-            name: name,
-            youtubeUrl: youtubeUrl
-        }
-        bloggers.push(newBlogger)
-        res.status(201).send(newBlogger)
-        return
-    }
+    bloggers.push(newBlogger)
+    res.status(201).send(bloggers)
 })
 app.put('/bloggers/:id', (req: Request, res: Response) => {
     let name = req.body.name
