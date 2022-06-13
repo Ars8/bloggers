@@ -154,29 +154,29 @@ app.post('/posts', (req: Request, res: Response) => {
     }
 })
 app.put('/posts/:id', (req: Request, res: Response) => {
-    let name = req.body.name
-    let youtubeUrl = req.body.youtubeUrl
-    if (!name || typeof name !== 'string' || !name.trim() || name.length > 40) {
+    let title = req.body.title
+    let shortDescription = req.body.shortDescription
+    let content = req.body.content
+    let bloggerId = req.body.bloggerId
+    if (!title || typeof title !== 'string' || !title.trim() || title.length > 30) {
         res.status(400).send({
             errorsMessages: [
                 {
-                    'message': 'Incorrect youtubeUrl',
-                    'field': 'youtubeUrl'
-                },
-                {
-                    'message': 'Incorrect name',
-                    'field': 'name'
+                    'message': 'Incorrect title',
+                    'field': 'title'
                 }
             ]
         })
         return
     }
     const id = +req.params.id
-    const blogger = bloggers.find(item => item.id === id)
-    if (blogger) {
-        blogger.name = name,
-            blogger.youtubeUrl = youtubeUrl
-        res.status(204).send(bloggers)
+    const post = posts.find(item => item.id === id)
+    if (post) {
+        post.title = title,
+        post.shortDescription = shortDescription,
+        post.content = content,
+        post.bloggerId = bloggerId,
+        res.status(204).send(posts)
     } else {
         res.send(404)
     }
