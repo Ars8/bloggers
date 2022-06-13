@@ -40,16 +40,12 @@ app.post('/bloggers', (req: Request, res: Response) => {
     let youtubeUrl = req.body.youtubeUrl
     const regex = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/
 
-    if (!name || regex.test(youtubeUrl)) {
+    if (!name) {
         res.status(400).send({
             errorsMessages: [
                 {
                     'message': 'Incorrect name',
                     'field': 'name'
-                },
-                {
-                    'message': 'Incorrect youtubeUrl',
-                    'field': 'youtubeUrl'
                 }
             ]
         })
@@ -79,6 +75,19 @@ app.post('/bloggers', (req: Request, res: Response) => {
         })
         return
     }
+
+    if (regex.test(youtubeUrl)) {
+        res.status(400).send({
+            errorsMessages: [
+                {
+                    'message': 'Incorrect youtubeUrl',
+                    'field': 'youtubeUrl'
+                }
+            ]
+        })
+        return
+    }
+
     if(name && youtubeUrl) {
         const newBlogger = {
             id: +(new Date()),
