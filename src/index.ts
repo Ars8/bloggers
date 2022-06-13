@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import cors from 'cors';
 import bodyParser from "body-parser";
-import { body, validationResult } from 'express-validator';
+import { body, check, validationResult } from 'express-validator';
 
 const express = require('express')
 const app = express()
