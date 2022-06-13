@@ -166,15 +166,29 @@ app.put('/posts/:id', (req: Request, res: Response) => {
     let content = req.body.content
     let bloggerId = req.body.bloggerId
 
+    if (!title || !shortDescription) {
+        res.status(400).send({
+            errorsMessages: [{
+                message: 'Incorrect shortDescription',
+                field: 'shortDescription'
+            },
+                {
+                    message: 'Incorrect title',
+                    field: 'title'
+                }]
+        })
+        return
+    }
+
     if (!title || !content || !shortDescription || typeof title !== 'string' || !title.trim() || title.length > 30 && content.length > 1000) {
         res.status(400).send({
             errorsMessages: [{
-                'message': 'Incorrect title',
-                'field': 'title'
+                message: 'Incorrect title',
+                field: 'title'
             },
                 {
-                    'message': 'Incorrect content',
-                    'field': 'content'
+                    message: 'Incorrect content',
+                    field: 'content'
                 }]
         })
         return
@@ -183,12 +197,12 @@ app.put('/posts/:id', (req: Request, res: Response) => {
     if (!title || !content || !shortDescription || typeof title !== 'string' || !title.trim() || title.length > 30 && shortDescription.length > 100) {
         res.status(400).send({
             errorsMessages: [{
-                'message': 'Incorrect shortDescription',
-                'field': 'shortDescription'
+                message: 'Incorrect shortDescription',
+                field: 'shortDescription'
             },
                 {
-                    'message': 'Incorrect title',
-                    'field': 'title'
+                    message: 'Incorrect title',
+                    field: 'title'
                 }]
         })
         return
