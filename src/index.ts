@@ -51,7 +51,8 @@ app.get('/bloggers/:id', (req: Request, res: Response) => {
 })
 app.post('/bloggers', (req: Request, res: Response) => {
     let name = req.body.name
-    if (!name || name == null ||  typeof name !== 'string' || !name.trim() || name.length > 15) {
+    let youtubeUrl = req.body.youtubeUrl
+    if (!name || name == null ||  typeof name !== 'string' || !name.trim() || name.length > 15 || youtubeUrl.length > 100) {
         res.status(400).send({
             errorsMessages: [{
                 'message': 'Incorrect name',
@@ -90,7 +91,7 @@ app.put('/bloggers/:id', (req: Request, res: Response) => {
     const id = +req.params.id
     const blogger = bloggers.find(item => item.id === id)
     if (blogger) {
-        blogger.name = name,
+        blogger.name = name
         blogger.youtubeUrl = youtubeUrl
         res.status(204).send(bloggers)
     } else {
@@ -132,7 +133,9 @@ app.get('/posts/:id', (req: Request, res: Response) => {
 })
 app.post('/posts', (req: Request, res: Response) => {
     let title = req.body.title
-    if (!title || title == null ||  typeof title !== 'string' || !title.trim() || title.length > 30) {
+    let shortDescription = req.body.shortDescription
+    let content = req.body.content
+    if (!title || title == null ||  typeof title !== 'string' || !title.trim() || title.length > 30 || shortDescription.length > 100 || content.length > 1000) {
         res.status(400).send({
             errorsMessages: [{
                 'message': 'Incorrect name',
@@ -158,7 +161,7 @@ app.put('/posts/:id', (req: Request, res: Response) => {
     let shortDescription = req.body.shortDescription
     let content = req.body.content
     let bloggerId = req.body.bloggerId
-    if (!title || typeof title !== 'string' || !title.trim() || title.length > 30) {
+    if (!title || typeof title !== 'string' || !title.trim() || title.length > 30 || shortDescription.length > 100 || content.length > 1000) {
         res.status(400).send({
             errorsMessages: [
                 {
