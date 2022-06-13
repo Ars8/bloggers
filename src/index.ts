@@ -1,6 +1,8 @@
 import {Request, Response} from "express";
 import cors from 'cors';
 import bodyParser from "body-parser";
+import { body, validationResult } from 'express-validator';
+import {validations} from './validation'
 
 const express = require('express')
 const app = express()
@@ -131,10 +133,11 @@ app.get('/posts/:id', (req: Request, res: Response) => {
         res.send(404)
     }
 })
-app.post('/posts', (req: Request, res: Response) => {
+app.post('/posts', body('title').isEmpty(), (req: Request, res: Response) => {
     let title = req.body.title
     let shortDescription = req.body.shortDescription
     let content = req.body.content
+
     if (!title || title == null ||  typeof title !== 'string' || !title.trim() || title.length > 30 || shortDescription.length > 100 || content.length > 1000) {
         res.status(400).send({
             errorsMessages: [{
@@ -160,53 +163,11 @@ app.post('/posts', (req: Request, res: Response) => {
         res.status(201).send(newPost)
     }
 })
-app.put('/posts/:id', (req: Request, res: Response) => {
+app.put('/posts/:id', validations, (req: Request, res: Response) => {
     let title = req.body.title
     let shortDescription = req.body.shortDescription
     let content = req.body.content
     let bloggerId = req.body.bloggerId
-
-    if (!title || !shortDescription) {
-        res.status(400).send({
-            errorsMessages: [{
-                message: 'Incorrect shortDescription',
-                field: 'shortDescription'
-            },
-                {
-                    message: 'Incorrect title',
-                    field: 'title'
-                }]
-        })
-        return
-    }
-
-    if (!title || !content || !shortDescription || typeof title !== 'string' || !title.trim() || title.length > 30 && content.length > 1000) {
-        res.status(400).send({
-            errorsMessages: [{
-                message: 'Incorrect title',
-                field: 'title'
-            },
-                {
-                    message: 'Incorrect content',
-                    field: 'content'
-                }]
-        })
-        return
-    }
-
-    if (!title || !content || !shortDescription || typeof title !== 'string' || !title.trim() || title.length > 30 && shortDescription.length > 100) {
-        res.status(400).send({
-            errorsMessages: [{
-                message: 'Incorrect shortDescription',
-                field: 'shortDescription'
-            },
-                {
-                    message: 'Incorrect title',
-                    field: 'title'
-                }]
-        })
-        return
-    }
 
     const id = +req.params.id
     const post = posts.find(item => item.id === id)
