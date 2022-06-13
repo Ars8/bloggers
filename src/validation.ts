@@ -1,25 +1,43 @@
 import { body } from 'express-validator';
 
 export const validations = [
-    body('title', 'Incorrect title')
+    body('title', {
+        errorsMessages: [
+            {
+                message: "incorrect title",
+                field: "title"
+            }
+        ]
+    })
         .isEmpty()
-        .withMessage('Incorrect title')
         .isLength({
-            max: 30,
+            max: 40,
         })
-        .withMessage('Incorrect shortDescription'),
-    body('shortDescription', 'Incorrect shortDescription')
+        .rtrim(),
+    body('shortDescription', {
+        errorsMessages: [
+            {
+                message: "incorrect shortDescription",
+                field: "shortDescription"
+            }
+        ]
+    })
         .isEmpty()
-        .withMessage('Incorrect shortDescription')
         .isLength({
             max: 100,
         })
-        .withMessage('Incorrect title'),
-    body('content', 'Incorrect content')
+        .rtrim(),
+    body('content', {
+        errorsMessages: [
+            {
+                message: "incorrect content",
+                field: "content"
+            }
+        ]
+    })
         .isEmpty()
-        .withMessage('Incorrect content')
         .isLength({
             max: 1000,
         })
-        .withMessage('Incorrect title'),
+        .rtrim(),
 ];
