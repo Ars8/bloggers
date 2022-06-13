@@ -162,11 +162,7 @@ app.post('/posts', body('title').isEmpty(), (req: Request, res: Response) => {
         res.status(201).send(newPost)
     }
 })
-app.put('/posts/:id', body('title').isEmpty(), body('title').rtrim, body('title').isLength({max: 40}), (req: Request, res: Response) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
+app.put('/posts/:id', (req: Request, res: Response) => {
     let title = req.body.title
     let shortDescription = req.body.shortDescription
     let content = req.body.content
