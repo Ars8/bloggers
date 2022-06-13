@@ -22,6 +22,10 @@ interface post {
     bloggerName?: string
 }
 
+const titleValidation = body('title').trim().isLength({max: 40}).notEmpty()
+const shortDescriptionValidation = body('shortDescription').trim().isLength({max: 100}).notEmpty()
+const contentValidation = body('content').trim().isLength({max: 1000}).notEmpty()
+
 let bloggers: blogger[] = [
     {id: 1, name: 'About JS - 01', youtubeUrl: 'it-incubator.eu'},
 ]
@@ -132,37 +136,44 @@ app.get('/posts/:id', (req: Request, res: Response) => {
         res.send(404)
     }
 })
-app.post('/posts', body('title').isEmpty(), (req: Request, res: Response) => {
+app.post('/posts', titleValidation, shortDescriptionValidation, contentValidation, (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).send({ errors: errors.array({onlyFirstError: true}).map(e => {
+                return {
+                    message: e.msg,
+                    field: e.param
+                }
+            }) });
+    }
+
     let title = req.body.title
     let shortDescription = req.body.shortDescription
     let content = req.body.content
 
-    if (!title || title == null ||  typeof title !== 'string' || !title.trim() || title.length > 30 || shortDescription.length > 100 || content.length > 1000) {
-        res.status(400).send({
-            errorsMessages: [{
-                'message': 'Incorrect shortDescription',
-                'field': 'shortDescription'
-            },
-                {
-                    'message': 'Incorrect name',
-                    'field': 'title'
-                }]
-        })
-        return
-    }else {
         const newPost = {
-            bloggerId: 1,
+            bloggerId: req.body.bloggerId,
             bloggerName: req.body.title,
             id: +(new Date()),
             title: req.body.title,
             shortDescription: req.body.shortDescription,
             content: req.body.content
         }
+
         posts.push(newPost)
         res.status(201).send(newPost)
-    }
+
 })
-app.put('/posts/:id', (req: Request, res: Response) => {
+app.put('/posts/:id', titleValidation, shortDescriptionValidation, contentValidation, (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).send({ errors: errors.array({onlyFirstError: true}).map(e => {
+            return {
+                message: e.msg,
+                field: e.param
+            }
+            }) });
+    }
     let title = req.body.title
     let shortDescription = req.body.shortDescription
     let content = req.body.content
