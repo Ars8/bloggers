@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import cors from 'cors';
 import bodyParser from "body-parser";
-import { body } from 'express-validator';
+import { body, validationResult } from 'express-validator';
 
 const express = require('express')
 const app = express()
@@ -21,48 +21,6 @@ interface post {
     bloggerId: number,
     bloggerName?: string
 }
-
-const validations = [
-    body('title', {
-        errorsMessages: [
-            {
-                message: "incorrect title",
-                field: "title"
-            }
-        ]
-    })
-        .isEmpty()
-        .isLength({
-            max: 40,
-        })
-        .rtrim(),
-    body('shortDescription', {
-        errorsMessages: [
-            {
-                message: "incorrect shortDescription",
-                field: "shortDescription"
-            }
-        ]
-    })
-        .isEmpty()
-        .isLength({
-            max: 100,
-        })
-        .rtrim(),
-    body('content', {
-        errorsMessages: [
-            {
-                message: "incorrect content",
-                field: "content"
-            }
-        ]
-    })
-        .isEmpty()
-        .isLength({
-            max: 1000,
-        })
-        .rtrim(),
-];
 
 let bloggers: blogger[] = [
     {id: 1, name: 'About JS - 01', youtubeUrl: 'it-incubator.eu'},
@@ -204,7 +162,11 @@ app.post('/posts', body('title').isEmpty(), (req: Request, res: Response) => {
         res.status(201).send(newPost)
     }
 })
-app.put('/posts/:id', validations, (req: Request, res: Response) => {
+app.put('/posts/:id', body('title').isEmpty(), body('title').rtrim, body('title').isLength({max: 40}), (req: Request, res: Response) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
     let title = req.body.title
     let shortDescription = req.body.shortDescription
     let content = req.body.content
