@@ -12,7 +12,9 @@ interface bloggers {
     youtubeUrl: string
 }
 
-let bloggers: bloggers[] = []
+let bloggers: bloggers[] = [
+    {id: 1, name: 'About JS - 01', youtubeUrl: 'it-incubator.eu'},
+]
 
 const parserMiddleware = bodyParser({})
 app.use(parserMiddleware)
