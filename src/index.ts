@@ -6,13 +6,13 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT || 5000
 
-let bloggers = [
-    {id: 1, name: 'About JS - 01', youtubeUrl: 'it-incubator.eu'},
-    {id: 2, name: 'About JS - 02', youtubeUrl: 'it-incubator.eu'},
-    {id: 3, name: 'About JS - 03', youtubeUrl: 'it-incubator.eu'},
-    {id: 4, name: 'About JS - 04', youtubeUrl: 'it-incubator.eu'},
-    {id: 5, name: 'About JS - 05', youtubeUrl: 'it-incubator.eu'},
-]
+interface bloggers {
+    id: number,
+    name: string,
+    youtubeUrl: string
+}
+
+let bloggers: bloggers[] = []
 
 const parserMiddleware = bodyParser({})
 app.use(parserMiddleware)
