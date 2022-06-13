@@ -166,7 +166,7 @@ app.put('/posts/:id', (req: Request, res: Response) => {
     let content = req.body.content
     let bloggerId = req.body.bloggerId
 
-    if (!title || typeof title !== 'string' || !title.trim() || title.length > 30 && content.length > 1000) {
+    if (!title || !content || !shortDescription || typeof title !== 'string' || !title.trim() || title.length > 30 && content.length > 1000) {
         res.status(400).send({
             errorsMessages: [{
                 'message': 'Incorrect title',
@@ -180,7 +180,7 @@ app.put('/posts/:id', (req: Request, res: Response) => {
         return
     }
 
-    if (!title || typeof title !== 'string' || !title.trim() || title.length > 30 && shortDescription.length > 100) {
+    if (!title || !content || !shortDescription || typeof title !== 'string' || !title.trim() || title.length > 30 && shortDescription.length > 100) {
         res.status(400).send({
             errorsMessages: [{
                 'message': 'Incorrect shortDescription',
