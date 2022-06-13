@@ -1,8 +1,7 @@
 import {Request, Response} from "express";
 import cors from 'cors';
 import bodyParser from "body-parser";
-import { body, validationResult } from 'express-validator';
-import {validations} from './validation'
+import { body } from 'express-validator';
 
 const express = require('express')
 const app = express()
@@ -22,6 +21,48 @@ interface post {
     bloggerId: number,
     bloggerName?: string
 }
+
+const validations = [
+    body('title', {
+        errorsMessages: [
+            {
+                message: "incorrect title",
+                field: "title"
+            }
+        ]
+    })
+        .isEmpty()
+        .isLength({
+            max: 40,
+        })
+        .rtrim(),
+    body('shortDescription', {
+        errorsMessages: [
+            {
+                message: "incorrect shortDescription",
+                field: "shortDescription"
+            }
+        ]
+    })
+        .isEmpty()
+        .isLength({
+            max: 100,
+        })
+        .rtrim(),
+    body('content', {
+        errorsMessages: [
+            {
+                message: "incorrect content",
+                field: "content"
+            }
+        ]
+    })
+        .isEmpty()
+        .isLength({
+            max: 1000,
+        })
+        .rtrim(),
+];
 
 let bloggers: blogger[] = [
     {id: 1, name: 'About JS - 01', youtubeUrl: 'it-incubator.eu'},
