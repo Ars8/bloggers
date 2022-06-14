@@ -146,7 +146,7 @@ app.post('/posts', (req: Request, res: Response) => {
         })
     }
 
-    if (shortDescription ===null || !shortDescription || typeof shortDescription !== 'string' || !shortDescription.trim() || title.length > 100) {
+    if (shortDescription ===null || !shortDescription || typeof shortDescription !== 'string' || !shortDescription.trim() || shortDescription.length > 100) {
         errors.push({
             message: "Invalid shortDescription",
             field: "shortDescription"
