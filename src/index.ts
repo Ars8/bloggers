@@ -201,10 +201,10 @@ app.post('/posts', (req: Request, res: Response) => {
 })
 app.put('/posts/:id', (req: Request, res: Response) => {
 
-    let title = req.body.title
-    let shortDescription = req.body.shortDescription
-    let content = req.body.content
-    let bloggerId = +req.body.bloggerId
+    const title = req.body.title
+    const shortDescription = req.body.shortDescription
+    const content = req.body.content
+    const bloggerId = +req.body.bloggerId
 
     let errors = []
 
@@ -226,6 +226,13 @@ app.put('/posts/:id', (req: Request, res: Response) => {
         errors.push({
             message: "Invalid content!",
             field: "content"
+        })
+    }
+
+    if (!bloggers.find(blogger => blogger.id === bloggerId)) {
+        errors.push({
+            message: "Invalid bloggerId!",
+            field: "bloggerId"
         })
     }
 
