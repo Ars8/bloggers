@@ -160,10 +160,8 @@ app.post('/posts', (req: Request, res: Response) => {
         })
     }
 
-    let errorsMessages
-
     if (errors.length > 0) {
-        res.status(400).send( errorsMessages = {errors})
+        res.status(400).send({errorsMessages: errors})
     }
 
         const newPost = {
