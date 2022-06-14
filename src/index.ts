@@ -155,7 +155,7 @@ app.post('/posts', (req: Request, res: Response) => {
 
     if (content === null || !content || typeof content !== 'string' || !content.trim() || content.length > 1000) {
         errors.push({
-            message: "Invalid content",
+            message: "Invalid content!",
             field: "content"
         })
     }
