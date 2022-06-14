@@ -1,7 +1,6 @@
 import {Request, Response} from "express";
 import cors from 'cors';
 import bodyParser from "body-parser";
-import { body, check, validationResult } from 'express-validator';
 
 const express = require('express')
 const app = express()
@@ -21,10 +20,6 @@ interface post {
     bloggerId: number,
     bloggerName?: string
 }
-
-const titleValidation = body('title').trim().isLength({max: 30}).notEmpty()
-const shortDescriptionValidation = body('shortDescription').trim().isLength({max: 100}).notEmpty()
-const contentValidation = body('content').trim().isLength({max: 1000}).notEmpty()
 
 let bloggers: blogger[] = [
     {id: 1, name: 'About JS - 01', youtubeUrl: 'it-incubator.eu'},
@@ -136,20 +131,38 @@ app.get('/posts/:id', (req: Request, res: Response) => {
         res.send(404)
     }
 })
-app.post('/posts', titleValidation, contentValidation, shortDescriptionValidation, (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).send({ errorsMessages: errors.array({onlyFirstError: true}).map(e => {
-                return {
-                    message: e.msg,
-                    field: e.param
-                }
-            }) });
-    }
+app.post('/posts', (req: Request, res: Response) => {
+
+    let errorsMessages = []
 
     let title = req.body.title
     let shortDescription = req.body.shortDescription
     let content = req.body.content
+
+    if (title === null || !title || typeof title !== 'string' || !title.trim() || title.length > 30) {
+        errorsMessages.push({
+            message: "string",
+            field: "title"
+        })
+    }
+
+    if (shortDescription ===null || !shortDescription || typeof shortDescription !== 'string' || !shortDescription.trim() || title.length > 100) {
+        errorsMessages.push({
+            message: "Invalid shortDescription",
+            field: "shortDescription"
+        })
+    }
+
+    if (content === null || !content || typeof content !== 'string' || !content.trim() || content.length > 1000) {
+        errorsMessages.push({
+            message: "Invalid content",
+            field: "content"
+        })
+    }
+
+    if (errorsMessages.length > 0) {
+        res.status(400).send(errorsMessages)
+    }
 
         const newPost = {
             bloggerId: +req.body.bloggerId,
@@ -164,16 +177,8 @@ app.post('/posts', titleValidation, contentValidation, shortDescriptionValidatio
         res.status(201).send(newPost)
 
 })
-app.put('/posts/:id', titleValidation, contentValidation, shortDescriptionValidation, (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).send({ errorsMessages: errors.array({onlyFirstError: true}).map(e => {
-            return {
-                message: e.msg,
-                field: e.param
-            }
-            }) });
-    }
+app.put('/posts/:id', (req: Request, res: Response) => {
+
     let title = req.body.title
     let shortDescription = req.body.shortDescription
     let content = req.body.content
