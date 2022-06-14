@@ -50,17 +50,30 @@ app.get('/bloggers/:id', (req: Request, res: Response) => {
     }
 })
 app.post('/bloggers', (req: Request, res: Response) => {
-    let name = req.body.name
-    let youtubeUrl = req.body.youtubeUrl
-    if (!name || name == null ||  typeof name !== 'string' || !name.trim() || name.length > 15 || youtubeUrl.length > 100) {
-        res.status(400).send({
-            errorsMessages: [{
-                'message': 'Incorrect name',
-                'field': 'name'
-            }]
+    const name = req.body.name
+    const youtubeUrl = req.body.youtubeUrl
+    const regEx = new RegExp('^https:\\/\\/([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$')
+    const found = regEx.test(youtubeUrl)
+
+    let errors = []
+
+    if (!name || typeof name !== 'string' || !name.trim() || name.length > 15) {
+        errors.push({
+            message: "Incorrect name",
+            field: "name"
         })
-        return
-    }else {
+    }
+
+    if (!youtubeUrl || typeof youtubeUrl !== 'string' || !youtubeUrl.trim() || youtubeUrl.length > 100 || !found) {
+        errors.push({
+            message: "Incorrect youtubeUrl",
+            field: "youtubeUrl"
+        })
+    }
+
+    if (errors.length >0) {
+        res.status(400).send({errorsMessages: errors})
+    } else {
         const newBlogger = {
             id: +(new Date()),
             name: req.body.name,
@@ -73,29 +86,38 @@ app.post('/bloggers', (req: Request, res: Response) => {
 app.put('/bloggers/:id', (req: Request, res: Response) => {
     let name = req.body.name
     let youtubeUrl = req.body.youtubeUrl
-    if (!name || typeof name !== 'string' || !name.trim() || name.length > 40) {
-        res.status(400).send({
-            errorsMessages: [
-                {
-                    'message': 'Incorrect youtubeUrl',
-                    'field': 'youtubeUrl'
-                },
-                {
-                    'message': 'Incorrect name',
-                    'field': 'name'
-                }
-            ]
+
+    const regEx = new RegExp('^https:\\/\\/([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$')
+    const found = regEx.test(youtubeUrl)
+
+    let errors = []
+
+    if (!name || typeof name !== 'string' || !name.trim() || name.length > 15) {
+        errors.push({
+            message: "Incorrect name",
+            field: "name"
         })
-        return
     }
-    const id = +req.params.id
-    const blogger = bloggers.find(item => item.id === id)
-    if (blogger) {
-        blogger.name = name
-        blogger.youtubeUrl = youtubeUrl
-        res.status(204).send(bloggers)
+
+    if (!youtubeUrl || typeof youtubeUrl !== 'string' || !youtubeUrl.trim() || youtubeUrl.length > 100 || !found) {
+        errors.push({
+            message: "Incorrect youtubeUrl",
+            field: "youtubeUrl"
+        })
+    }
+
+    if (errors.length >0) {
+        res.status(400).send({errorsMessages: errors})
     } else {
-        res.send(404)
+        const id = +req.params.id
+        const blogger = bloggers.find(item => item.id === id)
+        if (blogger) {
+            blogger.name = name
+            blogger.youtubeUrl = youtubeUrl
+            res.status(204).send(bloggers)
+        } else {
+            res.send(404)
+        }
     }
 })
 app.delete('/bloggers/:id', (req: Request, res: Response) => {
@@ -183,6 +205,33 @@ app.put('/posts/:id', (req: Request, res: Response) => {
     let shortDescription = req.body.shortDescription
     let content = req.body.content
     let bloggerId = +req.body.bloggerId
+
+    let errors = []
+
+    if (title === null || !title || typeof title !== 'string' || !title.trim() || title.length > 30) {
+        errors.push({
+            message: "string",
+            field: "title"
+        })
+    }
+
+    if (shortDescription ===null || !shortDescription || typeof shortDescription !== 'string' || !shortDescription.trim() || shortDescription.length > 100) {
+        errors.push({
+            message: "Invalid shortDescription",
+            field: "shortDescription"
+        })
+    }
+
+    if (content === null || !content || typeof content !== 'string' || !content.trim() || content.length > 1000) {
+        errors.push({
+            message: "Invalid content!",
+            field: "content"
+        })
+    }
+
+    if (errors.length > 0) {
+        res.status(400).send({errorsMessages: errors})
+    }
 
     const id = +req.params.id
     const post = posts.find(item => item.id === id)
