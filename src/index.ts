@@ -157,9 +157,10 @@ app.post('/posts', (req: Request, res: Response) => {
 
     let errors = []
 
-    let title = req.body.title
-    let shortDescription = req.body.shortDescription
-    let content = req.body.content
+    const title = req.body.title
+    const shortDescription = req.body.shortDescription
+    const content = req.body.content
+    const bloggerId = +req.body.bloggerId
 
     if (title === null || !title || typeof title !== 'string' || !title.trim() || title.length > 30) {
         errors.push({
@@ -181,6 +182,14 @@ app.post('/posts', (req: Request, res: Response) => {
             field: "content"
         })
     }
+
+    if (!bloggers.find(blogger => blogger.id === bloggerId)) {
+        errors.push({
+            message: "Invalid bloggerId!",
+            field: "bloggerId"
+        })
+    }
+
 
     if (errors.length > 0) {
         res.status(400).send({errorsMessages: errors})
