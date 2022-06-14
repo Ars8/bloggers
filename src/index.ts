@@ -133,35 +133,37 @@ app.get('/posts/:id', (req: Request, res: Response) => {
 })
 app.post('/posts', (req: Request, res: Response) => {
 
-    let errorsMessages = []
+    let errors = []
 
     let title = req.body.title
     let shortDescription = req.body.shortDescription
     let content = req.body.content
 
     if (title === null || !title || typeof title !== 'string' || !title.trim() || title.length > 30) {
-        errorsMessages.push({
+        errors.push({
             message: "string",
             field: "title"
         })
     }
 
     if (shortDescription ===null || !shortDescription || typeof shortDescription !== 'string' || !shortDescription.trim() || title.length > 100) {
-        errorsMessages.push({
+        errors.push({
             message: "Invalid shortDescription",
             field: "shortDescription"
         })
     }
 
     if (content === null || !content || typeof content !== 'string' || !content.trim() || content.length > 1000) {
-        errorsMessages.push({
+        errors.push({
             message: "Invalid content",
             field: "content"
         })
     }
 
-    if (errorsMessages.length > 0) {
-        res.status(400).send(errorsMessages)
+    let errorsMessages
+
+    if (errors.length > 0) {
+        res.status(400).send( errorsMessages = {errors})
     }
 
         const newPost = {
