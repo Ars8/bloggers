@@ -1,4 +1,4 @@
-import {Request, Response} from "express";
+import {Request, Response, NextFunction} from 'express';
 import cors from 'cors';
 import bodyParser from "body-parser";
 
@@ -30,6 +30,14 @@ let posts: post[] = [
 ]
 
 const parserMiddleware = bodyParser({})
+
+const authTokenMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    if (req.headers.authorization === 'Basic YWRtaW46cXdlcnR5') {
+        next()
+    } else {
+        res.send(401)
+    }
+}
 app.use(parserMiddleware)
 
 app.use(cors())
@@ -49,7 +57,7 @@ app.get('/bloggers/:id', (req: Request, res: Response) => {
         res.send(404)
     }
 })
-app.post('/bloggers', (req: Request, res: Response) => {
+app.post('/bloggers', authTokenMiddleware, (req: Request, res: Response) => {
     const name = req.body.name
     const youtubeUrl = req.body.youtubeUrl
     const regEx = new RegExp('^https:\\/\\/([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$')
@@ -83,7 +91,7 @@ app.post('/bloggers', (req: Request, res: Response) => {
         res.status(201).send(newBlogger)
     }
 })
-app.put('/bloggers/:id', (req: Request, res: Response) => {
+app.put('/bloggers/:id', authTokenMiddleware, (req: Request, res: Response) => {
     let name = req.body.name
     let youtubeUrl = req.body.youtubeUrl
 
@@ -120,7 +128,7 @@ app.put('/bloggers/:id', (req: Request, res: Response) => {
         }
     }
 })
-app.delete('/bloggers/:id', (req: Request, res: Response) => {
+app.delete('/bloggers/:id', authTokenMiddleware, (req: Request, res: Response) => {
     const id = +req.params.id
 
     if (!id) {
@@ -153,7 +161,7 @@ app.get('/posts/:id', (req: Request, res: Response) => {
         res.send(404)
     }
 })
-app.post('/posts', (req: Request, res: Response) => {
+app.post('/posts', authTokenMiddleware, (req: Request, res: Response) => {
 
     let errors = []
 
@@ -208,7 +216,7 @@ app.post('/posts', (req: Request, res: Response) => {
         res.status(201).send(newPost)
 
 })
-app.put('/posts/:id', (req: Request, res: Response) => {
+app.put('/posts/:id', authTokenMiddleware, (req: Request, res: Response) => {
 
     const title = req.body.title
     const shortDescription = req.body.shortDescription
@@ -261,7 +269,7 @@ app.put('/posts/:id', (req: Request, res: Response) => {
         res.send(404)
     }
 })
-app.delete('/posts/:id', (req: Request, res: Response) => {
+app.delete('/posts/:id', authTokenMiddleware, (req: Request, res: Response) => {
     const id = +req.params.id
 
     if (!id) {
