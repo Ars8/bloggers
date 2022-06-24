@@ -1,6 +1,7 @@
 import {Request, Response, Router} from "express";
 import {bloggersService} from "../domain/bloggers-service";
 import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
+import {postsService} from "../domain/posts-service";
 
 export const bloggersRouter = Router({})
 
@@ -46,6 +47,43 @@ bloggersRouter.post('/', authTokenMiddleware, async (req: Request, res: Response
     } else {
         const newBlogger = await bloggersService.createBlogger(name, youtubeUrl)
         res.status(201).send(newBlogger)
+    }
+})
+bloggersRouter.post('/:id/posts', authTokenMiddleware, async (req: Request, res: Response) => {
+    const title = req.body.title
+    const shortDescription = req.body.shortDescription
+    const content = req.body.content
+    const bloggerId = +req.body.bloggerId
+    const bloggerName = req.body.bloggerName
+
+    let errors = []
+
+    if (title === null || !title || typeof title !== 'string' || !title.trim() || title.length > 30) {
+        errors.push({
+            message: "string",
+            field: "title"
+        })
+    }
+
+    if (shortDescription ===null || !shortDescription || typeof shortDescription !== 'string' || !shortDescription.trim() || shortDescription.length > 100) {
+        errors.push({
+            message: "Invalid shortDescription",
+            field: "shortDescription"
+        })
+    }
+
+    if (content === null || !content || typeof content !== 'string' || !content.trim() || content.length > 1000) {
+        errors.push({
+            message: "Invalid content!",
+            field: "content"
+        })
+    }
+
+    if (errors.length > 0) {
+        res.status(400).send({errorsMessages: errors})
+    } else {
+        const newPostBlogger = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
+        res.status(201).send(newPostBlogger)
     }
 })
 bloggersRouter.put('/:id', authTokenMiddleware, async (req: Request, res: Response) => {
