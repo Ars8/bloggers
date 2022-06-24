@@ -1,5 +1,6 @@
 import {Request, Response, Router} from "express";
 import {bloggersService} from "../domain/bloggers-service";
+import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
 
 export const bloggersRouter = Router({})
 
@@ -18,7 +19,7 @@ bloggersRouter.get('/:id', async (req: Request, res: Response) => {
 bloggersRouter.get('/:id/posts', async (req: Request, res: Response) => {
     const bloggerPosts = await bloggersService.findBloggerPosts(+req.params.id)
 })
-bloggersRouter.post('/', async (req: Request, res: Response) => {
+bloggersRouter.post('/', authTokenMiddleware, async (req: Request, res: Response) => {
     const name = req.body.name
     const youtubeUrl = req.body.youtubeUrl
     const regEx = new RegExp('^https:\\/\\/([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$')
@@ -47,7 +48,7 @@ bloggersRouter.post('/', async (req: Request, res: Response) => {
         res.status(201).send(newBlogger)
     }
 })
-bloggersRouter.put('/:id', async (req: Request, res: Response) => {
+bloggersRouter.put('/:id', authTokenMiddleware, async (req: Request, res: Response) => {
     let name = req.body.name
     let youtubeUrl = req.body.youtubeUrl
 
@@ -83,7 +84,7 @@ bloggersRouter.put('/:id', async (req: Request, res: Response) => {
         }
     }
 })
-bloggersRouter.delete('/:id', async (req: Request, res: Response) => {
+bloggersRouter.delete('/:id', authTokenMiddleware, async (req: Request, res: Response) => {
     const id = +req.params.id
     const isDeleted = await bloggersService.deleteBlogger(id)
 

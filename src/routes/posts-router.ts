@@ -1,6 +1,7 @@
 import {Request, Response, Router} from "express";
 import {postsService} from "../domain/posts-service";
 import {ObjectId} from "mongodb";
+import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
 
 export const postsRouter = Router({})
 
@@ -16,7 +17,7 @@ postsRouter.get('/:id', async (req: Request, res: Response) => {
         res.send(404)
     }
 })
-postsRouter.post('/', async (req: Request, res: Response) => {
+postsRouter.post('/', authTokenMiddleware, async (req: Request, res: Response) => {
     const title = req.body.title
     const shortDescription = req.body.shortDescription
     const content = req.body.content
@@ -60,7 +61,7 @@ postsRouter.post('/', async (req: Request, res: Response) => {
         res.status(201).send(newPost)
     }
 })
-postsRouter.put('/:id', async (req: Request, res: Response) => {
+postsRouter.put('/:id', authTokenMiddleware, async (req: Request, res: Response) => {
     const title = req.body.title
     const shortDescription = req.body.shortDescription
     const content = req.body.content
@@ -110,7 +111,7 @@ postsRouter.put('/:id', async (req: Request, res: Response) => {
         }
     }
 })
-postsRouter.delete('/:id', async (req: Request, res: Response) => {
+postsRouter.delete('/:id', authTokenMiddleware, async (req: Request, res: Response) => {
     const id = +req.params.id
     const isDeleted = await postsService.deletePost(id)
 
