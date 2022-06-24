@@ -6,8 +6,16 @@ import {postsService} from "../domain/posts-service";
 export const bloggersRouter = Router({})
 
 bloggersRouter.get('/', async (req: Request, res: Response) => {
+    let PageNumber = req.query.PageNumber
+    let PageSize = req.query.PageSize
     const foundBloggers = await bloggersService.findBloggers(req.query.title?.toString())
-    res.send(foundBloggers)
+    res.send({
+        "pagesCount": PageNumber,
+        "page": PageNumber,
+        "pageSize": PageSize,
+        "totalCount": PageSize,
+        "items": [foundBloggers]
+    })
 })
 bloggersRouter.get('/:id', async (req: Request, res: Response) => {
     const blogger = await bloggersService.findBloggerById(+req.params.id)
