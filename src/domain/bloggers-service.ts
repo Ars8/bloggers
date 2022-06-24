@@ -1,4 +1,4 @@
-import {BloggerDBType} from "../repositories/types";
+import {BloggerDBType, PostDBType} from "../repositories/types";
 import {bloggersRepository} from "../repositories/bloggers-repository";
 
 export const bloggersService = {
@@ -7,6 +7,9 @@ export const bloggersService = {
     },
     async findBloggerById(id: number): Promise<BloggerDBType | null> {
         return bloggersRepository.findBloggerById(id)
+    },
+    async findBloggerPosts(id: number): Promise<PostDBType[]> {
+        return bloggersRepository.findBloggerPosts(id)
     },
     async createBlogger(name: string, youtubeUrl: string): Promise<BloggerDBType> {
         const newBlogger: BloggerDBType = {

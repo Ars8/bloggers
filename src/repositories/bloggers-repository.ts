@@ -1,5 +1,5 @@
-import {bloggersCollection} from "./db"
-import {BloggerDBType} from "./types";
+import {bloggersCollection, postsCollection} from "./db"
+import {BloggerDBType, PostDBType} from "./types";
 
 export const bloggersRepository = {
     async findBloggers(title: string | null | undefined): Promise<BloggerDBType[]> {
@@ -14,6 +14,10 @@ export const bloggersRepository = {
     async findBloggerById(id: number): Promise<BloggerDBType | null> {
         let blogger: BloggerDBType | null = await bloggersCollection.findOne({id: id})
         return blogger
+    },
+    async findBloggerPosts(id: number): Promise<PostDBType[]> {
+        let bloggerPosts: PostDBType[] | null = await postsCollection.find({id: id}).toArray()
+        return bloggerPosts
     },
     async createBlogger(newBlogger: BloggerDBType): Promise<BloggerDBType> {
         const result = await bloggersCollection.insertOne(newBlogger)
