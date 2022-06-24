@@ -6,11 +6,12 @@ export const postsService = {
     async findPosts(title: string | null | undefined): Promise<PostDBType[]> {
         return postsRepository.findPosts(title)
     },
-    async findPostById(id: ObjectId): Promise<PostDBType | null> {
+    async findPostById(id: number): Promise<PostDBType | null> {
         return postsRepository.findPostById(id)
     },
     async createPost(title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<PostDBType> {
         const newPost: PostDBType = {
+            id: +(new Date()),
             title: title,
             shortDescription: shortDescription,
             content: content,
@@ -20,10 +21,10 @@ export const postsService = {
         const createdPost = await postsRepository.createPost(newPost)
         return createdPost
     },
-    async updatePost(id: ObjectId, title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<boolean> {
+    async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<boolean> {
         return await postsRepository.updatePost(id, title, shortDescription, content, bloggerId, bloggerName)
     },
-    async deletePost(id: ObjectId): Promise<boolean> {
+    async deletePost(id: number): Promise<boolean> {
         return await postsRepository.delete(id)
     },
 }

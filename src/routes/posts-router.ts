@@ -9,7 +9,7 @@ postsRouter.get('/', async (req: Request, res: Response) => {
     res.send(foundPosts)
 })
 postsRouter.get('/:id', async (req: Request, res: Response) => {
-    const post = await postsService.findPostById(new ObjectId(req.params.id))
+    const post = await postsService.findPostById(+req.params.id)
     if (post) {
         res.status(200).send(post)
     }else {
@@ -100,7 +100,7 @@ postsRouter.put('/:id', async (req: Request, res: Response) => {
     if (errors.length > 0) {
         res.status(400).send({errorsMessages: errors})
     } else {
-        const id = new ObjectId(req.params.id)
+        const id = +req.params.id
         const isUpdated = await postsService.updatePost(id,title,shortDescription, content, bloggerId, bloggerName)
         if (isUpdated) {
             const post = await postsService.findPostById(id)
@@ -111,7 +111,7 @@ postsRouter.put('/:id', async (req: Request, res: Response) => {
     }
 })
 postsRouter.delete('/:id', async (req: Request, res: Response) => {
-    const id = new ObjectId(req.params.id)
+    const id = +req.params.id
     const isDeleted = await postsService.deletePost(id)
 
     if (isDeleted) {
