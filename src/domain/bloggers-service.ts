@@ -11,6 +11,7 @@ export const bloggersService = {
     },
     async createBlogger(name: string, youtubeUrl: string): Promise<BloggerDBType> {
         const newBlogger: BloggerDBType = {
+            id: +new Date(),
             name: name,
             youtubeUrl: youtubeUrl
         }
