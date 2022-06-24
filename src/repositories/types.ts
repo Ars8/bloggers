@@ -5,6 +5,7 @@ export type BloggerDBType = {
 }
 
 export type PostDBType = {
+    id: number
     title: string
     shortDescription: string
     content: string

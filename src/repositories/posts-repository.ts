@@ -10,7 +10,7 @@ export const postsRepository = {
             filter.title = {$regex: title}
         }
 
-        return postsCollection.find(filter).toArray()
+        return postsCollection.find(filter, {projection: {_id: 0}}).toArray()
     },
     async findPostById(id: ObjectId): Promise<PostDBType | null> {
         let post: PostDBType | null = await postsCollection.findOne({_id: id})

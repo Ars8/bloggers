@@ -1,6 +1,5 @@
 import {bloggersCollection} from "./db"
 import {BloggerDBType} from "./types";
-import {ObjectId} from "mongodb";
 
 export const bloggersRepository = {
     async findBloggers(title: string | null | undefined): Promise<BloggerDBType[]> {
@@ -10,22 +9,22 @@ export const bloggersRepository = {
             filter.title = {$regex: title}
         }
 
-        return bloggersCollection.find(filter).toArray()
+        return bloggersCollection.find(filter, {projection: {_id: 0}}).toArray()
     },
-    async findBloggerById(id: ObjectId): Promise<BloggerDBType | null> {
-        let blogger: BloggerDBType | null = await bloggersCollection.findOne({_id: id})
+    async findBloggerById(id: number): Promise<BloggerDBType | null> {
+        let blogger: BloggerDBType | null = await bloggersCollection.findOne({id: id})
         return blogger
     },
     async createBlogger(newBlogger: BloggerDBType): Promise<BloggerDBType> {
         const result = await bloggersCollection.insertOne(newBlogger)
         return newBlogger
     },
-    async updateBlogger(id: ObjectId, name: string, youtubeUrl: string): Promise<boolean> {
-        const result = await bloggersCollection.updateOne({_id: id}, {$set: {name: name, youtubeUrl: youtubeUrl}})
+    async updateBlogger(id: number, name: string, youtubeUrl: string): Promise<boolean> {
+        const result = await bloggersCollection.updateOne({id: id}, {$set: {name: name, youtubeUrl: youtubeUrl}})
         return result.matchedCount === 1
     },
-    async delete(id: ObjectId): Promise<boolean> {
-        const result = await bloggersCollection.deleteOne({_id: id})
+    async delete(id: number): Promise<boolean> {
+        const result = await bloggersCollection.deleteOne({id: id})
         return result.deletedCount === 1
     }
     /*async getBloggers(): Promise<BloggerDBType[]> {

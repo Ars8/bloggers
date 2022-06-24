@@ -1,12 +1,11 @@
 import {BloggerDBType} from "../repositories/types";
 import {bloggersRepository} from "../repositories/bloggers-repository";
-import {ObjectId} from "mongodb";
 
 export const bloggersService = {
     async findBloggers(title: string | null | undefined): Promise<BloggerDBType[]> {
         return bloggersRepository.findBloggers(title)
     },
-    async findBloggerById(id: ObjectId): Promise<BloggerDBType | null> {
+    async findBloggerById(id: number): Promise<BloggerDBType | null> {
         return bloggersRepository.findBloggerById(id)
     },
     async createBlogger(name: string, youtubeUrl: string): Promise<BloggerDBType> {
@@ -18,10 +17,10 @@ export const bloggersService = {
         const createdBlogger = await bloggersRepository.createBlogger(newBlogger)
         return createdBlogger
     },
-    async updateBlogger(id: ObjectId, name: string, youtubeUrl: string): Promise<boolean> {
+    async updateBlogger(id: number, name: string, youtubeUrl: string): Promise<boolean> {
         return await bloggersRepository.updateBlogger(id, name, youtubeUrl)
     },
-    async deleteBlogger(id: ObjectId): Promise<boolean> {
+    async deleteBlogger(id: number): Promise<boolean> {
         return await bloggersRepository.delete(id)
     },
     /*async create(name: string, youtubeUrl: string): Promise<BloggerDBType> {

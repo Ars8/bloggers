@@ -1,6 +1,5 @@
 import {Request, Response, Router} from "express";
 import {bloggersService} from "../domain/bloggers-service";
-import {ObjectId} from "mongodb";
 
 export const bloggersRouter = Router({})
 
@@ -9,7 +8,7 @@ bloggersRouter.get('/', async (req: Request, res: Response) => {
     res.send(foundBloggers)
 })
 bloggersRouter.get('/:id', async (req: Request, res: Response) => {
-    const blogger = await bloggersService.findBloggerById(new ObjectId(req.params.id))
+    const blogger = await bloggersService.findBloggerById(+req.params.id)
     if (blogger) {
         res.status(200).send(blogger)
     }else {
@@ -71,7 +70,7 @@ bloggersRouter.put('/:id', async (req: Request, res: Response) => {
     if (errors.length > 0) {
         res.status(400).send({errorsMessages: errors})
     } else {
-        const id = new ObjectId(req.params.id)
+        const id = +req.params.id
         const isUpdated = await bloggersService.updateBlogger(id, name, youtubeUrl)
         if (isUpdated) {
             const blogger = await bloggersService.findBloggerById(id)
@@ -82,7 +81,7 @@ bloggersRouter.put('/:id', async (req: Request, res: Response) => {
     }
 })
 bloggersRouter.delete('/:id', async (req: Request, res: Response) => {
-    const id = new ObjectId(req.params.id)
+    const id = +req.params.id
     const isDeleted = await bloggersService.deleteBlogger(id)
 
     if (isDeleted) {
