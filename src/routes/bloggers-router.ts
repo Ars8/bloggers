@@ -15,6 +15,14 @@ bloggersRouter.get('/:id', async (req: Request, res: Response) => {
         res.send(404)
     }
 })
+bloggersRouter.get('/:id/posts', async (req: Request, res: Response) => {
+    const blogger = await bloggersService.findBloggerById(+req.params.id)
+    if (blogger) {
+        res.status(200).send(blogger)
+    }else {
+        res.send(404)
+    }
+})
 bloggersRouter.post('/', async (req: Request, res: Response) => {
     const name = req.body.name
     const youtubeUrl = req.body.youtubeUrl
