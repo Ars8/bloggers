@@ -17,8 +17,7 @@ export const bloggersService = {
             name: name,
             youtubeUrl: youtubeUrl
         }
-        const createdBlogger = await bloggersRepository.createBlogger(newBlogger)
-        return createdBlogger
+        return await bloggersRepository.createBlogger(newBlogger)
     },
     async updateBlogger(id: number, name: string, youtubeUrl: string): Promise<boolean> {
         return await bloggersRepository.updateBlogger(id, name, youtubeUrl)
