@@ -104,6 +104,7 @@ bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, async (req: Reques
             message: "Invalid bloggerId!",
             field: "bloggerId"
         })
+        res.status(404).send({errorsMessages: errors})
     }
 
     if (errors.length > 0) {
