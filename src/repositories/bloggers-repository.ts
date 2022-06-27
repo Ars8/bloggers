@@ -11,7 +11,7 @@ export const bloggersRepository = {
         return bloggersCollection.find(filter, {projection: {_id: 0}}).limit(1).toArray()
     },
     async findBloggerById(id: number): Promise<BloggerDBType | null> {
-        let blogger: BloggerDBType | null = await bloggersCollection.findOne({id: id})
+        let blogger: BloggerDBType | null = await bloggersCollection.findOne({id: id}, {projection: {_id: 0}})
         return blogger
     },
     async findBloggerPosts(id: number): Promise<PostDBType[]> {
