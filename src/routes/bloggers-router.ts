@@ -48,7 +48,7 @@ bloggersRouter.post('/', authTokenMiddleware, async (req: Request, res: Response
 
     if (!name || typeof name !== 'string' || !name.trim() || name.length > 15) {
         errors.push({
-            message: "Incorrect name",
+            message: "Incorrect nam",
             field: "name"
         })
     }
