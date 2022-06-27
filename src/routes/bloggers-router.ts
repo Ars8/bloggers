@@ -71,7 +71,7 @@ bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, async (req: Reques
     const title = req.body.title
     const shortDescription = req.body.shortDescription
     const content = req.body.content
-    const bloggerId = +req.body.bloggerId
+    const bloggerId = +req.params.bloggerId
     const bloggerName = req.body.bloggerName
 
     let errors = []
