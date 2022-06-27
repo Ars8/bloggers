@@ -11,11 +11,11 @@ export const bloggersRepository = {
         return bloggersCollection.find(filter, {projection: {_id: 0}}).limit(1).toArray()
     },
     async findBloggerById(id: number): Promise<BloggerDBType | null> {
-        let blogger: BloggerDBType | null = await bloggersCollection.findOne({id: id}, {projection: {_id: 0}})
+        let blogger: BloggerDBType | null = await bloggersCollection.findOne({id: id})
         return blogger
     },
     async findBloggerPosts(id: number): Promise<PostDBType[]> {
-        let bloggerPosts: PostDBType[] | null = await postsCollection.find({id: id}, {projection: {_id: 0}}).toArray()
+        let bloggerPosts: PostDBType[] | null = await postsCollection.find({id: id}).toArray()
         return bloggerPosts
     },
     async createBlogger(newBlogger: BloggerDBType): Promise<BloggerDBType> {
