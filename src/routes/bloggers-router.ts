@@ -2,13 +2,14 @@ import {Request, Response, Router} from "express";
 import {bloggersService} from "../domain/bloggers-service";
 import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
 import {postsService} from "../domain/posts-service";
+import {bloggersRepository} from "../repositories/bloggers-repository";
 
 export const bloggersRouter = Router({})
 
 bloggersRouter.get('/', async (req: Request, res: Response) => {
     let PageNumber = req.query.PageNumber ? +req.query.PageNumber : undefined
-    let PageSize = req.query.PageSize ? +req.query.PageSize : undefined
-    const foundBloggers = await bloggersService.findBloggers(req.query.title?.toString(), PageSize = 1)
+    const PageSize = req.query.PageSize ? +req.query.PageSize : undefined
+    const foundBloggers = await bloggersService.findBloggers(req.query.title?.toString(), +req.query.PageSize)
 
     res.send({
         "pagesCount": PageNumber,
@@ -26,8 +27,16 @@ bloggersRouter.get('/:id', async (req: Request, res: Response) => {
         res.send(404)
     }
 })
-bloggersRouter.get('/:id/posts', async (req: Request, res: Response) => {
-    const bloggerPosts = await bloggersService.findBloggerPosts(+req.params.id)
+bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
+    const bloggerId = +req.body.bloggerId
+    const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
+
+    if (isBloggerId) {
+        const bloggerPosts = await bloggersService.findBloggerPosts(+req.params.id)
+        res.send(200)
+    }else {
+        res.send(404)
+    }
 })
 bloggersRouter.post('/', authTokenMiddleware, async (req: Request, res: Response) => {
     const name = req.body.name
@@ -85,6 +94,15 @@ bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, async (req: Reques
         errors.push({
             message: "Invalid content!",
             field: "content"
+        })
+    }
+
+    const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
+
+    if (!isBloggerId) {
+        errors.push({
+            message: "Invalid bloggerId!",
+            field: "bloggerId"
         })
     }
 
