@@ -58,7 +58,7 @@ bloggersRouter.post('/', authTokenMiddleware, async (req: Request, res: Response
         res.status(201).send(newBlogger)
     }
 })
-bloggersRouter.post('/:id/posts', authTokenMiddleware, async (req: Request, res: Response) => {
+bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, async (req: Request, res: Response) => {
     const title = req.body.title
     const shortDescription = req.body.shortDescription
     const content = req.body.content
