@@ -2,6 +2,7 @@ import {Request, Response, Router} from "express";
 import {postsService} from "../domain/posts-service";
 import {ObjectId} from "mongodb";
 import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
+import {bloggersRepository} from "../repositories/bloggers-repository";
 
 export const postsRouter = Router({})
 
@@ -47,12 +48,14 @@ postsRouter.post('/', authTokenMiddleware, async (req: Request, res: Response) =
         })
     }
 
-    /*if (!bloggers.find(blogger => blogger.id === bloggerId)) {
+    const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
+
+    if (!isBloggerId) {
         errors.push({
             message: "Invalid bloggerId!",
             field: "bloggerId"
         })
-    }*/
+    }
 
     if (errors.length > 0) {
         res.status(400).send({errorsMessages: errors})
