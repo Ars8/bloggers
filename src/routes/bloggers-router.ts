@@ -28,11 +28,11 @@ bloggersRouter.get('/:id', async (req: Request, res: Response) => {
     }
 })
 bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
-    const bloggerId = +req.body.bloggerId
+    const bloggerId = +req.params.bloggerId
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
 
     if (isBloggerId) {
-        const bloggerPosts = await bloggersService.findBloggerPosts(+req.params.id)
+        const bloggerPosts = await bloggersService.findBloggerPosts(bloggerId)
         res.send(200)
     }else {
         res.send(404)
