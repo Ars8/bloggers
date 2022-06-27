@@ -28,12 +28,20 @@ bloggersRouter.get('/:id', async (req: Request, res: Response) => {
     }
 })
 bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
+    let PageNumber = req.query.PageNumber ? +req.query.PageNumber : undefined
+    let PageSize = req.query.PageSize ? +req.query.PageSize : undefined
     const bloggerId = +req.params.bloggerId
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
 
     if (isBloggerId) {
         const bloggerPosts = await bloggersService.findBloggerPosts(bloggerId)
-        res.status(200).send(bloggerPosts)
+        res.status(200).send({
+            "pagesCount": PageNumber,
+            "page": PageNumber,
+            "pageSize": PageSize,
+            "totalCount": PageSize,
+            "items": bloggerPosts
+        })
     }else {
         res.send(404)
     }
