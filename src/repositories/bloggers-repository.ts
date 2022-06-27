@@ -4,7 +4,6 @@ import {BloggerDBType, PostDBType} from "./types";
 export const bloggersRepository = {
     async findBloggers(title: string | null | undefined): Promise<BloggerDBType[]> {
         const filter: any = {}
-
         if (title) {
             filter.title = {$regex: title}
         }

@@ -25,20 +25,5 @@ export const bloggersService = {
     },
     async deleteBlogger(id: number): Promise<boolean> {
         return await bloggersRepository.delete(id)
-    },
-    /*async create(name: string, youtubeUrl: string): Promise<BloggerDBType> {
-        const blogger: BloggerDBType = {
-            _id: new ObjectId(),
-            name: name,
-            youtubeUrl: youtubeUrl
-        }
-        return bloggersRepository.createBlogger(blogger)
-    },
-    async findById(id: ObjectId): Promise<BloggerDBType | null> {
-        return bloggersRepository.getBloggerById(id)
-    },
-    async update(id: ObjectId, name: string, youtubeUrl: string): Promise<BloggerDBType | null> {
-        return bloggersRepository.updateBlogger(id, name, youtubeUrl)
-
-    }*/
+    }
 }
