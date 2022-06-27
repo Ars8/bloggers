@@ -2,14 +2,14 @@ import {bloggersCollection, postsCollection} from "./db"
 import {BloggerDBType, PostDBType} from "./types";
 
 export const bloggersRepository = {
-    async findBloggers(title: string | null | undefined): Promise<BloggerDBType[]> {
+    async findBloggers(title: string | null | undefined, PageSize: number = 1): Promise<BloggerDBType[]> {
         const filter: any = {}
 
         if (title) {
             filter.title = {$regex: title}
         }
 
-        return bloggersCollection.find(filter, {projection: {_id: 0}}).toArray()
+        return bloggersCollection.find(filter, {projection: {_id: 0}}).limit(PageSize).toArray()
     },
     async findBloggerById(id: number): Promise<BloggerDBType | null> {
         let blogger: BloggerDBType | null = await bloggersCollection.findOne({id: id})
