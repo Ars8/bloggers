@@ -3,14 +3,14 @@ import {PostDBType} from "./types";
 import {ObjectId} from "mongodb";
 
 export const postsRepository = {
-    async findPosts(title: string | null | undefined): Promise<PostDBType[]> {
+    async findPosts(title: string | null | undefined, PageSize: number = 1): Promise<PostDBType[]> {
         const filter: any = {}
 
         if (title) {
             filter.title = {$regex: title}
         }
 
-        return postsCollection.find(filter, {projection: {_id: 0}}).toArray()
+        return postsCollection.find(filter, {projection: {_id: 0}}).limit(PageSize).toArray()
     },
     async findPostById(id: number): Promise<PostDBType | null> {
         let post: PostDBType | null = await postsCollection.findOne({id: id})

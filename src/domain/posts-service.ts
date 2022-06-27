@@ -4,8 +4,8 @@ import {postsRepository} from "../repositories/posts-repository";
 import {bloggersRepository} from "../repositories/bloggers-repository";
 
 export const postsService = {
-    async findPosts(title: string | null | undefined): Promise<PostDBType[]> {
-        return postsRepository.findPosts(title)
+    async findPosts(title: string | null | undefined, PageSize: number): Promise<PostDBType[]> {
+        return postsRepository.findPosts(title, PageSize)
     },
     async findPostById(id: number): Promise<PostDBType | null> {
         return postsRepository.findPostById(id)

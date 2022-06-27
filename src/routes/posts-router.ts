@@ -7,7 +7,9 @@ import {bloggersRepository} from "../repositories/bloggers-repository";
 export const postsRouter = Router({})
 
 postsRouter.get('/', async (req: Request, res: Response) => {
-    const foundPosts = await postsService.findPosts(req.query.title?.toString())
+    let PageSize = req.query.PageSize ? +req.query.PageSize : undefined
+
+    const foundPosts = await postsService.findPosts(req.query.title?.toString(), PageSize = 1)
     res.send(foundPosts)
 })
 postsRouter.get('/:id', async (req: Request, res: Response) => {
