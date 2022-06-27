@@ -33,7 +33,7 @@ bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
 
     if (isBloggerId) {
         const bloggerPosts = await bloggersService.findBloggerPosts(bloggerId)
-        res.send(200)
+        res.status(200).send(bloggerPosts)
     }else {
         res.send(404)
     }
