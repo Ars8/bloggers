@@ -107,7 +107,7 @@ bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, async (req: Reques
     }
 
     if (errors.length > 0) {
-        res.status(400).send({errorsMessages: errors})
+        res.status(404).send({errorsMessages: errors})
     } else {
         const newPostBlogger = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
         res.status(201).send(newPostBlogger)
