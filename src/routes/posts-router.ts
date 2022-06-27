@@ -94,12 +94,14 @@ postsRouter.put('/:id', authTokenMiddleware, async (req: Request, res: Response)
         })
     }
 
-    /*if (!bloggers.find(blogger => blogger.id === bloggerId)) {
+    const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
+
+    if (!isBloggerId) {
         errors.push({
             message: "Invalid bloggerId!",
             field: "bloggerId"
         })
-    }*/
+    }
 
     if (errors.length > 0) {
         res.status(400).send({errorsMessages: errors})
