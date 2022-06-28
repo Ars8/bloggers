@@ -113,14 +113,15 @@ bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, async (req: Reques
             field: "bloggerId"
         })
         res.status(404).send({errorsMessages: errors})
+        return
     }
 
     if (errors.length > 0) {
         res.status(400).send({errorsMessages: errors})
-    } else {
-        const newPostBlogger = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
-        res.status(201).send(newPostBlogger)
+        return
     }
+    const newPostBlogger = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
+    res.status(201).send(newPostBlogger)
 })
 bloggersRouter.put('/:id', authTokenMiddleware, async (req: Request, res: Response) => {
     let name = req.body.name
