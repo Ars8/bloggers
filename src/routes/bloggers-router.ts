@@ -40,7 +40,7 @@ bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
             "page": PageNumber,
             "pageSize": PageSize,
             "totalCount": PageSize,
-            "items": bloggerPosts
+            "items": {...bloggerPosts}
         })
     }else {
         res.send(404)

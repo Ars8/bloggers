@@ -57,14 +57,15 @@ postsRouter.post('/', authTokenMiddleware, async (req: Request, res: Response) =
             message: "Invalid bloggerId!",
             field: "bloggerId"
         })
+        return
     }
 
     if (errors.length > 0) {
         res.status(400).send({errorsMessages: errors})
-    } else {
-        const newPost = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
-        res.status(201).send(newPost)
+        return
     }
+    const newPost = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
+    res.status(201).send(newPost)
 })
 postsRouter.put('/:id', authTokenMiddleware, async (req: Request, res: Response) => {
     const title = req.body.title
