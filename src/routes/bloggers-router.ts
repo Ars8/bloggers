@@ -8,9 +8,9 @@ import {bloggersCollection} from "../repositories/db";
 export const bloggersRouter = Router({})
 
 bloggersRouter.get('/', async (req: Request, res: Response) => {
-    let PageNumber = req.query.PageNumber ? +req.query.PageNumber : 1
+    let page = req.query.PageNumber ? +req.query.PageNumber : 1
     let PageSize = req.query.PageSize ? +req.query.PageSize : 10
-    const foundBloggers = await bloggersService.findBloggers(req.query.SearchNameTerm?.toString(), PageNumber, PageSize)
+    const foundBloggers = await bloggersService.findBloggers(req.query.SearchNameTerm?.toString(), page, PageSize)
 
     res.send(foundBloggers)
 })

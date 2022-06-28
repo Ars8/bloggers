@@ -2,11 +2,11 @@ import {bloggersCollection, postsCollection} from "./db"
 import {BloggerDBType, PostDBType} from "./types";
 
 export const bloggersRepository = {
-    async findBloggers(SearchNameTerm: string | null | undefined, page: number, pageSize: number): Promise<any> {
+    async findBloggers(SearchNameTerm: string | undefined, page: number, pageSize: number): Promise<any> {
         const skip = (page - 1) * pageSize
         let allBloggers = await bloggersCollection.find({}).toArray()
         let pagesCount = allBloggers.length / pageSize
-        let bloggers = await bloggersCollection.find({$regex: SearchNameTerm}, {projection: {_id: 0}}).skip(skip).limit(pageSize).toArray()
+        let bloggers = await bloggersCollection.find({name: {$regex: SearchNameTerm}}, {projection: {_id: 0}}).skip(skip).limit(pageSize).toArray()
         let allCount = await bloggersCollection.count({})
         return {
             pagesCount: Math.ceil(pagesCount),
