@@ -1,5 +1,4 @@
 import {PostDBType} from "../repositories/types";
-import {ObjectId} from "mongodb";
 import {postsRepository} from "../repositories/posts-repository";
 import {bloggersRepository} from "../repositories/bloggers-repository";
 
@@ -21,8 +20,7 @@ export const postsService = {
                 bloggerId: bloggerId,
                 bloggerName: bloggerName
             }
-            const createdPost = await postsRepository.createPost(newPost)
-            return createdPost
+            return await postsRepository.createPost({...newPost})
         }
     },
     async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<boolean> {
