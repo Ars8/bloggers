@@ -19,7 +19,7 @@ export const bloggersRepository = {
         return bloggerPosts
     },
     async createBlogger(newBlogger: BloggerDBType): Promise<BloggerDBType> {
-        const result = await bloggersCollection.insertOne({...newBlogger})
+        const result = await bloggersCollection.insertOne(newBlogger)
         return newBlogger
     },
     async updateBlogger(id: number, name: string, youtubeUrl: string): Promise<boolean> {
