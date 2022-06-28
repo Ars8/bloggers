@@ -20,7 +20,7 @@ export const postsService = {
                 bloggerId: bloggerId,
                 bloggerName: bloggerName
             }
-            return await postsRepository.createPost({...newPost})
+            return await postsRepository.createPost(newPost)
         }
     },
     async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<boolean> {
