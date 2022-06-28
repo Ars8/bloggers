@@ -1,6 +1,5 @@
 import {postsCollection} from "./db";
 import {PostDBType} from "./types";
-import {ObjectId} from "mongodb";
 
 export const postsRepository = {
     async findPosts(title: string | null | undefined, PageSize: number = 1): Promise<PostDBType[]> {
@@ -18,7 +17,7 @@ export const postsRepository = {
     },
     async createPost(newPost: PostDBType): Promise<PostDBType> {
         const result = await postsCollection.insertOne(newPost)
-        return newPost
+        return {...newPost}
     },
     async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<boolean> {
         const result = await postsCollection.updateOne(
