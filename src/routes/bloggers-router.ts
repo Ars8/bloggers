@@ -3,21 +3,16 @@ import {bloggersService} from "../domain/bloggers-service";
 import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
 import {postsService} from "../domain/posts-service";
 import {bloggersRepository} from "../repositories/bloggers-repository";
+import {bloggersCollection} from "../repositories/db";
 
 export const bloggersRouter = Router({})
 
 bloggersRouter.get('/', async (req: Request, res: Response) => {
-    let PageNumber = req.query.PageNumber ? +req.query.PageNumber : undefined
-    let PageSize = req.query.PageSize ? +req.query.PageSize : undefined
-    const foundBloggers = await bloggersService.findBloggers(req.query.title?.toString())
+    let PageNumber = req.query.PageNumber ? +req.query.PageNumber : 1
+    let PageSize = req.query.PageSize ? +req.query.PageSize : 10
+    const foundBloggers = await bloggersService.findBloggers(req.query.SearchNameTerm?.toString(), PageNumber, PageSize)
 
-    res.send({
-        "pagesCount": PageNumber,
-        "page": PageNumber,
-        "pageSize": PageSize,
-        "totalCount": PageSize,
-        "items": foundBloggers
-    })
+    res.send(foundBloggers)
 })
 bloggersRouter.get('/:id', async (req: Request, res: Response) => {
     const blogger = await bloggersService.findBloggerById(+req.params.id)

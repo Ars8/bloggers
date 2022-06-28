@@ -2,13 +2,21 @@ import {bloggersCollection, postsCollection} from "./db"
 import {BloggerDBType, PostDBType} from "./types";
 
 export const bloggersRepository = {
-    async findBloggers(title: string | null | undefined): Promise<BloggerDBType[]> {
-        const filter: any = {}
-        if (title) {
-            filter.title = {$regex: title}
+    async findBloggers(SearchNameTerm: string | null | undefined, page: number, pageSize: number): Promise<any> {
+        const skip = (page - 1) * pageSize
+        let allBloggers = await bloggersCollection.find({}).toArray()
+        let pagesCount = allBloggers.length / pageSize
+        let bloggers = await bloggersCollection.find({$regex: SearchNameTerm}, {projection: {_id: 0}}).skip(skip).limit(pageSize).toArray()
+        let allCount = await bloggersCollection.count({})
+        return {
+            pagesCount: Math.ceil(pagesCount),
+            page: page,
+            pageSize: pageSize,
+            totalCount: allCount,
+            items: bloggers
         }
 
-        return bloggersCollection.find(filter, {projection: {_id: 0}}).limit(1).toArray()
+        //return bloggersCollection.find({$regex: SearchNameTerm}, {projection: {_id: 0}}).skip(1).limit(1).toArray()
     },
     async findBloggerById(id: number): Promise<BloggerDBType | null> {
         let blogger: BloggerDBType | null = await bloggersCollection.findOne({id: id}, {projection: {_id: 0}})
