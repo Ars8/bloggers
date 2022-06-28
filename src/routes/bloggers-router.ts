@@ -80,7 +80,7 @@ bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, async (req: Reques
     const shortDescription = req.body.shortDescription
     const content = req.body.content
     const bloggerId = +req.params.bloggerId
-    const bloggerName = req.body.bloggerName
+
 
     let errors = []
 
@@ -106,6 +106,7 @@ bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, async (req: Reques
     }
 
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
+    const bloggerName = isBloggerId ? isBloggerId.name : undefined
 
     if (!isBloggerId) {
         errors.push({
@@ -120,6 +121,7 @@ bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, async (req: Reques
         res.status(400).send({errorsMessages: errors})
         return
     }
+
     const newPostBlogger = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
     res.status(201).send(newPostBlogger)
 })

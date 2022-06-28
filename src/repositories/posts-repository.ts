@@ -16,8 +16,8 @@ export const postsRepository = {
         return post
     },
     async createPost(newPost: PostDBType): Promise<PostDBType> {
-        const result = await postsCollection.insertOne(newPost)
-        return {...newPost}
+        const result = await postsCollection.insertOne({...newPost})
+        return newPost
     },
     async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<boolean> {
         const result = await postsCollection.updateOne(

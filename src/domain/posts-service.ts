@@ -9,7 +9,7 @@ export const postsService = {
     async findPostById(id: number): Promise<PostDBType | null> {
         return postsRepository.findPostById(id)
     },
-    async createPost(title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<PostDBType | undefined> {
+    async createPost(title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string | undefined): Promise<PostDBType | undefined> {
         const blogger = await bloggersRepository.findBloggerById(bloggerId)
         if (blogger) {
             const newPost: PostDBType = {
