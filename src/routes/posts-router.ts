@@ -1,15 +1,16 @@
 import {Request, Response, Router} from "express";
 import {postsService} from "../domain/posts-service";
-import {ObjectId} from "mongodb";
 import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
 import {bloggersRepository} from "../repositories/bloggers-repository";
+import {bloggersService} from "../domain/bloggers-service";
 
 export const postsRouter = Router({})
 
 postsRouter.get('/', async (req: Request, res: Response) => {
-    let PageSize = req.query.PageSize ? +req.query.PageSize : undefined
+    let PageNumber = req.query.PageNumber ? +req.query.PageNumber : 1
+    let PageSize = req.query.PageSize ? +req.query.PageSize : 10
+    const foundPosts = await postsService.findPosts(PageNumber, PageSize)
 
-    const foundPosts = await postsService.findPosts(req.query.title?.toString(), PageSize = 1)
     res.send(foundPosts)
 })
 postsRouter.get('/:id', async (req: Request, res: Response) => {
