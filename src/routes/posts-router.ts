@@ -51,19 +51,17 @@ postsRouter.post('/', authTokenMiddleware, async (req: Request, res: Response) =
     }
 
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
-    const bloggerName = isBloggerId ? isBloggerId.name : undefined
+    const bloggerName = isBloggerId ? isBloggerId.name : null
 
     if (!isBloggerId) {
         errors.push({
             message: "Invalid bloggerId!",
             field: "bloggerId"
         })
-        return
     }
 
     if (errors.length > 0) {
         res.status(400).send({errorsMessages: errors})
-        return
     }
     const newPost = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
     res.status(201).send(newPost)
