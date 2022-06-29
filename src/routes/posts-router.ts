@@ -111,8 +111,7 @@ postsRouter.put('/:id', authTokenMiddleware, async (req: Request, res: Response)
         const id = +req.params.id
         const isUpdated = await postsService.updatePost(id,title,shortDescription, content, bloggerId, bloggerName)
         if (isUpdated) {
-            const post = await postsService.findPostById(id)
-            res.status(204).send(post)
+            res.send(204)
         } else {
             res.send(404)
         }

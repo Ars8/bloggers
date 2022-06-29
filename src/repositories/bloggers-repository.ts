@@ -51,34 +51,4 @@ export const bloggersRepository = {
         const result = await bloggersCollection.deleteOne({id: id})
         return result.deletedCount === 1
     }
-    /*async getBloggers(): Promise<BloggerDBType[]> {
-        return bloggersCollection
-            .find()
-            .sort('createdAt', -1)
-            .toArray()
-    },
-    async getBloggerById(id: ObjectId): Promise<BloggerDBType | null> {
-        let blogger = await bloggersCollection.findOne({_id: id})
-        if (blogger) {
-            return blogger
-        } else {
-            return null
-        }
-    },
-    async createBlogger(blogger: BloggerDBType): Promise<BloggerDBType> {
-        const result = await bloggersCollection.insertOne(blogger)
-        return blogger
-    },
-    async updateBlogger(id: ObjectId, name: string, youtubeUrl: string): Promise<BloggerDBType | null> {
-        const result = await bloggersCollection.updateOne(
-            {_id: id},
-            {
-                $set: {
-                    name: name,
-                    youtubeUrl: youtubeUrl
-                }
-            })
-        const updatedBlogger = await bloggersCollection.findOne({_id: id})
-        return updatedBlogger
-    }*/
 }

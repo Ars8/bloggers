@@ -144,8 +144,7 @@ bloggersRouter.put('/:id', authTokenMiddleware, async (req: Request, res: Respon
         const id = +req.params.id
         const isUpdated = await bloggersService.updateBlogger(id, name, youtubeUrl)
         if (isUpdated) {
-            const blogger = await bloggersService.findBloggerById(id)
-            res.status(204).send(blogger)
+            res.send(204)
         } else {
             res.send(404)
         }
