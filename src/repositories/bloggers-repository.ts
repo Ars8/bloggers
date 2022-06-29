@@ -2,15 +2,19 @@ import {bloggersCollection, postsCollection} from "./db"
 import {BloggerDBType, PostDBType} from "./types";
 
 export const bloggersRepository = {
-    async findBloggers(SearchNameTerm: string | undefined, page: number, pageSize: number): Promise<any> {
-        const skip = (page - 1) * pageSize
+    async findBloggers(SearchNameTerm: string | null, pageNumber: number, pageSize: number): Promise<any> {
+        const filter: {name?: any} = {}
+        if (SearchNameTerm) {
+            filter.name = {$regex: SearchNameTerm}
+        }
+        const skip = (pageNumber - 1) * pageSize
         let allBloggers = await bloggersCollection.find({}).toArray()
         let pagesCount = allBloggers.length / pageSize
-        let bloggers = await bloggersCollection.find({name: {$regex: SearchNameTerm}}, {projection: {_id: 0}}).skip(skip).limit(pageSize).toArray()
-        let allCount = await bloggersCollection.count({})
+        let bloggers = await bloggersCollection.find(filter, {projection: {_id: 0}}).skip(skip).limit(pageSize).toArray()
+        let allCount = await bloggersCollection.countDocuments(filter)
         return {
             pagesCount: Math.ceil(pagesCount),
-            page: page,
+            page: pageNumber,
             pageSize: pageSize,
             totalCount: allCount,
             items: bloggers
