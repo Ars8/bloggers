@@ -30,7 +30,7 @@ export const bloggersRepository = {
         let allBloggers = await bloggersCollection.find({}).toArray()
         let pagesCount = allBloggers.length / pageSize
         let posts = await bloggersCollection.find({id: id}, {projection: {_id: 0}}).skip(skip).limit(pageSize).toArray()
-        let allCount = await bloggersCollection.countDocuments()
+        let allCount = await bloggersCollection.countDocuments({id: id})
         return {
             pagesCount: Math.ceil(pagesCount),
             page: pageNumber,
