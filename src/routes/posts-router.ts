@@ -25,7 +25,6 @@ postsRouter.post('/', authTokenMiddleware, async (req: Request, res: Response) =
     const shortDescription = req.body.shortDescription
     const content = req.body.content
     const bloggerId = +req.body.bloggerId
-    const bloggerName = req.body.bloggerName
 
     let errors = []
 
@@ -51,6 +50,7 @@ postsRouter.post('/', authTokenMiddleware, async (req: Request, res: Response) =
     }
 
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
+    const bloggerName = isBloggerId ? isBloggerId.name : null
 
     if (!isBloggerId) {
         errors.push({

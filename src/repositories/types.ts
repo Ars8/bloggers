@@ -10,5 +10,5 @@ export type PostDBType = {
     shortDescription: string
     content: string
     bloggerId: number
-    bloggerName?: string
+    bloggerName?: string | null
 }

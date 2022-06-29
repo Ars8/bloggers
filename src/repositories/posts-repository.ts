@@ -12,7 +12,7 @@ export const postsRepository = {
         return postsCollection.find(filter, {projection: {_id: 0}}).limit(PageSize).toArray()
     },
     async findPostById(id: number): Promise<PostDBType | null> {
-        let post: PostDBType | null = await postsCollection.findOne({id: id})
+        let post: PostDBType | null = await postsCollection.findOne({id: id}, {projection: {_id: 0}})
         return post
     },
     async createPost(newPost: PostDBType): Promise<PostDBType> {
