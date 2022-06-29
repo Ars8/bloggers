@@ -2,7 +2,7 @@ import {BloggerDBType, PostDBType} from "../repositories/types";
 import {bloggersRepository} from "../repositories/bloggers-repository";
 
 export const bloggersService = {
-    async findBloggers(SearchNameTerm: string | undefined, page: number, pageSize: number): Promise<any> {
+    async findBloggers(SearchNameTerm: string | null, page: number, pageSize: number): Promise<any> {
         return bloggersRepository.findBloggers(SearchNameTerm, page, pageSize)
     },
     async findBloggerById(id: number): Promise<BloggerDBType | null> {

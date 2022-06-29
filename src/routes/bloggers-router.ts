@@ -10,7 +10,8 @@ export const bloggersRouter = Router({})
 bloggersRouter.get('/', async (req: Request, res: Response) => {
     let page = req.query.PageNumber ? +req.query.PageNumber : 1
     let PageSize = req.query.PageSize ? +req.query.PageSize : 10
-    const foundBloggers = await bloggersService.findBloggers(req.query.SearchNameTerm?.toString(), page, PageSize)
+    let SearchNameTerm = req.query.SearchNameTerm ? req.query.SearchNameTerm.toString() : null
+    const foundBloggers = await bloggersService.findBloggers(SearchNameTerm, page, PageSize)
 
     res.send(foundBloggers)
 })
