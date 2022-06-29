@@ -27,8 +27,8 @@ export const bloggersRepository = {
     async findBloggerPosts(id: number, pageNumber: number, pageSize: number): Promise<any> {
         //let bloggerPosts: PostDBType[] | null = await postsCollection.find({id: id}, {projection: {_id: 0}}).limit(1).toArray()
         const skip = (pageNumber - 1) * pageSize
-        let allPosts = await postsCollection.find({}).toArray()
-        let pagesCount = allPosts.length / pageSize
+        let allBloggers = await bloggersCollection.find({}).toArray()
+        let pagesCount = allBloggers.length / pageSize
         let posts = await postsCollection.find({bloggerId: id}, {projection: {_id: 0}}).skip(skip).limit(pageSize).toArray()
         let allCount = await postsCollection.countDocuments()
         return {
