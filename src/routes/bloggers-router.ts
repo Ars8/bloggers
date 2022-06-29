@@ -31,13 +31,7 @@ bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
 
     if (isBloggerId) {
         const bloggerPosts = await bloggersService.findBloggerPosts(bloggerId, PageNumber, PageSize)
-        res.status(200).send({
-            "pagesCount": PageNumber,
-            "page": PageNumber,
-            "pageSize": PageSize,
-            "totalCount": PageSize,
-            "items": {...bloggerPosts}
-        })
+        res.send(bloggerPosts)
     }else {
         res.send(404)
     }
