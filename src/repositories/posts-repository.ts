@@ -24,7 +24,7 @@ export const postsRepository = {
         const result = await postsCollection.insertOne({...newPost})
         return newPost
     },
-    async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<boolean> {
+    async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string | undefined): Promise<boolean> {
         const result = await postsCollection.updateOne(
             {id: id},
             {

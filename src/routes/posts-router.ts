@@ -71,7 +71,6 @@ postsRouter.put('/:id', authTokenMiddleware, async (req: Request, res: Response)
     const shortDescription = req.body.shortDescription
     const content = req.body.content
     const bloggerId = +req.body.bloggerId
-    const bloggerName = req.body.bloggerName
 
     let errors = []
 
@@ -109,6 +108,8 @@ postsRouter.put('/:id', authTokenMiddleware, async (req: Request, res: Response)
         res.status(400).send({errorsMessages: errors})
     } else {
         const id = +req.params.id
+        const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
+        const bloggerName = isBloggerId ? isBloggerId.name : undefined
         const isUpdated = await postsService.updatePost(id,title,shortDescription, content, bloggerId, bloggerName)
         if (isUpdated) {
             res.send(204)

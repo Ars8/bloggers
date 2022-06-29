@@ -23,7 +23,7 @@ export const postsService = {
             return await postsRepository.createPost(newPost)
         }
     },
-    async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string): Promise<boolean> {
+    async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string | undefined): Promise<boolean> {
         return await postsRepository.updatePost(id, title, shortDescription, content, bloggerId, bloggerName)
     },
     async deletePost(id: number): Promise<boolean> {
