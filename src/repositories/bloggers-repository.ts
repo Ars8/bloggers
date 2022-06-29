@@ -26,9 +26,20 @@ export const bloggersRepository = {
         let blogger: BloggerDBType | null = await bloggersCollection.findOne({id: id}, {projection: {_id: 0}})
         return blogger
     },
-    async findBloggerPosts(id: number): Promise<PostDBType[]> {
-        let bloggerPosts: PostDBType[] | null = await postsCollection.find({id: id}, {projection: {_id: 0}}).limit(1).toArray()
-        return bloggerPosts
+    async findBloggerPosts(id: number, pageNumber: number, pageSize: number): Promise<any> {
+        //let bloggerPosts: PostDBType[] | null = await postsCollection.find({id: id}, {projection: {_id: 0}}).limit(1).toArray()
+        const skip = (pageNumber - 1) * pageSize
+        let allPosts = await postsCollection.find({}).toArray()
+        let pagesCount = allPosts.length / pageSize
+        let posts = await postsCollection.find({bloggerId: id}, {projection: {_id: 0}}).skip(skip).limit(pageSize).toArray()
+        let allCount = await postsCollection.countDocuments()
+        return {
+            pagesCount: Math.ceil(pagesCount),
+            page: pageNumber,
+            pageSize: pageSize,
+            totalCount: allCount,
+            items: posts
+        }
     },
     async createBlogger(newBlogger: BloggerDBType): Promise<BloggerDBType> {
         const result = await bloggersCollection.insertOne({...newBlogger})
