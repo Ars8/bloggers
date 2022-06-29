@@ -19,8 +19,6 @@ export const bloggersRepository = {
             totalCount: allCount,
             items: bloggers
         }
-
-        //return bloggersCollection.find({$regex: SearchNameTerm}, {projection: {_id: 0}}).skip(1).limit(1).toArray()
     },
     async findBloggerById(id: number): Promise<BloggerDBType | null> {
         let blogger: BloggerDBType | null = await bloggersCollection.findOne({id: id}, {projection: {_id: 0}})
