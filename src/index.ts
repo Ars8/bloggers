@@ -8,7 +8,7 @@ const app = express()
 
 const port = process.env.PORT || 5000
 
-const parserMiddleware = bodyParser({})
+const parserMiddleware = bodyParser.json()
 
 app.use(parserMiddleware)
 app.use('/bloggers', bloggersRouter)
