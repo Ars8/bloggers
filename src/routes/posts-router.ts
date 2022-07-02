@@ -34,7 +34,8 @@ postsRouter.post('/', authTokenMiddleware, postsValidation, async (req: Request,
     const errors = myValidationResult(req).array()
     if (errors.length > 0) {
         return res.status(400).json({ errorsMessages: errors })
-    } else {
+    }
+    if (bloggerId) {
         const newPost = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
         return res.status(201).send(newPost)
     }
