@@ -8,7 +8,7 @@ export const bloggersRepository = {
             filter.name = {$regex: SearchNameTerm}
         }
         const skip = (pageNumber - 1) * pageSize
-        let allBloggers = await bloggersCollection.find({}).toArray()
+        let allBloggers = await bloggersCollection.find(filter).toArray()
         let pagesCount = allBloggers.length / pageSize
         let bloggers = await bloggersCollection.find(filter, {projection: {_id: 0}}).skip(skip).limit(pageSize).toArray()
         let allCount = await bloggersCollection.countDocuments(filter)
