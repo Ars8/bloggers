@@ -4,7 +4,6 @@ import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
 import {bloggersRepository} from "../repositories/bloggers-repository";
 import {postsValidation} from "../middlewares/postsValidation";
 import {postsRepository} from "../repositories/posts-repository";
-import {validationResult} from "express-validator";
 
 export const postsRouter = Router({})
 

@@ -5,7 +5,6 @@ import {postsService} from "../domain/posts-service";
 import {bloggersRepository} from "../repositories/bloggers-repository";
 import {bloggerNameValidation} from "../middlewares/bloggerNameValidation";
 import {postsValidation} from "../middlewares/postsValidation";
-import {validationResult} from "express-validator";
 
 export const bloggersRouter = Router({})
 
