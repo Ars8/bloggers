@@ -3,6 +3,8 @@ import {postsService} from "../domain/posts-service";
 import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
 import {bloggersRepository} from "../repositories/bloggers-repository";
 import {bloggersService} from "../domain/bloggers-service";
+import {postsValidation} from "../middlewares/postsValidation";
+import {myValidationResult} from "../middlewares/bloggerValidation";
 
 export const postsRouter = Router({})
 
@@ -16,116 +18,63 @@ postsRouter.get('/', async (req: Request, res: Response) => {
 postsRouter.get('/:id', async (req: Request, res: Response) => {
     const post = await postsService.findPostById(+req.params.id)
     if (post) {
-        res.status(200).send(post)
+        return res.status(200).send(post)
     }else {
-        res.send(404)
+        return res.send(404)
     }
 })
-postsRouter.post('/', authTokenMiddleware, async (req: Request, res: Response) => {
+postsRouter.post('/', authTokenMiddleware, postsValidation, async (req: Request, res: Response) => {
     const title = req.body.title
     const shortDescription = req.body.shortDescription
     const content = req.body.content
     const bloggerId = +req.body.bloggerId
-
-    let errors = []
-
-    if (title === null || !title || typeof title !== 'string' || !title.trim() || title.length > 30) {
-        errors.push({
-            message: "string",
-            field: "title"
-        })
-    }
-
-    if (shortDescription ===null || !shortDescription || typeof shortDescription !== 'string' || !shortDescription.trim() || shortDescription.length > 100) {
-        errors.push({
-            message: "Invalid shortDescription",
-            field: "shortDescription"
-        })
-    }
-
-    if (content === null || !content || typeof content !== 'string' || !content.trim() || content.length > 1000) {
-        errors.push({
-            message: "Invalid content!",
-            field: "content"
-        })
-    }
-
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
     const bloggerName = isBloggerId ? isBloggerId.name : undefined
 
-    if (!isBloggerId) {
-        errors.push({
-            message: "Invalid bloggerId!",
-            field: "bloggerId"
-        })
+    const errors = myValidationResult(req).array()
+    if (errors.length > 0) {
+        return res.status(400).json({ errorsMessages: errors })
+    } else {
+        const newPost = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
+        return res.status(201).send(newPost)
     }
 
-    if (errors.length > 0) {
-       res.status(400).send({errorsMessages: errors})
-        return
-    }
-    const newPost = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
-     res.status(201).send(newPost)
 })
 postsRouter.put('/:id', authTokenMiddleware, async (req: Request, res: Response) => {
     const title = req.body.title
     const shortDescription = req.body.shortDescription
     const content = req.body.content
     const bloggerId = +req.body.bloggerId
-
-    let errors = []
-
-    if (title === null || !title || typeof title !== 'string' || !title.trim() || title.length > 30) {
-        errors.push({
-            message: "string",
-            field: "title"
-        })
-    }
-
-    if (shortDescription ===null || !shortDescription || typeof shortDescription !== 'string' || !shortDescription.trim() || shortDescription.length > 100) {
-        errors.push({
-            message: "Invalid shortDescription",
-            field: "shortDescription"
-        })
-    }
-
-    if (content === null || !content || typeof content !== 'string' || !content.trim() || content.length > 1000) {
-        errors.push({
-            message: "Invalid content!",
-            field: "content"
-        })
-    }
+    const id = +req.params.id
 
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
 
     if (!isBloggerId) {
-        errors.push({
-            message: "Invalid bloggerId!",
-            field: "bloggerId"
-        })
+        return res.send(404)
     }
 
+    const errors = myValidationResult(req).array()
     if (errors.length > 0) {
-        res.status(400).send({errorsMessages: errors})
+        return res.status(400).json({ errorsMessages: errors })
     } else {
-        const id = +req.params.id
         const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
         const bloggerName = isBloggerId ? isBloggerId.name : undefined
         const isUpdated = await postsService.updatePost(id,title,shortDescription, content, bloggerId, bloggerName)
         if (isUpdated) {
-            res.send(204)
+            return res.send(204)
         } else {
-            res.send(404)
+            return res.send(404)
         }
     }
+
 })
 postsRouter.delete('/:id', authTokenMiddleware, async (req: Request, res: Response) => {
     const id = +req.params.id
     const isDeleted = await postsService.deletePost(id)
 
     if (isDeleted) {
-        res.send(204)
+        return res.send(204)
     } else {
-        res.send(404)
+        return res.send(404)
     }
 })
