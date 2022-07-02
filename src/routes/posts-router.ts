@@ -5,6 +5,7 @@ import {bloggersRepository} from "../repositories/bloggers-repository";
 import {bloggersService} from "../domain/bloggers-service";
 import {postsValidation} from "../middlewares/postsValidation";
 import {myValidationResult} from "../middlewares/bloggerValidation";
+import {postsRepository} from "../repositories/posts-repository";
 
 export const postsRouter = Router({})
 
@@ -20,7 +21,7 @@ postsRouter.get('/:id', async (req: Request, res: Response) => {
     if (post) {
         return res.status(200).send(post)
     }else {
-        return res.send(404)
+        res.send(404)
     }
 })
 postsRouter.post('/', authTokenMiddleware, postsValidation, async (req: Request, res: Response) => {
@@ -51,8 +52,9 @@ postsRouter.put('/:id', authTokenMiddleware, postsValidation, async (req: Reques
     const id = +req.params.id
 
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
+    const isPostsId = await postsRepository.findPostById(id)
 
-    if (!isBloggerId) {
+    if (!isBloggerId || !isPostsId) {
         return res.send(404)
     }
 
