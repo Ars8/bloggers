@@ -10,8 +10,7 @@ export const bloggerValidation = [
             .isString()
             .isLength({
                     max: 15,
-            })
-            .withMessage('Incorrect name'),
+            }),
         body('youtubeUrl', 'Incorrect youtubeUrl')
             .exists()
             .trim()
@@ -20,8 +19,7 @@ export const bloggerValidation = [
             .isLength({
                     max: 100,
             })
-            .matches(URL_REGEX)
-            .withMessage('Incorrect youtubeUrl'),
+            .matches(URL_REGEX),
 ];
 
 export const myValidationResult = validationResult.withDefaults({
