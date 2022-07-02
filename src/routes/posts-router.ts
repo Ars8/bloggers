@@ -31,19 +31,6 @@ postsRouter.post('/', authTokenMiddleware, postsValidation, async (req: Request,
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
     const bloggerName = isBloggerId ? isBloggerId.name : undefined
 
-    const myValidationResult = validationResult.withDefaults({
-        formatter: error => {
-            return {
-                message: error.msg,
-                field: error.param,
-            }
-        },
-    })
-
-    const errors = myValidationResult(req).array()
-    if (errors.length > 0) {
-        return res.status(400).json({ errorsMessages: errors })
-    }
     if (isBloggerId) {
         const newPost = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
         return res.status(201).send(newPost)
@@ -66,24 +53,10 @@ postsRouter.put('/:id', authTokenMiddleware, postsValidation, async (req: Reques
         return res.send(404)
     }
 
-    const myValidationResult = validationResult.withDefaults({
-        formatter: error => {
-            return {
-                message: error.msg,
-                field: error.param,
-            }
-        },
-    })
-
-    const errors = myValidationResult(req).array()
-    if (errors.length > 0) {
-        return res.status(400).json({ errorsMessages: errors })
-    } else {
-        const bloggerName = isBloggerId ? isBloggerId.name : undefined
-        const isUpdated = await postsService.updatePost(id,title,shortDescription, content, bloggerId, bloggerName)
-        if (isUpdated) {
-            return res.send(204)
-        }
+    const bloggerName = isBloggerId ? isBloggerId.name : undefined
+    const isUpdated = await postsService.updatePost(id,title,shortDescription, content, bloggerId, bloggerName)
+    if (isUpdated) {
+        return res.send(204)
     }
 
 })

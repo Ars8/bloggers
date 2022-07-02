@@ -41,24 +41,8 @@ bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
 bloggersRouter.post('/', authTokenMiddleware, bloggerNameValidation, async (req: Request, res: Response) => {
     const name = req.body.name
     const youtubeUrl = req.body.youtubeUrl
-
-    const myValidationResult = validationResult.withDefaults({
-        formatter: error => {
-            return {
-                message: error.msg,
-                field: error.param,
-            }
-        },
-    })
-
-    const errors = myValidationResult(req).array()
-    if (errors.length > 0) {
-        return res.status(400).json({ errorsMessages: errors })
-    } else {
-        const newBlogger = await bloggersService.createBlogger(name, youtubeUrl)
-        return res.status(201).send(newBlogger)
-    }
-
+    const newBlogger = await bloggersService.createBlogger(name, youtubeUrl)
+    return res.status(201).send(newBlogger)
 })
 bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, postsValidation, async (req: Request, res: Response) => {
     const title = req.body.title
@@ -71,51 +55,21 @@ bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, postsValidation, a
     if (!isBloggerId) {
         return res.send(404)
     }
-
-    const myValidationResult = validationResult.withDefaults({
-        formatter: error => {
-            return {
-                message: error.msg,
-                field: error.param,
-            }
-        },
-    })
-
-    const errors = myValidationResult(req).array()
-    if (errors.length > 0) {
-        return res.status(400).json({ errorsMessages: errors })
-    } else {
-        const newPostBlogger = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
-        return res.status(201).send(newPostBlogger)
-    }
+    
+    const newPostBlogger = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
+    return res.status(201).send(newPostBlogger)
 
 })
 bloggersRouter.put('/:id', authTokenMiddleware, bloggerNameValidation, async (req: Request, res: Response) => {
     const name = req.body.name
     const youtubeUrl = req.body.youtubeUrl
     const id = +req.params.id
-
-    const myValidationResult = validationResult.withDefaults({
-        formatter: error => {
-            return {
-                message: error.msg,
-                field: error.param,
-            }
-        },
-    })
-
-    const errors = myValidationResult(req).array()
-    if (errors.length > 0) {
-        return res.status(400).json({ errorsMessages: errors })
+    const isUpdated = await bloggersService.updateBlogger(id, name, youtubeUrl)
+    if (isUpdated) {
+        return res.send(204)
     } else {
-        const isUpdated = await bloggersService.updateBlogger(id, name, youtubeUrl)
-        if (isUpdated) {
-            return res.send(204)
-        } else {
-            return res.send(404)
-        }
+        return res.send(404)
     }
-
 })
 bloggersRouter.delete('/:id', authTokenMiddleware, async (req: Request, res: Response) => {
     const id = +req.params.id
