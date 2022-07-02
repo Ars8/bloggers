@@ -41,7 +41,7 @@ postsRouter.post('/', authTokenMiddleware, postsValidation, async (req: Request,
     }
 
 })
-postsRouter.put('/:id', authTokenMiddleware, async (req: Request, res: Response) => {
+postsRouter.put('/:id', authTokenMiddleware, postsValidation, async (req: Request, res: Response) => {
     const title = req.body.title
     const shortDescription = req.body.shortDescription
     const content = req.body.content
