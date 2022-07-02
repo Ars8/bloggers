@@ -3,10 +3,7 @@ import {bloggersService} from "../domain/bloggers-service";
 import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
 import {postsService} from "../domain/posts-service";
 import {bloggersRepository} from "../repositories/bloggers-repository";
-import {bloggersCollection} from "../repositories/db";
 import {bloggerValidation, myValidationResult} from "../middlewares/bloggerValidation";
-import {bloggerIdValidation} from "../middlewares/bloggerIdValidation";
-import {validationResult} from "express-validator";
 import {postsValidation} from "../middlewares/postsValidation";
 
 export const bloggersRouter = Router({})
