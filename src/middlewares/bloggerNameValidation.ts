@@ -4,7 +4,6 @@ import {NextFunction, Request, Response, Router} from "express"
 const URL_REGEX = new RegExp("^https:\\/\\/([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$")
 
 export const bloggerNameValidation = (req: Request, res: Response, next: NextFunction) => {
-    [
         body('name', 'Incorrect name')
             .exists()
             .trim()
@@ -21,8 +20,7 @@ export const bloggerNameValidation = (req: Request, res: Response, next: NextFun
             .isLength({
                 max: 100,
             })
-            .matches(URL_REGEX),
-    ]
+            .matches(URL_REGEX)
 
     const myValidationResult = validationResult.withDefaults({
         formatter: error => {

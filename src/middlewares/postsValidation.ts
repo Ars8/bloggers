@@ -3,7 +3,6 @@ import {NextFunction, Request, Response, Router} from "express"
 
 
 export const postsValidation = (req: Request, res: Response, next: NextFunction) => {
-    [
         body('title', 'Incorrect title')
             .exists()
             .trim()
@@ -27,8 +26,7 @@ export const postsValidation = (req: Request, res: Response, next: NextFunction)
             .isString()
             .isLength({
                 max: 1000,
-            }),
-    ]
+            })
 
     const myValidationResult = validationResult.withDefaults({
         formatter: error => {
