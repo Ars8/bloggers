@@ -2,10 +2,9 @@ import {Request, Response, Router} from "express";
 import {postsService} from "../domain/posts-service";
 import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
 import {bloggersRepository} from "../repositories/bloggers-repository";
-import {bloggersService} from "../domain/bloggers-service";
 import {postsValidation} from "../middlewares/postsValidation";
-import {myValidationResult} from "../middlewares/bloggerNameValidation";
 import {postsRepository} from "../repositories/posts-repository";
+import {validationResult} from "express-validator";
 
 export const postsRouter = Router({})
 
@@ -32,6 +31,15 @@ postsRouter.post('/', authTokenMiddleware, postsValidation, async (req: Request,
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
     const bloggerName = isBloggerId ? isBloggerId.name : undefined
 
+    const myValidationResult = validationResult.withDefaults({
+        formatter: error => {
+            return {
+                message: error.msg,
+                field: error.param,
+            }
+        },
+    })
+
     const errors = myValidationResult(req).array()
     if (errors.length > 0) {
         return res.status(400).json({ errorsMessages: errors })
@@ -57,6 +65,15 @@ postsRouter.put('/:id', authTokenMiddleware, postsValidation, async (req: Reques
     if (!isBloggerId || !isPostsId) {
         return res.send(404)
     }
+
+    const myValidationResult = validationResult.withDefaults({
+        formatter: error => {
+            return {
+                message: error.msg,
+                field: error.param,
+            }
+        },
+    })
 
     const errors = myValidationResult(req).array()
     if (errors.length > 0) {
