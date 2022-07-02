@@ -26,10 +26,7 @@ export const postsValidation = [
             max: 1000,
         }),
     param('bloggerId', 'Incorrect bloggerId')
-        .exists()
-        .isInt({
-            min: 1
-        }),
+        .exists(),
 ];
 
 export const myValidationResult = validationResult.withDefaults({
