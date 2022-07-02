@@ -3,8 +3,9 @@ import {bloggersService} from "../domain/bloggers-service";
 import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
 import {postsService} from "../domain/posts-service";
 import {bloggersRepository} from "../repositories/bloggers-repository";
-import {bloggerValidation, myValidationResult} from "../middlewares/bloggerValidation";
+import {bloggerNameValidation, myValidationResult} from "../middlewares/bloggerNameValidation";
 import {postsValidation} from "../middlewares/postsValidation";
+import {bloggerYTValidation} from "../middlewares/bloggerYTValidation";
 
 export const bloggersRouter = Router({})
 
@@ -37,7 +38,7 @@ bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
         return res.send(404)
     }
 })
-bloggersRouter.post('/', authTokenMiddleware, bloggerValidation, async (req: Request, res: Response) => {
+bloggersRouter.post('/', authTokenMiddleware, bloggerNameValidation, bloggerYTValidation, async (req: Request, res: Response) => {
     const name = req.body.name
     const youtubeUrl = req.body.youtubeUrl
 
@@ -71,7 +72,7 @@ bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, postsValidation, a
     }
 
 })
-bloggersRouter.put('/:id', authTokenMiddleware, bloggerValidation, async (req: Request, res: Response) => {
+bloggersRouter.put('/:id', authTokenMiddleware, bloggerNameValidation, bloggerYTValidation, async (req: Request, res: Response) => {
     const name = req.body.name
     const youtubeUrl = req.body.youtubeUrl
     const id = +req.params.id

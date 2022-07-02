@@ -4,7 +4,7 @@ import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
 import {bloggersRepository} from "../repositories/bloggers-repository";
 import {bloggersService} from "../domain/bloggers-service";
 import {postsValidation} from "../middlewares/postsValidation";
-import {myValidationResult} from "../middlewares/bloggerValidation";
+import {myValidationResult} from "../middlewares/bloggerNameValidation";
 import {postsRepository} from "../repositories/posts-repository";
 
 export const postsRouter = Router({})
@@ -62,7 +62,6 @@ postsRouter.put('/:id', authTokenMiddleware, postsValidation, async (req: Reques
     if (errors.length > 0) {
         return res.status(400).json({ errorsMessages: errors })
     } else {
-        const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
         const bloggerName = isBloggerId ? isBloggerId.name : undefined
         const isUpdated = await postsService.updatePost(id,title,shortDescription, content, bloggerId, bloggerName)
         if (isUpdated) {
