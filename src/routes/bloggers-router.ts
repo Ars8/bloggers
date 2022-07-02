@@ -3,9 +3,9 @@ import {bloggersService} from "../domain/bloggers-service";
 import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
 import {postsService} from "../domain/posts-service";
 import {bloggersRepository} from "../repositories/bloggers-repository";
-import {bloggerNameValidation, myValidationResult} from "../middlewares/bloggerNameValidation";
+import {bloggerNameValidation} from "../middlewares/bloggerNameValidation";
 import {postsValidation} from "../middlewares/postsValidation";
-import {bloggerYTValidation} from "../middlewares/bloggerYTValidation";
+import {validationResult} from "express-validator";
 
 export const bloggersRouter = Router({})
 
@@ -38,9 +38,18 @@ bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
         return res.send(404)
     }
 })
-bloggersRouter.post('/', authTokenMiddleware, bloggerNameValidation, bloggerYTValidation, async (req: Request, res: Response) => {
+bloggersRouter.post('/', authTokenMiddleware, bloggerNameValidation, async (req: Request, res: Response) => {
     const name = req.body.name
     const youtubeUrl = req.body.youtubeUrl
+
+    const myValidationResult = validationResult.withDefaults({
+        formatter: error => {
+            return {
+                message: error.msg,
+                field: error.param,
+            }
+        },
+    })
 
     const errors = myValidationResult(req).array()
     if (errors.length > 0) {
@@ -63,6 +72,15 @@ bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, postsValidation, a
         return res.send(404)
     }
 
+    const myValidationResult = validationResult.withDefaults({
+        formatter: error => {
+            return {
+                message: error.msg,
+                field: error.param,
+            }
+        },
+    })
+
     const errors = myValidationResult(req).array()
     if (errors.length > 0) {
         return res.status(400).json({ errorsMessages: errors })
@@ -72,10 +90,19 @@ bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, postsValidation, a
     }
 
 })
-bloggersRouter.put('/:id', authTokenMiddleware, bloggerNameValidation, bloggerYTValidation, async (req: Request, res: Response) => {
+bloggersRouter.put('/:id', authTokenMiddleware, bloggerNameValidation, async (req: Request, res: Response) => {
     const name = req.body.name
     const youtubeUrl = req.body.youtubeUrl
     const id = +req.params.id
+
+    const myValidationResult = validationResult.withDefaults({
+        formatter: error => {
+            return {
+                message: error.msg,
+                field: error.param,
+            }
+        },
+    })
 
     const errors = myValidationResult(req).array()
     if (errors.length > 0) {

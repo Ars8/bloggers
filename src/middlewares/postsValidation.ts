@@ -25,13 +25,4 @@ export const postsValidation = [
         .isLength({
             max: 1000,
         }),
-];
-
-export const myValidationResult = validationResult.withDefaults({
-    formatter: error => {
-        return {
-            message: error.msg,
-            field: error.param,
-        }
-    },
-})
+]
