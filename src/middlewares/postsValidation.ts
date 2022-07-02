@@ -25,8 +25,6 @@ export const postsValidation = [
         .isLength({
             max: 1000,
         }),
-    param('bloggerId', 'Incorrect bloggerId')
-        .exists(),
 ];
 
 export const myValidationResult = validationResult.withDefaults({
