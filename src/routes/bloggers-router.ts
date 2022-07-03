@@ -83,7 +83,7 @@ bloggersRouter.post('/',
             }
         })
         if(!err.isEmpty()) {
-            res.status(400).json({ errorsMessages: errors })
+            return res.status(400).json({ errorsMessages: errors })
         }
 
         const newBlogger = await bloggersService.createBlogger(name, youtubeUrl)

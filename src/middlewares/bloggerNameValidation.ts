@@ -22,21 +22,16 @@ export const bloggerNameValidation = (req: Request, res: Response, next: NextFun
             })
             .matches(URL_REGEX)
 
-            const myValidationResult = validationResult.withDefaults({
-                formatter: error => {
-                    return {
-                        message: error.msg,
-                        field: error.param,
-                    }
-                },
-            })
-
-            const errors = myValidationResult(req).array()
-            if (errors.length > 0) {
-                return res.status(400).send({ errorsMessages: errors })
-            } else {
-                next()
-            }
-        
-
+    const err = validationResult(req)
+    const errors = err.array({ onlyFirstError: true }).map(elem => {
+        return {
+            message: elem.msg,
+            field: elem.param,
+        }
+    })
+    if (!err.isEmpty()) {
+        res.status(400).json({ errorsMessages: errors })
+    } else {
+        next()
+    }
 }
