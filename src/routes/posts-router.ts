@@ -29,12 +29,12 @@ export const postsContentValidation = body('content')
 export const validationBloggerId = param('bloggerId', 'incorrect bloggerId').toInt().custom(id => {
     const blogger = bloggersRepository.findBloggerById(id)
     return (blogger)
-})
+}).withMessage('incorrect bloggerId')
 
 export const validationPostsId = param('postsId', 'incorrect bloggerId').toInt().custom(id => {
     const post = postsRepository.findPostById(id)
     return (post)
-})
+}).withMessage('incorrect postsId')
 
 postsRouter.get('/', async (req: Request, res: Response) => {
     let PageNumber = req.query.PageNumber ? +req.query.PageNumber : 1
