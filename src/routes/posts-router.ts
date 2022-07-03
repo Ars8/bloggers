@@ -93,6 +93,13 @@ postsRouter.put('/:id', authTokenMiddleware, postsTitleValidation, postsSDValida
     const bloggerId = +req.body.bloggerId
     const id = +req.params.id
 
+    const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
+    const isPostsId = await postsRepository.findPostById(id)
+
+    if (!isBloggerId || !isPostsId) {
+        return res.send(404)
+    }
+
     const err = validationResult(req)
     const errors = err.array({ onlyFirstError: true }).map(elem => {
         return {
@@ -102,14 +109,7 @@ postsRouter.put('/:id', authTokenMiddleware, postsTitleValidation, postsSDValida
     })
     if (!err.isEmpty()) {
         return res.status(400).json({ errorsMessages: errors })
-    }
-
-    const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
-    const isPostsId = await postsRepository.findPostById(id)
-
-    /*if (!isBloggerId || !isPostsId) {
-        return res.send(404)
-    }*/
+    }    
 
     const bloggerName = isBloggerId ? isBloggerId.name : undefined
     const isUpdated = await postsService.updatePost(id, title, shortDescription, content, bloggerId, bloggerName)
