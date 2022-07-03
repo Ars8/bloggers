@@ -33,7 +33,7 @@ export const validationBloggerId = body('bloggerId', 'incorrect bloggerId')
     }).withMessage('incorrect bloggerId')
 
 export const validationPostsId = body('postsId', 'incorrect bloggerId').toInt().custom(async (postsId: number) => {
-    const post = await postsRepository.findPostById(postsId)
+    const post = await postsService.findPostById(postsId)
     return (post)
 }).withMessage('incorrect postsId')
 
