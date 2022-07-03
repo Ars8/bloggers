@@ -26,12 +26,12 @@ export const postsContentValidation = body('content')
     .isString().withMessage('incorrect content')
     .isLength({ max: 1000 }).withMessage('incorrect content')
 
-export const validationBloggerId = param('bloggerId').toInt().custom(id => {
+export const validationBloggerId = param('bloggerId', 'incorrect bloggerId').toInt().custom(id => {
     const blogger = bloggersRepository.findBloggerById(id)
     return (blogger)
 })
 
-export const validationPostsId = param('postsId').toInt().custom(id => {
+export const validationPostsId = param('postsId', 'incorrect bloggerId').toInt().custom(id => {
     const post = postsRepository.findPostById(id)
     return (post)
 })
@@ -71,15 +71,11 @@ postsRouter.post('/', authTokenMiddleware, postsTitleValidation, postsSDValidati
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
     const bloggerName = isBloggerId ? isBloggerId.name : undefined
 
-    if (isBloggerId) {
-        const newPost = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
-        return res.status(201).send(newPost)
-    } else {
-        return res.send(400)
-    }
+    const newPost = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
+    return res.status(201).send(newPost)
 
 })
-postsRouter.put('/:id', authTokenMiddleware, postsTitleValidation, postsSDValidation, postsContentValidation, validationPostsId, async (req: Request, res: Response) => {
+postsRouter.put('/:id', authTokenMiddleware, postsTitleValidation, postsSDValidation, postsContentValidation, validationPostsId, validationBloggerId, async (req: Request, res: Response) => {
     const title = req.body.title
     const shortDescription = req.body.shortDescription
     const content = req.body.content
@@ -98,17 +94,10 @@ postsRouter.put('/:id', authTokenMiddleware, postsTitleValidation, postsSDValida
     }
 
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
-    const isPostsId = await postsRepository.findPostById(id)
-
-    if (!isBloggerId || !isPostsId) {
-        return res.send(404)
-    }
 
     const bloggerName = isBloggerId ? isBloggerId.name : undefined
     const isUpdated = await postsService.updatePost(id, title, shortDescription, content, bloggerId, bloggerName)
-    if (isUpdated) {
-        return res.send(204)
-    }
+    return res.send(204)
 
 })
 postsRouter.delete('/:id', authTokenMiddleware, async (req: Request, res: Response) => {
