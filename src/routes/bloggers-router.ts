@@ -43,8 +43,8 @@ bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
         return res.send(404)
     }
 })
-bloggersRouter.post('/', authTokenMiddleware, body('name', { message: 'Incorrect name', field: 'name' }).exists().trim().notEmpty().isString().isLength({ max: 15 }),
-    body('youtubeUrl', { message: 'Incorrect youtubeUrl', field: 'youtubeUrl' }).exists().trim().notEmpty().isString().isLength({ max: 100 }).matches(URL_REGEX),
+bloggersRouter.post('/', authTokenMiddleware, body('name', 'Incorrect name').exists().trim().notEmpty().isString().isLength({ max: 15 }),
+    body('youtubeUrl', 'Incorrect youtubeUrl').exists().trim().notEmpty().isString().isLength({ max: 100 }).matches(URL_REGEX),
     async (req: Request, res: Response) => {
         const name = req.body.name
         const youtubeUrl = req.body.youtubeUrl
@@ -58,8 +58,8 @@ bloggersRouter.post('/', authTokenMiddleware, body('name', { message: 'Incorrect
             },
         })
 
-        const errors = myValidationResult(req).array()
-        if (errors.length > 0) {
+        const errors = myValidationResult(req)
+        if (!errors.isEmpty) {
             return res.status(400).send({ errorsMessages: unique(errors) })
         }
 
