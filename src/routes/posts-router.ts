@@ -26,13 +26,13 @@ export const postsContentValidation = body('content')
     .isString().withMessage('incorrect content')
     .isLength({ max: 1000 }).withMessage('incorrect content')
 
-export const validationBloggerId = param('bloggerId', 'incorrect bloggerId')
+export const validationBloggerId = body('bloggerId', 'incorrect bloggerId')
     .toInt().custom(async (bloggerId: number) => {
         const blogger = await bloggersRepository.findBloggerById(bloggerId)
         return (blogger)
     }).withMessage('incorrect bloggerId')
 
-export const validationPostsId = param('postsId', 'incorrect bloggerId').toInt().custom(async (postsId: number) => {
+export const validationPostsId = body('postsId', 'incorrect bloggerId').toInt().custom(async (postsId: number) => {
     const post = await postsRepository.findPostById(postsId)
     return (post)
 }).withMessage('incorrect postsId')
