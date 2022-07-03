@@ -10,6 +10,10 @@ import { body, validationResult } from 'express-validator'
 export const bloggersRouter = Router({})
 const URL_REGEX = new RegExp("^https:\\/\\/([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$")
 
+function unique(arr: any) {
+    return Array.from(new Set(arr));
+  }
+
 bloggersRouter.get('/', async (req: Request, res: Response) => {
     let page = req.query.PageNumber ? +req.query.PageNumber : 1
     let PageSize = req.query.PageSize ? +req.query.PageSize : 10
@@ -45,7 +49,7 @@ bloggersRouter.post('/', authTokenMiddleware, body('name', { message: 'Incorrect
         const name = req.body.name
         const youtubeUrl = req.body.youtubeUrl
 
-        /*const myValidationResult = validationResult.withDefaults({
+        const myValidationResult = validationResult.withDefaults({
             formatter: error => {
                 return {
                     message: error.msg,
@@ -56,12 +60,7 @@ bloggersRouter.post('/', authTokenMiddleware, body('name', { message: 'Incorrect
 
         const errors = myValidationResult(req).array()
         if (errors.length > 0) {
-            return res.status(400).send({ errorsMessages: errors })
-        }*/
-
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            return res.status(400).send({ errorsMessages: unique(errors) })
         }
 
         const newBlogger = await bloggersService.createBlogger(name, youtubeUrl)
