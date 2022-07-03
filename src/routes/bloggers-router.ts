@@ -10,9 +10,6 @@ import { body, validationResult } from 'express-validator'
 export const bloggersRouter = Router({})
 const URL_REGEX = new RegExp("^https:\\/\\/([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$")
 
-function unique(arr: any) {
-    return Array.from(new Set(arr));
-  }
 
 bloggersRouter.get('/', async (req: Request, res: Response) => {
     let page = req.query.PageNumber ? +req.query.PageNumber : 1
@@ -60,7 +57,7 @@ bloggersRouter.post('/', authTokenMiddleware, body('name', 'Incorrect name').exi
 
         const errors = myValidationResult(req)
         if (!errors.isEmpty) {
-            return res.status(400).send({ errorsMessages: unique(errors) })
+            return res.status(400).send({ errorsMessages: errors })
         }
 
         const newBlogger = await bloggersService.createBlogger(name, youtubeUrl)
