@@ -71,8 +71,10 @@ postsRouter.post('/', authTokenMiddleware, postsTitleValidation, postsSDValidati
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
     const bloggerName = isBloggerId ? isBloggerId.name : undefined
 
-    const newPost = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
-    return res.status(201).send(newPost)
+    if (isBloggerId) {
+        const newPost = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
+        return res.status(201).send(newPost)
+    }
 
 })
 postsRouter.put('/:id', authTokenMiddleware, postsTitleValidation, postsSDValidation, postsContentValidation, validationPostsId, validationBloggerId, async (req: Request, res: Response) => {
@@ -94,10 +96,17 @@ postsRouter.put('/:id', authTokenMiddleware, postsTitleValidation, postsSDValida
     }
 
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
+    const isPostsId = await postsRepository.findPostById(id)
+
+    if (!isBloggerId || !isPostsId) {
+        return res.send(404)
+    }
 
     const bloggerName = isBloggerId ? isBloggerId.name : undefined
     const isUpdated = await postsService.updatePost(id, title, shortDescription, content, bloggerId, bloggerName)
-    return res.send(204)
+    if (isUpdated) {
+        return res.send(204)
+    }
 
 })
 postsRouter.delete('/:id', authTokenMiddleware, async (req: Request, res: Response) => {
