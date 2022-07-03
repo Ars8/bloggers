@@ -29,7 +29,7 @@ export const postsContentValidation = body('content')
 
 export const validationBloggerId = body('bloggerId').toInt().custom(bloggerId => {
         return bloggersService.findBloggerById(bloggerId).then(function(blogger) {
-            if (blogger) {
+            if (!blogger) {
                 throw new Error('this blogger is already in use')
             }
         }
@@ -38,7 +38,7 @@ export const validationBloggerId = body('bloggerId').toInt().custom(bloggerId =>
 
 export const validationPostsId = param('id').toInt().custom(async (id) => {
     return postsService.findPostById(id).then(function(post) {
-        if (post) {
+        if (!post) {
             throw new Error('this post is already in use')
         }
     }
