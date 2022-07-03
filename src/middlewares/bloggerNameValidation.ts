@@ -1,10 +1,10 @@
-import { body, validationResult } from 'express-validator'
+import { body, check, validationResult } from 'express-validator'
 import {NextFunction, Request, Response, Router} from "express"
 
 const URL_REGEX = new RegExp("^https:\\/\\/([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$")
 
 export const bloggerNameValidation = (req: Request, res: Response, next: NextFunction) => {
-        body('name', 'Incorrect name')
+        check('name', 'Incorrect name')
             .exists()
             .trim()
             .notEmpty()
@@ -12,7 +12,7 @@ export const bloggerNameValidation = (req: Request, res: Response, next: NextFun
             .isLength({
                 max: 15,
             }),
-        body('youtubeUrl', 'Incorrect youtubeUrl')
+        check('youtubeUrl', 'Incorrect youtubeUrl')
             .exists()
             .trim()
             .notEmpty()
@@ -32,7 +32,7 @@ export const bloggerNameValidation = (req: Request, res: Response, next: NextFun
     })
 
     const errors = myValidationResult(req).array()
-    if (errors.length > 0 || !req.body.name || !req.body.youtubeUrl) {
+    if (errors.length > 0 || !req.body.name) {
         return res.status(400).send({ errorsMessages: errors })
     } else {
         next()
