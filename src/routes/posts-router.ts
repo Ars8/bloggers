@@ -4,7 +4,7 @@ import { authTokenMiddleware } from "../middlewares/authTokenMiddleware";
 import { bloggersRepository } from "../repositories/bloggers-repository";
 import { postsValidation } from "../middlewares/postsValidation";
 import { postsRepository } from "../repositories/posts-repository";
-import { body, validationResult } from 'express-validator'
+import { body, param, validationResult } from 'express-validator'
 
 export const postsRouter = Router({})
 
@@ -26,6 +26,16 @@ export const postsContentValidation = body('content')
     .isString().withMessage('incorrect content')
     .isLength({ max: 1000 }).withMessage('incorrect content')
 
+export const validationBloggerId = param('bloggerId').toInt().custom(id => {
+    const blogger = bloggersRepository.findBloggerById(id)
+    return (blogger)
+})
+
+export const validationPostsId = param('postsId').toInt().custom(id => {
+    const post = postsRepository.findPostById(id)
+    return (post)
+})
+
 postsRouter.get('/', async (req: Request, res: Response) => {
     let PageNumber = req.query.PageNumber ? +req.query.PageNumber : 1
     let PageSize = req.query.PageSize ? +req.query.PageSize : 10
@@ -41,7 +51,7 @@ postsRouter.get('/:id', async (req: Request, res: Response) => {
         res.send(404)
     }
 })
-postsRouter.post('/', authTokenMiddleware, postsTitleValidation, postsSDValidation, postsContentValidation, async (req: Request, res: Response) => {
+postsRouter.post('/', authTokenMiddleware, postsTitleValidation, postsSDValidation, postsContentValidation, validationPostsId, async (req: Request, res: Response) => {
     const title = req.body.title
     const shortDescription = req.body.shortDescription
     const content = req.body.content
@@ -69,7 +79,7 @@ postsRouter.post('/', authTokenMiddleware, postsTitleValidation, postsSDValidati
     }
 
 })
-postsRouter.put('/:id', authTokenMiddleware, postsTitleValidation, postsSDValidation, postsContentValidation, async (req: Request, res: Response) => {
+postsRouter.put('/:id', authTokenMiddleware, postsTitleValidation, postsSDValidation, postsContentValidation, validationPostsId, async (req: Request, res: Response) => {
     const title = req.body.title
     const shortDescription = req.body.shortDescription
     const content = req.body.content
