@@ -26,19 +26,19 @@ export const postsContentValidation = body('content')
     .isString().withMessage('incorrect content')
     .isLength({ max: 1000 }).withMessage('incorrect content')
 
-export const validationBloggerId = body('bloggerId', 'incorrect bloggerId')
+export const validationBloggerId = body('bloggerId')
     .toInt()
     .custom(bloggerId => {
         const blogger = bloggersRepository.findBloggerById(bloggerId)
         return blogger
-    })
+    }).withMessage('incorrect bloggerId')
 
-export const validationPostsId = param('id', 'incorrect postId')
+export const validationPostsId = param('id')
 .toInt()
 .custom( id => {
     const post = postsService.findPostById(id)
     return (post)
-})
+}).withMessage('incorrect postId')
 
 postsRouter.get('/', async (req: Request, res: Response) => {
     let PageNumber = req.query.PageNumber ? +req.query.PageNumber : 1
