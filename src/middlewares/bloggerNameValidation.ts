@@ -12,7 +12,14 @@ export const bloggerNameValidation = (req: Request, res: Response, next: NextFun
             .isLength({
                 max: 15,
             })
-            .custom((value) => value !== 'name'),
+            .custom((value, { req }) => {
+                if (value !== 'name') {
+                  throw new Error('Password confirmation does not match password');
+                }
+            
+                // Indicates the success of this synchronous custom validator
+                return true;
+              }),
         check('youtubeUrl', 'Incorrect youtubeUrl')
             .exists()
             .trim()
