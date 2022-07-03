@@ -31,6 +31,8 @@ export const validationBloggerId = body('bloggerId').toInt().custom(async (blogg
         const blogger = await bloggersService.findBloggerById(bloggerId)
         if(blogger) {
             return true
+        } else {
+            return false
         }
     }).withMessage('incorrect bloggerId')
 
@@ -38,6 +40,8 @@ export const validationPostsId = param('id').toInt().custom(async (id) => {
     const post = await postsService.findPostById(id)
     if(post) {
         return true
+    } else {
+        return false
     }
 }).withMessage('incorrect postId')
 
