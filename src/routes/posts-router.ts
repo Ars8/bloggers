@@ -51,7 +51,7 @@ postsRouter.get('/:id', async (req: Request, res: Response) => {
         res.send(404)
     }
 })
-postsRouter.post('/', authTokenMiddleware, postsTitleValidation, postsSDValidation, postsContentValidation, validationPostsId, validationBloggerId, async (req: Request, res: Response) => {
+postsRouter.post('/', authTokenMiddleware, postsTitleValidation, postsSDValidation, postsContentValidation, validationBloggerId, validationPostsId, async (req: Request, res: Response) => {
     const title = req.body.title
     const shortDescription = req.body.shortDescription
     const content = req.body.content
@@ -77,7 +77,7 @@ postsRouter.post('/', authTokenMiddleware, postsTitleValidation, postsSDValidati
     }
 
 })
-postsRouter.put('/:id', authTokenMiddleware, postsTitleValidation, postsSDValidation, postsContentValidation, validationPostsId, validationBloggerId, async (req: Request, res: Response) => {
+postsRouter.put('/:id', authTokenMiddleware, postsTitleValidation, postsSDValidation, postsContentValidation, validationBloggerId, validationPostsId, async (req: Request, res: Response) => {
     const title = req.body.title
     const shortDescription = req.body.shortDescription
     const content = req.body.content
