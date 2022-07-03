@@ -27,22 +27,22 @@ export const postsContentValidation = body('content')
     .isString().withMessage('incorrect content')
     .isLength({ max: 1000 }).withMessage('incorrect content')
 
-export const validationBloggerId = body('bloggerId').toInt().custom(async (bloggerId) => {
-        const blogger = await bloggersService.findBloggerById(bloggerId)
-        if(blogger) {
-            return true
-        } else {
-            return false
+export const validationBloggerId = body('bloggerId').toInt().custom(bloggerId => {
+        return bloggersService.findBloggerById(bloggerId).then(function(blogger) {
+            if (blogger) {
+                throw new Error('this blogger is already in use')
+            }
         }
+        )        
     }).withMessage('incorrect bloggerId')
 
 export const validationPostsId = param('id').toInt().custom(async (id) => {
-    const post = await postsService.findPostById(id)
-    if(post) {
-        return true
-    } else {
-        return false
+    return postsService.findPostById(id).then(function(post) {
+        if (post) {
+            throw new Error('this post is already in use')
+        }
     }
+    ) 
 }).withMessage('incorrect postId')
 
 postsRouter.get('/', async (req: Request, res: Response) => {
