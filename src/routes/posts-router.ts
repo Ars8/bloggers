@@ -29,7 +29,7 @@ export const postsContentValidation = body('content')
 export const validationBloggerId = body('bloggerId', 'incorrect bloggerId')
     .toInt().custom(async (bloggerId, {req}) => {
         const blogger = await bloggersRepository.findBloggerById(bloggerId)
-        blogger === req.body.bloggerId
+        return blogger === req.body.bloggerId
     }).withMessage('incorrect bloggerId')
 
 export const validationPostsId = body('postsId', 'incorrect bloggerId').toInt().custom(async (postsId: number) => {
