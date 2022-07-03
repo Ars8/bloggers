@@ -39,13 +39,13 @@ bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
         return res.send(404)
     }
 })
-bloggersRouter.post('/', authTokenMiddleware, body('name', {message: 'Incorrect name', field:'name'}).exists().trim().notEmpty().isString().isLength({ max: 15 }),
-    body('youtubeUrl', {message: 'Incorrect youtubeUrl', field:'youtubeUrl'}).exists().trim().notEmpty().isString().isLength({ max: 100 }).matches(URL_REGEX),
+bloggersRouter.post('/', authTokenMiddleware, body('name', { message: 'Incorrect name', field: 'name' }).exists().trim().notEmpty().isString().isLength({ max: 15 }),
+    body('youtubeUrl', { message: 'Incorrect youtubeUrl', field: 'youtubeUrl' }).exists().trim().notEmpty().isString().isLength({ max: 100 }).matches(URL_REGEX),
     async (req: Request, res: Response) => {
         const name = req.body.name
         const youtubeUrl = req.body.youtubeUrl
-        
-        const myValidationResult = validationResult.withDefaults({
+
+        /*const myValidationResult = validationResult.withDefaults({
             formatter: error => {
                 return {
                     message: error.msg,
@@ -57,9 +57,15 @@ bloggersRouter.post('/', authTokenMiddleware, body('name', {message: 'Incorrect 
         const errors = myValidationResult(req).array()
         if (errors.length > 0) {
             return res.status(400).send({ errorsMessages: errors })
+        }*/
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
         }
+
         const newBlogger = await bloggersService.createBlogger(name, youtubeUrl)
-        return res.status(201).send(newBlogger)        
+        return res.status(201).send(newBlogger)
 
     })
 bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, postsValidation, async (req: Request, res: Response) => {
