@@ -4,23 +4,15 @@ import {NextFunction, Request, Response, Router} from "express"
 const URL_REGEX = new RegExp("^https:\\/\\/([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$")
 
 export const bloggerNameValidation = (req: Request, res: Response, next: NextFunction) => {
-        check('name', 'Incorrect name')
+        body('name', 'Incorrect name')
             .exists()
             .trim()
             .notEmpty()
             .isString()
             .isLength({
                 max: 15,
-            })
-            .custom((value, { req }) => {
-                if (value !== 'name') {
-                  throw new Error('Password confirmation does not match password');
-                }
-            
-                // Indicates the success of this synchronous custom validator
-                return true;
-              }),
-        check('youtubeUrl', 'Incorrect youtubeUrl')
+            }),
+        body('youtubeUrl', 'Incorrect youtubeUrl')
             .exists()
             .trim()
             .notEmpty()
