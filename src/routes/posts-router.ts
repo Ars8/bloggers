@@ -27,14 +27,18 @@ export const postsContentValidation = body('content')
     .isString().withMessage('incorrect content')
     .isLength({ max: 1000 }).withMessage('incorrect content')
 
-export const validationBloggerId = body('bloggerId').toInt().custom(bloggerId => {
-        const blogger = bloggersService.findBloggerById(bloggerId)
-        return blogger
+export const validationBloggerId = body('bloggerId').toInt().custom(async bloggerId => {
+        const blogger = await bloggersService.findBloggerById(bloggerId)
+        if(blogger) {
+            return true
+        }
     }).withMessage('incorrect bloggerId')
 
-export const validationPostsId = param('id').toInt().custom( id => {
-    const post = postsService.findPostById(id)
-    return (post)
+export const validationPostsId = param('id').toInt().custom(async id => {
+    const post = await postsService.findPostById(id)
+    if(post) {
+        return true
+    }
 }).withMessage('incorrect postId')
 
 postsRouter.get('/', async (req: Request, res: Response) => {
