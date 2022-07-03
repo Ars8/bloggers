@@ -10,6 +10,19 @@ import { body, validationResult } from 'express-validator'
 export const bloggersRouter = Router({})
 const URL_REGEX = new RegExp("^https:\\/\\/([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$")
 
+const bloggerNamValidation = body('name')
+    .exists().withMessage('incorrect name')
+    .trim().notEmpty().withMessage('incorrect name')
+    .isString().withMessage('incorrect name')
+    .isLength({ max: 15 }).withMessage('incorrect name')
+
+const bloggerYTValidation = body('youtubeUrl')
+    .exists().withMessage('incorrect youtubeUrl')
+    .trim().notEmpty().withMessage('incorrect youtubeUrl')
+    .isString().withMessage('incorrect youtubeUrl')
+    .isLength({ max: 100 }).withMessage('incorrect youtubeUrl')
+    .matches(URL_REGEX).withMessage('incorrect youtubeUrl')
+
 
 bloggersRouter.get('/', async (req: Request, res: Response) => {
     let page = req.query.PageNumber ? +req.query.PageNumber : 1
@@ -40,13 +53,15 @@ bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
         return res.send(404)
     }
 })
-bloggersRouter.post('/', authTokenMiddleware, body('name', 'Incorrect name').exists().trim().notEmpty().isString().isLength({ max: 15 }),
-    body('youtubeUrl', 'Incorrect youtubeUrl').exists().trim().notEmpty().isString().isLength({ max: 100 }).matches(URL_REGEX),
+bloggersRouter.post('/',
+    authTokenMiddleware,
+    bloggerNamValidation,
+    bloggerYTValidation,
     async (req: Request, res: Response) => {
         const name = req.body.name
         const youtubeUrl = req.body.youtubeUrl
 
-        const myValidationResult = validationResult.withDefaults({
+        /*const myValidationResult = validationResult.withDefaults({
             formatter: error => {
                 return {
                     message: error.msg,
@@ -58,7 +73,7 @@ bloggersRouter.post('/', authTokenMiddleware, body('name', 'Incorrect name').exi
         const errors = myValidationResult(req)
         if (!errors.isEmpty) {
             return res.status(400).send({ errorsMessages: errors })
-        }
+        }*/
 
         const newBlogger = await bloggersService.createBlogger(name, youtubeUrl)
         return res.status(201).send(newBlogger)
