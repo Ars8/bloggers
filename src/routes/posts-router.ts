@@ -5,6 +5,7 @@ import { bloggersRepository } from "../repositories/bloggers-repository";
 import { postsValidation } from "../middlewares/postsValidation";
 import { postsRepository } from "../repositories/posts-repository";
 import { body, param, validationResult } from 'express-validator'
+import { bloggersService } from "../domain/bloggers-service";
 
 export const postsRouter = Router({})
 
@@ -26,16 +27,12 @@ export const postsContentValidation = body('content')
     .isString().withMessage('incorrect content')
     .isLength({ max: 1000 }).withMessage('incorrect content')
 
-export const validationBloggerId = body('bloggerId')
-    .toInt()
-    .custom(bloggerId => {
-        const blogger = bloggersRepository.findBloggerById(bloggerId)
+export const validationBloggerId = body('bloggerId').toInt().custom(bloggerId => {
+        const blogger = bloggersService.findBloggerById(bloggerId)
         return blogger
     }).withMessage('incorrect bloggerId')
 
-export const validationPostsId = param('id')
-.toInt()
-.custom( id => {
+export const validationPostsId = param('id').toInt().custom( id => {
     const post = postsService.findPostById(id)
     return (post)
 }).withMessage('incorrect postId')
