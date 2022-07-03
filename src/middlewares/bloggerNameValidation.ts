@@ -32,7 +32,7 @@ export const bloggerNameValidation = (req: Request, res: Response, next: NextFun
     })
 
     const errors = myValidationResult(req).array()
-    if (errors.length > 0) {
+    if (errors.length > 0 || !req.body.name || !req.body.youtubeUrl) {
         return res.status(400).send({ errorsMessages: errors })
     } else {
         next()

@@ -40,12 +40,8 @@ bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
 bloggersRouter.post('/', authTokenMiddleware, bloggerNameValidation, async (req: Request, res: Response) => {
     const name = req.body.name
     const youtubeUrl = req.body.youtubeUrl
-    if (!name || !youtubeUrl) {
-        res.send(400)
-    } else {
-        const newBlogger = await bloggersService.createBlogger(name, youtubeUrl)
-        return res.status(201).send(newBlogger)
-    }
+    const newBlogger = await bloggersService.createBlogger(name, youtubeUrl)
+    return res.status(201).send(newBlogger)
     
 })
 bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, postsValidation, async (req: Request, res: Response) => {
