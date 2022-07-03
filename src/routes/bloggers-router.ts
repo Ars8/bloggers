@@ -106,10 +106,22 @@ bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, postsValidation, a
     return res.status(201).send(newPostBlogger)
 
 })
-bloggersRouter.put('/:id', authTokenMiddleware, bloggerNameValidation, async (req: Request, res: Response) => {
+bloggersRouter.put('/:id', authTokenMiddleware, bloggerNamValidation, bloggerYTValidation, async (req: Request, res: Response) => {
     const name = req.body.name
     const youtubeUrl = req.body.youtubeUrl
     const id = +req.params.id
+    
+    const err = validationResult(req)
+        const errors=err.array({onlyFirstError:true}).map(elem=>{
+            return {
+                message: elem.msg,
+                field: elem.param,
+            }
+        })
+        if(!err.isEmpty()) {
+            return res.status(400).json({ errorsMessages: errors })
+        }
+
     const isUpdated = await bloggersService.updateBlogger(id, name, youtubeUrl)
     if (isUpdated) {
         return res.send(204)
