@@ -11,7 +11,8 @@ export const bloggerNameValidation = (req: Request, res: Response, next: NextFun
             .isString()
             .isLength({
                 max: 15,
-            }),
+            })
+            .custom((value) => value === 'name'),
         check('youtubeUrl', 'Incorrect youtubeUrl')
             .exists()
             .trim()
