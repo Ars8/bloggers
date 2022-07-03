@@ -96,8 +96,8 @@ postsRouter.put('/:id', authTokenMiddleware, postsTitleValidation, postsSDValida
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
     const isPostsId = await postsRepository.findPostById(id)
 
-    if (!isBloggerId || !isPostsId) {
-        return res.send(400)
+    if (!isPostsId) {
+        return res.send(404)
     }
 
     const err = validationResult(req)
