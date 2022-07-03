@@ -5,8 +5,10 @@ import {postsService} from "../domain/posts-service";
 import {bloggersRepository} from "../repositories/bloggers-repository";
 import {bloggerNameValidation} from "../middlewares/bloggerNameValidation";
 import {postsValidation} from "../middlewares/postsValidation";
+import { body, validationResult } from 'express-validator'
 
 export const bloggersRouter = Router({})
+const URL_REGEX = new RegExp("^https:\\/\\/([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$")
 
 bloggersRouter.get('/', async (req: Request, res: Response) => {
     let page = req.query.PageNumber ? +req.query.PageNumber : 1
@@ -37,7 +39,22 @@ bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
         return res.send(404)
     }
 })
-bloggersRouter.post('/', authTokenMiddleware, bloggerNameValidation, async (req: Request, res: Response) => {
+bloggersRouter.post('/', authTokenMiddleware, body('name', 'Incorrect name')
+.exists()
+.trim()
+.notEmpty()
+.isString()
+.isLength({
+    max: 15,
+}),body('youtubeUrl', 'Incorrect youtubeUrl')
+.exists()
+.trim()
+.notEmpty()
+.isString()
+.isLength({
+    max: 100,
+})
+.matches(URL_REGEX), async (req: Request, res: Response) => {
     const name = req.body.name
     const youtubeUrl = req.body.youtubeUrl
     const newBlogger = await bloggersService.createBlogger(name, youtubeUrl)
