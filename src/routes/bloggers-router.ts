@@ -6,6 +6,7 @@ import { bloggersRepository } from "../repositories/bloggers-repository";
 import { bloggerNameValidation } from "../middlewares/bloggerNameValidation";
 import { postsValidation } from "../middlewares/postsValidation";
 import { body, validationResult } from 'express-validator'
+import { postsContentValidation, postsSDValidation, postsTitleValidation } from "./posts-router";
 
 export const bloggersRouter = Router({})
 const URL_REGEX = new RegExp("^https:\\/\\/([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$")
@@ -76,13 +77,13 @@ bloggersRouter.post('/',
         }*/
 
         const err = validationResult(req)
-        const errors=err.array({onlyFirstError:true}).map(elem=>{
+        const errors = err.array({ onlyFirstError: true }).map(elem => {
             return {
                 message: elem.msg,
                 field: elem.param,
             }
         })
-        if(!err.isEmpty()) {
+        if (!err.isEmpty()) {
             return res.status(400).json({ errorsMessages: errors })
         }
 
@@ -90,11 +91,23 @@ bloggersRouter.post('/',
         return res.status(201).send(newBlogger)
 
     })
-bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, postsValidation, async (req: Request, res: Response) => {
+bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, postsTitleValidation, postsSDValidation, postsContentValidation, async (req: Request, res: Response) => {
     const title = req.body.title
     const shortDescription = req.body.shortDescription
     const content = req.body.content
     const bloggerId = +req.params.bloggerId
+
+    const err = validationResult(req)
+    const errors = err.array({ onlyFirstError: true }).map(elem => {
+        return {
+            message: elem.msg,
+            field: elem.param,
+        }
+    })
+    if (!err.isEmpty()) {
+        return res.status(400).json({ errorsMessages: errors })
+    }
+
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
     const bloggerName = isBloggerId ? isBloggerId.name : undefined
 
@@ -110,17 +123,17 @@ bloggersRouter.put('/:id', authTokenMiddleware, bloggerNamValidation, bloggerYTV
     const name = req.body.name
     const youtubeUrl = req.body.youtubeUrl
     const id = +req.params.id
-    
+
     const err = validationResult(req)
-        const errors=err.array({onlyFirstError:true}).map(elem=>{
-            return {
-                message: elem.msg,
-                field: elem.param,
-            }
-        })
-        if(!err.isEmpty()) {
-            return res.status(400).json({ errorsMessages: errors })
+    const errors = err.array({ onlyFirstError: true }).map(elem => {
+        return {
+            message: elem.msg,
+            field: elem.param,
         }
+    })
+    if (!err.isEmpty()) {
+        return res.status(400).json({ errorsMessages: errors })
+    }
 
     const isUpdated = await bloggersService.updateBlogger(id, name, youtubeUrl)
     if (isUpdated) {
