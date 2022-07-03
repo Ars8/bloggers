@@ -75,6 +75,17 @@ bloggersRouter.post('/',
             return res.status(400).send({ errorsMessages: errors })
         }*/
 
+        const err = validationResult(req)
+        const errors=err.array({onlyFirstError:true}).map(elem=>{
+            return {
+                message: elem.msg,
+                field: elem.param,
+            }
+        })
+        if(!err.isEmpty()) {
+            res.status(400).json({ errorsMessages: errors })
+        }
+
         const newBlogger = await bloggersService.createBlogger(name, youtubeUrl)
         return res.status(201).send(newBlogger)
 
