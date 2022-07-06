@@ -17,8 +17,7 @@ export type PostDBType = {
 
 export type UserDBType = {
     _id: ObjectId
-    userName: string
-    email: string
+    login: string
     passwordHash: string
     passwordSalt: string
     createdAt: Date
