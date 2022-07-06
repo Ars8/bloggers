@@ -2,7 +2,6 @@ import bcrypt from 'bcrypt'
 import {PostDBType, UserDBType} from "../repositories/types";
 import {ObjectId} from "mongodb";
 import {usersRepository} from "../repositories/users-repository";
-import {postsRepository} from "../repositories/posts-repository";
 
 export const usersService = {
     async getAllUsers(PageNumber: number, PageSize: number) {
@@ -33,6 +32,10 @@ export const usersService = {
         }
 
         return user
+    },
+    async findUserByLogin(login: string) {
+        const user = await usersRepository.findByLogin(login)
+        return !!user;
     },
     async _generateHash(password: string, salt: string) {
         const hash = await bcrypt.hash(password, salt)
