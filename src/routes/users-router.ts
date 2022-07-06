@@ -17,8 +17,8 @@ export const userPasswordValidation = body('password')
     .isString().withMessage('incorrect password')
     .isLength({ min: 6, max: 20 }).withMessage('incorrect password')
 
-export const validationUserLogin = body('login').custom(login => {
-    return usersService.findUserByLogin(login).then(function(login) {
+export const validationUserLogin = body('login').custom(async login => {
+    return await usersService.findUserByLogin(login).then(function(login) {
             if (!login) {
                 throw new Error('this login is already in use')
             }

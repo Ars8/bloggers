@@ -35,7 +35,11 @@ export const usersService = {
     },
     async findUserByLogin(login: string) {
         const user = await usersRepository.findByLogin(login)
-        return !!user;
+        if (user) {
+            return true
+        } else {
+            return false
+        }
     },
     async _generateHash(password: string, salt: string) {
         const hash = await bcrypt.hash(password, salt)
