@@ -36,9 +36,9 @@ export const usersService = {
     async findUserByLogin(login: string) {
         const user = await usersRepository.findByLogin(login)
         if (user) {
-            return true
+            return user
         } else {
-            return false
+            return null
         }
     },
     async _generateHash(password: string, salt: string) {

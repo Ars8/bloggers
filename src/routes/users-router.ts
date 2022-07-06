@@ -18,8 +18,8 @@ export const userPasswordValidation = body('password')
     .isLength({ min: 6, max: 20 }).withMessage('incorrect password')
 
 export const validationUserLogin = body('login').custom(async login => {
-    return await usersService.findUserByLogin(login).then(function(login) {
-            if (!login) {
+    return await usersService.findUserByLogin(login).then(function(user) {
+            if (!user) {
                 throw new Error('this login is already in use')
             }
         }
