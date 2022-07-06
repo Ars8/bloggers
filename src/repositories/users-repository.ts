@@ -1,5 +1,5 @@
-import {usersCollection} from "./db";
-import {UserDBType} from "./types";
+import {postsCollection, usersCollection} from "./db";
+import {PostDBType, UserDBType} from "./types";
 import {ObjectId, WithId} from "mongodb";
 
 export const usersRepository = {
@@ -28,7 +28,7 @@ export const usersRepository = {
         return user
     },
     async findUserById(id: ObjectId): Promise<UserDBType | null> {
-        let user = await usersCollection.findOne({_id: id})
+        let user: UserDBType | null = await usersCollection.findOne({_id: id})
         if (user) {
             return user
         } else {
