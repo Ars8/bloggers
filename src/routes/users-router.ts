@@ -19,7 +19,7 @@ export const userPasswordValidation = body('password')
 
 export const validationUserLogin = body('login').custom(async login => {
     return await usersService.findUserByLogin(login).then(function(user) {
-            if (!user) {
+            if (user) {
                 throw new Error('this login is already in use')
             }
         }
