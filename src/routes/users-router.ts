@@ -1,10 +1,7 @@
 import {Request, Response, Router} from "express";
 import {usersService} from "../domain/users-service";
 import {body, validationResult} from "express-validator";
-import {bloggersService} from "../domain/bloggers-service";
 import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
-import {postsService} from "../domain/posts-service";
-import {postsRouter} from "./posts-router";
 import {ObjectId} from "mongodb";
 
 export const usersRouter = Router({})
