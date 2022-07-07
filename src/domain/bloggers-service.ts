@@ -5,24 +5,24 @@ export const bloggersService = {
     async findBloggers(SearchNameTerm: string | null, page: number, pageSize: number): Promise<any> {
         return bloggersRepository.findBloggers(SearchNameTerm, page, pageSize)
     },
-    async findBloggerById(id: number): Promise<BloggerDBType | null> {
+    async findBloggerById(id: string): Promise<BloggerDBType | null> {
         return bloggersRepository.findBloggerById(id)
     },
-    async findBloggerPosts(id: number, PageNumber: number, PageSize: number): Promise<PostDBType[]> {
+    async findBloggerPosts(id: string, PageNumber: number, PageSize: number): Promise<PostDBType[]> {
         return bloggersRepository.findBloggerPosts(id, PageNumber, PageSize)
     },
     async createBlogger(name: string, youtubeUrl: string): Promise<BloggerDBType> {
         const newBlogger: BloggerDBType = {
-            id: +(new Date()),
+            id: new Date().toString(),
             name: name,
             youtubeUrl: youtubeUrl
         }
         return await bloggersRepository.createBlogger(newBlogger)
     },
-    async updateBlogger(id: number, name: string, youtubeUrl: string): Promise<boolean> {
+    async updateBlogger(id: string, name: string, youtubeUrl: string): Promise<boolean> {
         return await bloggersRepository.updateBlogger(id, name, youtubeUrl)
     },
-    async deleteBlogger(id: number): Promise<boolean> {
+    async deleteBlogger(id: string): Promise<boolean> {
         return await bloggersRepository.delete(id)
     }
 }

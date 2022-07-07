@@ -20,11 +20,11 @@ export const bloggersRepository = {
             items: bloggers
         }
     },
-    async findBloggerById(id: number): Promise<BloggerDBType | null> {
+    async findBloggerById(id: string): Promise<BloggerDBType | null> {
         let blogger: BloggerDBType | null = await bloggersCollection.findOne({id: id}, {projection: {_id: 0}})
         return blogger
     },
-    async findBloggerPosts(id: number, pageNumber: number, pageSize: number): Promise<any> {
+    async findBloggerPosts(id: string, pageNumber: number, pageSize: number): Promise<any> {
         //let bloggerPosts: PostDBType[] | null = await postsCollection.find({id: id}, {projection: {_id: 0}}).limit(1).toArray()
         const skip = (pageNumber - 1) * pageSize
         let allPosts = await postsCollection.find({bloggerId: id}).toArray()
@@ -43,11 +43,11 @@ export const bloggersRepository = {
         const result = await bloggersCollection.insertOne({...newBlogger})
         return newBlogger
     },
-    async updateBlogger(id: number, name: string, youtubeUrl: string): Promise<boolean> {
+    async updateBlogger(id: string, name: string, youtubeUrl: string): Promise<boolean> {
         const result = await bloggersCollection.updateOne({id: id}, {$set: {name: name, youtubeUrl: youtubeUrl}})
         return result.matchedCount === 1
     },
-    async delete(id: number): Promise<boolean> {
+    async delete(id: string): Promise<boolean> {
         const result = await bloggersCollection.deleteOne({id: id})
         return result.deletedCount === 1
     }

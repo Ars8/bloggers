@@ -2,7 +2,6 @@ import {Request, Response, Router} from "express";
 import {commentsService} from "../domain/comments-service";
 import {ObjectId} from "mongodb";
 import {body, validationResult} from "express-validator";
-import {postsService} from "../domain/posts-service";
 
 export const commentsRouter = Router({})
 

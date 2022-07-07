@@ -1,17 +1,17 @@
 import {ObjectId} from "mongodb";
 
 export type BloggerDBType = {
-    id: number
+    id: string
     name: string
     youtubeUrl: string
 }
 
 export type PostDBType = {
-    id: number
+    id: string
     title: string
     shortDescription: string
     content: string
-    bloggerId: number
+    bloggerId: string
     bloggerName?: string | null | undefined
 }
 

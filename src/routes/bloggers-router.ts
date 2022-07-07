@@ -3,8 +3,6 @@ import { bloggersService } from "../domain/bloggers-service";
 import { authTokenMiddleware } from "../middlewares/authTokenMiddleware";
 import { postsService } from "../domain/posts-service";
 import { bloggersRepository } from "../repositories/bloggers-repository";
-import { bloggerNameValidation } from "../middlewares/bloggerNameValidation";
-import { postsValidation } from "../middlewares/postsValidation";
 import { body, validationResult } from 'express-validator'
 import { postsContentValidation, postsSDValidation, postsTitleValidation } from "./posts-router";
 
@@ -34,7 +32,7 @@ bloggersRouter.get('/', async (req: Request, res: Response) => {
     res.send(foundBloggers)
 })
 bloggersRouter.get('/:id', async (req: Request, res: Response) => {
-    const blogger = await bloggersService.findBloggerById(+req.params.id)
+    const blogger = await bloggersService.findBloggerById(req.params.id)
     if (blogger) {
         return res.status(200).send(blogger)
     } else {
@@ -44,7 +42,7 @@ bloggersRouter.get('/:id', async (req: Request, res: Response) => {
 bloggersRouter.get('/:bloggerId/posts', async (req: Request, res: Response) => {
     let PageNumber = req.query.PageNumber ? +req.query.PageNumber : 1
     let PageSize = req.query.PageSize ? +req.query.PageSize : 10
-    const bloggerId = +req.params.bloggerId
+    const bloggerId = req.params.bloggerId
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
 
     if (isBloggerId) {
@@ -95,7 +93,7 @@ bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, postsTitleValidati
     const title = req.body.title
     const shortDescription = req.body.shortDescription
     const content = req.body.content
-    const bloggerId = +req.params.bloggerId
+    const bloggerId = req.params.bloggerId
 
     const err = validationResult(req)
     const errors = err.array({ onlyFirstError: true }).map(elem => {
@@ -122,7 +120,7 @@ bloggersRouter.post('/:bloggerId/posts', authTokenMiddleware, postsTitleValidati
 bloggersRouter.put('/:id', authTokenMiddleware, bloggerNamValidation, bloggerYTValidation, async (req: Request, res: Response) => {
     const name = req.body.name
     const youtubeUrl = req.body.youtubeUrl
-    const id = +req.params.id
+    const id = req.params.id
 
     const err = validationResult(req)
     const errors = err.array({ onlyFirstError: true }).map(elem => {
@@ -143,7 +141,7 @@ bloggersRouter.put('/:id', authTokenMiddleware, bloggerNamValidation, bloggerYTV
     }
 })
 bloggersRouter.delete('/:id', authTokenMiddleware, async (req: Request, res: Response) => {
-    const id = +req.params.id
+    const id = req.params.id
     const isDeleted = await bloggersService.deleteBlogger(id)
 
     if (isDeleted) {

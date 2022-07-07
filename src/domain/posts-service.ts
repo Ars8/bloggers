@@ -6,14 +6,14 @@ export const postsService = {
     async findPosts(PageNumber: number, PageSize: number): Promise<PostDBType[]> {
         return postsRepository.findPosts(PageNumber, PageSize)
     },
-    async findPostById(id: number): Promise<PostDBType | null> {
+    async findPostById(id: string): Promise<PostDBType | null> {
         return postsRepository.findPostById(id)
     },
-    async createPost(title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string | undefined): Promise<PostDBType | undefined> {
+    async createPost(title: string, shortDescription: string, content: string, bloggerId: string, bloggerName: string | undefined): Promise<PostDBType | undefined> {
         const blogger = await bloggersRepository.findBloggerById(bloggerId)
         if (blogger) {
             const newPost: PostDBType = {
-                id: +(new Date()),
+                id: new Date().toString(),
                 title: title,
                 shortDescription: shortDescription,
                 content: content,
@@ -23,10 +23,10 @@ export const postsService = {
             return await postsRepository.createPost(newPost)
         }
     },
-    async updatePost(id: number, title: string, shortDescription: string, content: string, bloggerId: number, bloggerName: string | undefined): Promise<boolean> {
+    async updatePost(id: string, title: string, shortDescription: string, content: string, bloggerId: string, bloggerName: string | undefined): Promise<boolean> {
         return await postsRepository.updatePost(id, title, shortDescription, content, bloggerId, bloggerName)
     },
-    async deletePost(id: number): Promise<boolean> {
+    async deletePost(id: string): Promise<boolean> {
         return await postsRepository.delete(id)
     },
 }

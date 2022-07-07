@@ -2,7 +2,6 @@ import { Request, Response, Router } from "express";
 import { postsService } from "../domain/posts-service";
 import { authTokenMiddleware } from "../middlewares/authTokenMiddleware";
 import { bloggersRepository } from "../repositories/bloggers-repository";
-import { postsValidation } from "../middlewares/postsValidation";
 import { postsRepository } from "../repositories/posts-repository";
 import { body, param, validationResult } from 'express-validator'
 import { bloggersService } from "../domain/bloggers-service";
@@ -53,7 +52,7 @@ postsRouter.get('/', async (req: Request, res: Response) => {
     res.send(foundPosts)
 })
 postsRouter.get('/:id', async (req: Request, res: Response) => {
-    const post = await postsService.findPostById(+req.params.id)
+    const post = await postsService.findPostById(req.params.id)
     if (post) {
         return res.status(200).send(post)
     } else {
@@ -64,7 +63,7 @@ postsRouter.post('/', authTokenMiddleware, postsTitleValidation, postsSDValidati
     const title = req.body.title
     const shortDescription = req.body.shortDescription
     const content = req.body.content
-    const bloggerId = +req.body.bloggerId
+    const bloggerId = req.body.bloggerId
 
     const err = validationResult(req)
     const errors = err.array({ onlyFirstError: true }).map(elem => {
@@ -90,8 +89,8 @@ postsRouter.put('/:id', authTokenMiddleware, postsTitleValidation, postsSDValida
     const title = req.body.title
     const shortDescription = req.body.shortDescription
     const content = req.body.content
-    const bloggerId = +req.body.bloggerId
-    const id = +req.params.id
+    const bloggerId = req.body.bloggerId
+    const id = req.params.id
 
     const isBloggerId = await bloggersRepository.findBloggerById(bloggerId)
     const isPostsId = await postsRepository.findPostById(id)
@@ -119,7 +118,7 @@ postsRouter.put('/:id', authTokenMiddleware, postsTitleValidation, postsSDValida
 
 })
 postsRouter.delete('/:id', authTokenMiddleware, async (req: Request, res: Response) => {
-    const id = +req.params.id
+    const id = req.params.id
     const isDeleted = await postsService.deletePost(id)
 
     if (isDeleted) {
