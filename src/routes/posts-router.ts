@@ -26,7 +26,7 @@ export const postsContentValidation = body('content')
     .isString().withMessage('incorrect content')
     .isLength({ max: 1000 }).withMessage('incorrect content')
 
-export const validationBloggerId = body('bloggerId').toInt().custom(bloggerId => {
+export const validationBloggerId = body('bloggerId').custom(bloggerId => {
         return bloggersService.findBloggerById(bloggerId).then(function(blogger) {
             if (!blogger) {
                 throw new Error('this blogger is already in use')
@@ -35,7 +35,7 @@ export const validationBloggerId = body('bloggerId').toInt().custom(bloggerId =>
         )        
     }).withMessage('incorrect bloggerId')
 
-export const validationPostsId = param('id').toInt().custom(async (id) => {
+export const validationPostsId = param('id').custom(async (id) => {
     return postsService.findPostById(id).then(function(post) {
         if (!post) {
             throw new Error('this post is already in use')
