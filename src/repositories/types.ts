@@ -22,3 +22,11 @@ export type UserDBType = {
     passwordSalt: string
     createdAt: Date
 }
+
+export type CommentDBType = {
+    _id: ObjectId
+    content: string
+    userId: string
+    userLogin: string
+    addedAt: Date
+}
