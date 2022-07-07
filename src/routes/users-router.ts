@@ -2,6 +2,10 @@ import {Request, Response, Router} from "express";
 import {usersService} from "../domain/users-service";
 import {body, validationResult} from "express-validator";
 import {bloggersService} from "../domain/bloggers-service";
+import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
+import {postsService} from "../domain/posts-service";
+import {postsRouter} from "./posts-router";
+import {ObjectId} from "mongodb";
 
 export const usersRouter = Router({})
 
@@ -51,4 +55,14 @@ usersRouter.post('/', userLoginValidation, userPasswordValidation, validationUse
         login: user.login
     }
     return res.status(201).send(newUser)
+})
+usersRouter.delete('/:id', authTokenMiddleware, async (req: Request, res: Response) => {
+    const id = new ObjectId(req.params.id)
+    const isDeleted = await usersService.deleteUser(id)
+
+    if (isDeleted) {
+        return res.send(204)
+    } else {
+        return res.send(404)
+    }
 })

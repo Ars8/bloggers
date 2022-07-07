@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt'
 import {PostDBType, UserDBType} from "../repositories/types";
 import {ObjectId} from "mongodb";
 import {usersRepository} from "../repositories/users-repository";
+import {postsRepository} from "../repositories/posts-repository";
 
 export const usersService = {
     async getAllUsers(PageNumber: number, PageSize: number) {
@@ -44,5 +45,8 @@ export const usersService = {
     async _generateHash(password: string, salt: string) {
         const hash = await bcrypt.hash(password, salt)
         return hash
-    }
+    },
+    async deleteUser(id: ObjectId): Promise<boolean> {
+        return await usersRepository.delete(id)
+    },
 }
