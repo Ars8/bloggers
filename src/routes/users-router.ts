@@ -46,5 +46,9 @@ usersRouter.post('/', userLoginValidation, userPasswordValidation, validationUse
     }
 
     const user = await usersService.createUser(req.body.login, req.body.password)
-    return res.status(201).send(user)
+    const newUser = {
+        id: user._id,
+        login: user.login
+    }
+    return res.status(201).send(newUser)
 })
