@@ -31,7 +31,7 @@ usersRouter.get('/', async(req: Request, res: Response) => {
     let PageNumber = req.query.PageNumber ? +req.query.PageNumber : 1
     let PageSize = req.query.PageSize ? +req.query.PageSize : 10
     const users = await usersService.getAllUsers(PageNumber, PageSize)
-    res.status(200).send(users)
+    return res.status(200).send(users)
 })
 usersRouter.post('/', userLoginValidation, userPasswordValidation, validationUserLogin, async(req: Request, res: Response) => {
 
