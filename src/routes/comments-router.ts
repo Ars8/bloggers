@@ -2,6 +2,7 @@ import {Request, Response, Router} from "express";
 import {commentsService} from "../domain/comments-service";
 import {ObjectId} from "mongodb";
 import {body, validationResult} from "express-validator";
+import {authMiddleware} from "../middlewares/authMiddleware";
 
 export const commentsRouter = Router({})
 
@@ -25,7 +26,7 @@ commentsRouter.get('/:id', async (req: Request, res: Response) => {
         res.send(404)
     }
 })
-commentsRouter.put('/:commentId', commentsContentValidation, async (req: Request, res: Response) => {
+commentsRouter.put('/:commentId', authMiddleware, commentsContentValidation, async (req: Request, res: Response) => {
 
     const err = validationResult(req)
     const errors = err.array({ onlyFirstError: true }).map(elem => {
@@ -40,6 +41,12 @@ commentsRouter.put('/:commentId', commentsContentValidation, async (req: Request
 
     const comment = req.body.comment
     const commentId = new ObjectId(req.params.commentId)
+    const userIdFromReq = new ObjectId(req.user?._id)
+    const userIdFromDBComment = await commentsService.findCommentById(comment)
+
+    if (userIdFromReq !== userIdFromDBComment?._id) {
+        return res.send(403)
+    }
 
     const isUpdated = await commentsService.updateComment(commentId, comment)
     if (isUpdated) {
