@@ -1,8 +1,10 @@
 import {Request, Response, Router} from "express";
 import {commentsService} from "../domain/comments-service";
-import {ObjectId} from "mongodb";
 import {body, validationResult} from "express-validator";
 import {authMiddleware} from "../middlewares/authMiddleware";
+import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
+import {postsService} from "../domain/posts-service";
+import {postsRouter} from "./posts-router";
 
 export const commentsRouter = Router({})
 
@@ -53,4 +55,14 @@ commentsRouter.put('/:commentId', authMiddleware, commentsContentValidation, asy
         return res.send(204)
     }
 
+})
+commentsRouter.delete('/:commentId', authMiddleware, async (req: Request, res: Response) => {
+    const id = req.params.commentId
+    const isDeleted = await commentsService.deleteComment(id)
+
+    if (isDeleted) {
+        return res.send(204)
+    } else {
+        return res.send(404)
+    }
 })
