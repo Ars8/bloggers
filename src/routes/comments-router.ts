@@ -13,10 +13,10 @@ export const commentsContentValidation = body('content')
     .isLength({ min: 20, max: 300 }).withMessage('incorrect content')
 
 commentsRouter.get('/:id', async (req: Request, res: Response) => {
-    const comment = await commentsService.findCommentById(new ObjectId(req.params.id))
+    const comment = await commentsService.findCommentById(req.params.id)
     if (comment) {
         return res.status(200).send({
-            id: comment._id,
+            id: comment.id,
             content: comment.content,
             userId: comment.userId,
             userLogin: comment.userLogin,
@@ -40,11 +40,11 @@ commentsRouter.put('/:commentId', authMiddleware, commentsContentValidation, asy
     }
 
     const comment = req.body.comment
-    const commentId = new ObjectId(req.params.commentId)
-    const userIdFromReq = new ObjectId(req.user?._id)
+    const commentId = req.params.commentId
+    const userIdFromReq = req.user?.id
     const userIdFromDBComment = await commentsService.findCommentById(comment)
 
-    if (userIdFromReq !== userIdFromDBComment?._id) {
+    if (userIdFromReq !== userIdFromDBComment?.id) {
         return res.send(403)
     }
 

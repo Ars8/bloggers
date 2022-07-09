@@ -4,10 +4,10 @@ import {ObjectId} from "mongodb";
 import {postsRepository} from "../repositories/posts-repository";
 
 export const commentsService = {
-    async findCommentById(id: ObjectId): Promise<CommentDBType | null> {
+    async findCommentById(id: string): Promise<CommentDBType | null> {
         return commentsRepository.findCommentById(id)
     },
-    async updateComment(commentId: ObjectId, comment: string): Promise<boolean> {
+    async updateComment(commentId: string, comment: string): Promise<boolean> {
         return await commentsRepository.updateComment(commentId, comment)
     },
 }

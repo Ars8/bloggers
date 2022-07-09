@@ -16,7 +16,7 @@ export type PostDBType = {
 }
 
 export type UserDBType = {
-    _id: ObjectId
+    id: string
     login: string
     passwordHash: string
     passwordSalt: string
@@ -24,7 +24,7 @@ export type UserDBType = {
 }
 
 export type CommentDBType = {
-    _id: ObjectId
+    id: string
     content: string
     userId: string
     userLogin: string

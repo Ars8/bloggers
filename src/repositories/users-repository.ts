@@ -14,12 +14,7 @@ export const usersRepository = {
             page: pageNumber,
             pageSize: pageSize,
             totalCount: allCount,
-            items: users.map(user => {
-                {
-                    id: user._id
-                    login: user.login
-                }
-            })
+            items: users
         }
     },
     async getAllUsers(): Promise<WithId<UserDBType>[]> {
