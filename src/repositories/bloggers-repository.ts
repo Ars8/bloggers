@@ -1,5 +1,6 @@
 import {bloggersCollection, postsCollection} from "./db"
 import {BloggerDBType, PostDBType} from "./types";
+import {WithId} from "mongodb";
 
 export const bloggersRepository = {
     async findBloggers(SearchNameTerm: string | null, pageNumber: number, pageSize: number): Promise<any> {
@@ -10,7 +11,7 @@ export const bloggersRepository = {
         const skip = (pageNumber - 1) * pageSize
         let allBloggers = await bloggersCollection.find(filter).toArray()
         let pagesCount = allBloggers.length / pageSize
-        let bloggers = await bloggersCollection.find(filter, {projection: {_id: 0}}).skip(skip).limit(pageSize).toArray()
+        let bloggers: WithId<BloggerDBType>[] = await bloggersCollection.find(filter, {projection: {_id: 0}}).skip(skip).limit(pageSize).toArray()
         let allCount = await bloggersCollection.countDocuments(filter)
         return {
             pagesCount: Math.ceil(pagesCount),

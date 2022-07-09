@@ -54,7 +54,7 @@ usersRouter.post('/', userLoginValidation, userPasswordValidation, validationUse
     return res.status(201).send(newUser)
 })
 usersRouter.delete('/:id', authTokenMiddleware, async (req: Request, res: Response) => {
-    const id = new ObjectId(req.params.id)
+    const id = req.params.id
     const isDeleted = await usersService.deleteUser(id)
 
     if (isDeleted) {

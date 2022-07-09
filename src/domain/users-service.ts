@@ -46,7 +46,7 @@ export const usersService = {
         const hash = await bcrypt.hash(password, salt)
         return hash
     },
-    async deleteUser(id: ObjectId): Promise<boolean> {
+    async deleteUser(id: string): Promise<boolean> {
         return await usersRepository.delete(id)
     },
 }
