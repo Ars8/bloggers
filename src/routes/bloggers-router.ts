@@ -60,20 +60,6 @@ bloggersRouter.post('/',
         const name = req.body.name
         const youtubeUrl = req.body.youtubeUrl
 
-        /*const myValidationResult = validationResult.withDefaults({
-            formatter: error => {
-                return {
-                    message: error.msg,
-                    field: error.param,
-                }
-            },
-        })
-
-        const errors = myValidationResult(req)
-        if (!errors.isEmpty) {
-            return res.status(400).send({ errorsMessages: errors })
-        }*/
-
         const err = validationResult(req)
         const errors = err.array({ onlyFirstError: true }).map(elem => {
             return {

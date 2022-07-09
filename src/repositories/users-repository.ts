@@ -16,7 +16,7 @@ export const usersRepository = {
             totalCount: allCount,
             items: users.map(user => {
                 {
-                    id: user._id.toString()
+                    id: user._id
                     login: user.login
                 }
             })
