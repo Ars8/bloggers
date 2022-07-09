@@ -5,6 +5,7 @@ import { bloggersRepository } from "../repositories/bloggers-repository";
 import { postsRepository } from "../repositories/posts-repository";
 import { body, param, validationResult } from 'express-validator'
 import { bloggersService } from "../domain/bloggers-service";
+import {bloggersRouter} from "./bloggers-router";
 
 export const postsRouter = Router({})
 
@@ -57,6 +58,19 @@ postsRouter.get('/:id', async (req: Request, res: Response) => {
         return res.status(200).send(post)
     } else {
         res.send(404)
+    }
+})
+postsRouter.get('/:postId/comments', async (req: Request, res: Response) => {
+    let PageNumber = req.query.PageNumber ? +req.query.PageNumber : 1
+    let PageSize = req.query.PageSize ? +req.query.PageSize : 10
+    const postId = req.params.postId
+    const isPostId = await postsService.findPostById(postId)
+
+    if (isPostId) {
+        const bloggerPosts = await bloggersService.findBloggerPosts(bloggerId, PageNumber, PageSize)
+        return res.status(200).send(bloggerPosts)
+    } else {
+        return res.send(404)
     }
 })
 postsRouter.post('/', authTokenMiddleware, postsTitleValidation, postsSDValidation, postsContentValidation, validationBloggerId, async (req: Request, res: Response) => {

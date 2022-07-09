@@ -1,4 +1,4 @@
-import {PostDBType} from "../repositories/types";
+import {CommentDBType, PostDBType} from "../repositories/types";
 import {postsRepository} from "../repositories/posts-repository";
 import {bloggersRepository} from "../repositories/bloggers-repository";
 
@@ -8,6 +8,9 @@ export const postsService = {
     },
     async findPostById(id: string): Promise<PostDBType | null> {
         return postsRepository.findPostById(id)
+    },
+    async findPostComments(id: string, PageNumber: number, PageSize: number): Promise<CommentDBType[]> {
+        return bloggersRepository.findBloggerPosts(id, PageNumber, PageSize)
     },
     async createPost(title: string, shortDescription: string, content: string, bloggerId: string, bloggerName: string | undefined): Promise<PostDBType | undefined> {
         const blogger = await bloggersRepository.findBloggerById(bloggerId)
