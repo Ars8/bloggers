@@ -4,7 +4,7 @@ import {usersService} from "../domain/users-service";
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
-        res.send(401)
+        res.send(404)
         return
     }
 
