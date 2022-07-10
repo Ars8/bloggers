@@ -6,6 +6,9 @@ import { postsRepository } from "../repositories/posts-repository";
 import { body, param, validationResult } from 'express-validator'
 import { bloggersService } from "../domain/bloggers-service";
 import {bloggersRouter} from "./bloggers-router";
+import { commentsService } from "../domain/comments-service";
+import { authMiddleware } from "../middlewares/authMiddleware";
+import { commentsContentValidation } from "./comments-router";
 
 export const postsRouter = Router({})
 
@@ -67,8 +70,8 @@ postsRouter.get('/:postId/comments', async (req: Request, res: Response) => {
     const isPostId = await postsService.findPostById(postId)
 
     if (isPostId) {
-        const bloggerPosts = await bloggersService.findBloggerPosts(bloggerId, PageNumber, PageSize)
-        return res.status(200).send(bloggerPosts)
+        const postsComments = await commentsService.findPostComments(postId, PageNumber, PageSize)
+        return res.status(200).send(postsComments)
     } else {
         return res.send(404)
     }
@@ -96,6 +99,36 @@ postsRouter.post('/', authTokenMiddleware, postsTitleValidation, postsSDValidati
     if (isBloggerId) {
         const newPost = await postsService.createPost(title, shortDescription, content, bloggerId, bloggerName)
         return res.status(201).send(newPost)
+    }
+
+})
+postsRouter.post('/:postId/comments', authMiddleware, commentsContentValidation, async (req: Request, res: Response) => {
+    const content = req.body.content
+    const postId = req.params.postId
+
+    const err = validationResult(req)
+    const errors = err.array({ onlyFirstError: true }).map(elem => {
+        return {
+            message: elem.msg,
+            field: elem.param,
+        }
+    })
+    if (!err.isEmpty()) {
+        return res.status(400).json({ errorsMessages: errors })
+    }
+
+    const isPostId = await postsService.findPostById(postId)
+    const postIdFromDB = isPostId?.id
+    const userId = req.user?.id
+    const userLogin = req.user?.login
+
+    if (!isPostId) {
+        return res.send(404)
+    }
+
+    if (isPostId) {
+        const newCommetPost = await commentsService.createComment(postIdFromDB, content, userId, userLogin)
+        return res.status(201).send(newCommetPost)
     }
 
 })

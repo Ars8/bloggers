@@ -26,7 +26,8 @@ export type UserDBType = {
 export type CommentDBType = {
     id: string
     content: string
-    userId: string
-    userLogin: string
+    postId?: string
+    userId: string | undefined
+    userLogin: string | undefined
     addedAt: Date
 }

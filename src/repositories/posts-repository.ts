@@ -31,7 +31,7 @@ export const postsRepository = {
             page: pageNumber,
             pageSize: pageSize,
             totalCount: allCount,
-            items: posts
+            items: comments
         }
     },
     async createPost(newPost: PostDBType): Promise<PostDBType> {

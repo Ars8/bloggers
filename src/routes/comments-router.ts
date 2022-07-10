@@ -2,9 +2,6 @@ import {Request, Response, Router} from "express";
 import {commentsService} from "../domain/comments-service";
 import {body, validationResult} from "express-validator";
 import {authMiddleware} from "../middlewares/authMiddleware";
-import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
-import {postsService} from "../domain/posts-service";
-import {postsRouter} from "./posts-router";
 
 export const commentsRouter = Router({})
 
