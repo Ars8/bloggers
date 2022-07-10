@@ -1,14 +1,12 @@
 import bcrypt from 'bcrypt'
-import {PostDBType, UserDBType} from "../repositories/types";
-import {ObjectId} from "mongodb";
+import {UserDBType} from "../repositories/types";
 import {usersRepository} from "../repositories/users-repository";
-import {postsRepository} from "../repositories/posts-repository";
 
 export const usersService = {
     async getAllUsers(PageNumber: number, PageSize: number) {
         return usersRepository.findUsers(PageNumber, PageSize)
     },
-    async findUserById(id: ObjectId): Promise<UserDBType | null> {
+    async findUserById(id: string): Promise<UserDBType | null> {
         return usersRepository.findUserById(id)
     },
     async createUser(login: string, password: string): Promise<UserDBType> {

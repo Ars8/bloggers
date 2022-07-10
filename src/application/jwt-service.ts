@@ -1,6 +1,5 @@
 import {UserDBType} from "../repositories/types"
 import jwt from 'jsonwebtoken'
-import {ObjectId} from "mongodb";
 
 export const jwtService = {
     async createJWT(user: UserDBType) {
@@ -10,7 +9,7 @@ export const jwtService = {
     async getUserIdByToken(token: string) {
         try {
             const result: any = jwt.verify(token, process.env.JWT_SECRET || '123')
-            return new ObjectId(result.userId)
+            return result.userId
         } catch (error) {
             return null
         }
