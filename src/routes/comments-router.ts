@@ -64,9 +64,9 @@ commentsRouter.delete('/:commentId', authMiddleware, async (req: Request, res: R
     const commentId = req.params.commentId
     const userIdFromDBComment = await commentsService.findCommentById(commentId)
 
-    if (!userIdFromDBComment) {
+    /* if (!userIdFromDBComment) {
         return res.send(404)
-    }
+    } */
 
     if (userIdFromReq !== userIdFromDBComment?.userId) {
         return res.send(403)
