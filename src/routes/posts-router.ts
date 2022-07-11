@@ -126,7 +126,7 @@ postsRouter.post('/:postId/comments', authMiddleware, commentsContentValidation,
         return res.send(404)
     }
 
-    if (isPostId) {
+    if (isPostId && postIdFromDB !== undefined && userId !== undefined && userLogin !== undefined) {
         const newCommentPost = await commentsService.createComment(postIdFromDB, content, userId, userLogin)
         const newComment = {
             id: newCommentPost?.id,

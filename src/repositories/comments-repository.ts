@@ -1,4 +1,4 @@
-import {commentsCollection, postsCollection} from "./db"
+import {commentsCollection} from "./db"
 import {CommentDBType} from "./types"
 
 export const commentsRepository = {
