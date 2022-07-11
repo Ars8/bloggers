@@ -38,7 +38,7 @@ commentsRouter.put('/:commentId', authMiddleware, commentsContentValidation, asy
         return res.status(400).json({ errorsMessages: errors })
     }
 
-    const comment = req.body.comment
+    const comment = req.body.content
     const commentId = req.params.commentId
     const userIdFromReq = req.user?.id
     const userIdFromDBComment = await commentsService.findCommentById(commentId)
