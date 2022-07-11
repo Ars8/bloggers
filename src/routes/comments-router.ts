@@ -43,7 +43,7 @@ commentsRouter.put('/:commentId', authMiddleware, commentsContentValidation, asy
     const userIdFromReq = req.user?.id
     const userIdFromDBComment = await commentsService.findCommentById(commentId)
 
-    if (userIdFromReq !== userIdFromDBComment?.id) {
+    if (userIdFromReq !== userIdFromDBComment?.userId) {
         return res.send(403)
     }
 
