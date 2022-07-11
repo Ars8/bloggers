@@ -33,6 +33,6 @@ authRouter.post('/login', usersLoginValidation, usersPasswordValidation, async(r
         const token = await jwtService.createJWT(user)
         return res.status(200).send(token)
     } else {
-        return res.sendStatus(403)
+        return res.sendStatus(401)
     }
 })
