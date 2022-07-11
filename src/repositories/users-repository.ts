@@ -1,6 +1,6 @@
-import {postsCollection, usersCollection} from "./db";
-import {PostDBType, UserDBType} from "./types";
-import {ObjectId, WithId} from "mongodb";
+import {usersCollection} from "./db";
+import {UserDBType} from "./types";
+import {WithId} from "mongodb";
 
 export const usersRepository = {
     async findUsers(pageNumber: number, pageSize: number): Promise<any> {
@@ -14,7 +14,12 @@ export const usersRepository = {
             page: pageNumber,
             pageSize: pageSize,
             totalCount: allCount,
-            items: users
+            items: users.map(user => {
+                return {
+                    id: user.id,
+                    login: user.login
+                }
+            })
         }
     },
     async getAllUsers(): Promise<WithId<UserDBType>[]> {
