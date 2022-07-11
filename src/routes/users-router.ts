@@ -33,7 +33,7 @@ usersRouter.get('/', async(req: Request, res: Response) => {
     const users = await usersService.getAllUsers(PageNumber, PageSize)
     return res.status(200).send(users)
 })
-usersRouter.post('/', userLoginValidation, userPasswordValidation, validationUserLogin, async(req: Request, res: Response) => {
+usersRouter.post('/', authTokenMiddleware, userLoginValidation, userPasswordValidation, validationUserLogin, async(req: Request, res: Response) => {
 
     const err = validationResult(req)
     const errors = err.array({ onlyFirstError: true }).map(elem => {
