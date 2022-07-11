@@ -125,12 +125,6 @@ postsRouter.post('/:postId/comments', authMiddleware, commentsContentValidation,
     const userId = req.user.id
     const userLogin = req.user.login
 
-    
-
-    if (!isPostId) {
-        return res.send(404)
-    }
-
     if (postIdFromDB) {
         const newCommentPost = await commentsService.createComment(postIdFromDB, content, userId, userLogin)
         const newComment = {
