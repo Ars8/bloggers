@@ -8,7 +8,7 @@ export const commentsService = {
     async findPostComments(id: string, PageNumber: number, PageSize: number): Promise<CommentDBType[]> {
         return commentsRepository.findPostComments(id, PageNumber, PageSize)
     },
-    async createComment(postIdFromDB: string | undefined, content: string, userId: string | undefined, userLogin: string | undefined): Promise<CommentDBType | undefined> {
+    async createComment(postIdFromDB: string, content: string, userId: string, userLogin: string): Promise<CommentDBType | undefined> {
             const newComment: CommentDBType = {
                 id: new Date().toString(),
                 content: content,

@@ -118,9 +118,14 @@ postsRouter.post('/:postId/comments', authMiddleware, commentsContentValidation,
     }
 
     const isPostId = await postsService.findPostById(postId)
-    const postIdFromDB = isPostId?.id
-    const userId = req.user?.id
-    const userLogin = req.user?.login
+    if (isPostId === null || req.user === null) {
+        return res.send(404)
+    }
+    const postIdFromDB = isPostId.id
+    const userId = req.user.id
+    const userLogin = req.user.login
+
+    
 
     if (!isPostId) {
         return res.send(404)
