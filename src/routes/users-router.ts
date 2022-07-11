@@ -43,7 +43,7 @@ usersRouter.post('/', userLoginValidation, userPasswordValidation, validationUse
         }
     })
     if (!err.isEmpty()) {
-        return res.status(400).json({ errorsMessages: errors })
+        return res.status(401).json({ errorsMessages: errors })
     }
 
     const user = await usersService.createUser(req.body.login, req.body.password)
