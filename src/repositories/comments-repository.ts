@@ -17,7 +17,15 @@ export const commentsRepository = {
             page: pageNumber,
             pageSize: pageSize,
             totalCount: allCount,
-            items: comments
+            items: comments.map((comment) => {
+                return {
+                    id: comment.id,
+                    content: comment.content,
+                    userId: comment.userId,
+                    userLogin: comment.userLogin,
+                    addedAt: comment.addedAt
+                }
+            })
         }
     },
     async createComment(newComment: CommentDBType): Promise<CommentDBType> {
