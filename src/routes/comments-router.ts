@@ -63,7 +63,7 @@ commentsRouter.delete('/:commentId', authMiddleware, async (req: Request, res: R
     const userIdFromReq = req.user?.id
     const userIdFromDBComment = await commentsService.findCommentById(id)
 
-    if (!id) {
+    if (!userIdFromDBComment?.id) {
         return res.send(404)
     }
 
