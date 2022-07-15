@@ -2,6 +2,7 @@ import {Request, Response, Router} from "express";
 import {usersService} from "../domain/users-service";
 import {jwtService} from "../application/jwt-service";
 import {body, validationResult} from "express-validator";
+import { emailAdapter } from "../adapters/email-adapter";
 
 export const authRouter = Router({})
 
@@ -35,4 +36,9 @@ authRouter.post('/login', usersLoginValidation, usersPasswordValidation, async(r
     } else {
         return res.sendStatus(401)
     }
+})
+authRouter.post('/registration', usersLoginValidation, usersPasswordValidation, async(req: Request, res: Response) => {
+    await emailAdapter.sendEmail(req.body.email, req.body.subject, req.body.message)
+
+    
 })
