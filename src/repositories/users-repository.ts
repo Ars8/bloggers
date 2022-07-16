@@ -1,6 +1,6 @@
 import {usersCollection} from "./db";
 import {UserDBType} from "./types";
-import {WithId} from "mongodb";
+import {ObjectId, WithId} from "mongodb";
 
 export const usersRepository = {
     async findUsers(pageNumber: number, pageSize: number): Promise<any> {
@@ -48,6 +48,18 @@ export const usersRepository = {
             return null
         }
     },
+    async findUserByConfirmationCode(emailConfirmationCode: string) {
+        const user = await usersCollection.findOne({'emailConfirmation.confirmationCode': emailConfirmationCode})
+        if (user) {
+            return user
+        } else {
+            return null
+        }
+    },
+    async updateConfirmation(_id: ObjectId) {
+        let result = await usersAccountsCollection.updateOne({_id}, {$set: {'emailConfirmation.isConfirmed': true}})
+        return result.modifiedCount === 1
+    }
     async delete(id: string): Promise<boolean> {
         const result = await usersCollection.deleteOne({id: id})
         return result.deletedCount === 1

@@ -3,6 +3,7 @@ import {usersService} from "../domain/users-service";
 import {jwtService} from "../application/jwt-service";
 import {body, validationResult} from "express-validator";
 import { emailAdapter } from "../adapters/email-adapter";
+import { authService } from "../domain/auth-service";
 
 export const authRouter = Router({})
 
@@ -15,6 +16,15 @@ export const usersPasswordValidation = body('password')
     .exists().withMessage('incorrect password')
     .trim().notEmpty().withMessage('incorrect password')
     .isString().withMessage('incorrect password')
+
+authRouter.post('/registration', usersLoginValidation, usersPasswordValidation, async(req: Request, res: Response) => {
+    const user = await authService.createUser(req.body.login, req.body.email, req.body.password)
+    if (user) {
+        res.status(201).send()
+    } else {
+        res.status(400).send()
+    }
+})
 
 authRouter.post('/login', usersLoginValidation, usersPasswordValidation, async(req: Request, res: Response) => {
 
@@ -37,8 +47,14 @@ authRouter.post('/login', usersLoginValidation, usersPasswordValidation, async(r
         return res.sendStatus(401)
     }
 })
-authRouter.post('/registration', usersLoginValidation, usersPasswordValidation, async(req: Request, res: Response) => {
-    await emailAdapter.sendEmail(req.body.email, req.body.subject, req.body.message)
 
-    
+authRouter.post('/confirm-email', usersLoginValidation, usersPasswordValidation, async(req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
+        const result = await authService.confirmEmail(req.body.code)
+        if (result) {
+            res.status(201).send()
+        } else {
+            res.send(400)
+        }
+    }
 })
