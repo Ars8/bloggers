@@ -1,32 +1,45 @@
 import bcrypt from 'bcrypt'
-import {UserDBType} from "../repositories/types";
+import {v4 as uuidv4} from 'uuid'
+import { add } from 'date-fns'
+import {UserAccountDBType} from "../repositories/types";
 import {usersRepository} from "../repositories/users-repository";
 
 export const usersService = {
     async getAllUsers(PageNumber: number, PageSize: number) {
         return usersRepository.findUsers(PageNumber, PageSize)
     },
-    async findUserById(id: string): Promise<UserDBType | null> {
+    async findUserById(id: string): Promise<UserAccountDBType | null> {
         return usersRepository.findUserById(id)
     },
-    async createUser(login: string, password: string): Promise<UserDBType> {
+    async createUser(login: string, email: string, password: string): Promise<UserAccountDBType> {
         const passwordSalt = await bcrypt.genSalt(10)
         const passwordHash = await this._generateHash(password, passwordSalt)
 
-        const newUser: UserDBType = {
+        const newUser: UserAccountDBType = {
             id: new Date().toString(),
-            login: login,
-            passwordHash,
-            passwordSalt,
-            createdAt: new Date()
+            accountData: {
+                login,
+                email,
+                passwordHash,
+                passwordSalt,
+                createdAt: new Date()
+            },
+            emailConfirmation: {
+                isConfirmed: false,
+                confirmationCode: uuidv4(),
+                expirationDate: add(new Date(), {
+                    hours: 1,
+                    minutes: 3
+                })
+            }
         }
         return usersRepository.createUser(newUser)
     },
     async checkCredentials(login: string, password: string) {
         const user = await usersRepository.findByLogin(login)
         if(!user) return false
-        const passwordHash = await this._generateHash(password, user.passwordSalt)
-        if (user.passwordHash !== passwordHash) {
+        const passwordHash = await this._generateHash(password, user.accountData.passwordSalt)
+        if (user.accountData.passwordHash !== passwordHash) {
             return false
         }
 

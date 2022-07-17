@@ -2,9 +2,9 @@ import {Request, Response, Router} from "express";
 import {usersService} from "../domain/users-service";
 import {body, validationResult} from "express-validator";
 import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
-import {ObjectId} from "mongodb";
 
 export const usersRouter = Router({})
+const EMAIL_REGEX = new RegExp("^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")
 
 export const userLoginValidation = body('login')
     .exists().withMessage('incorrect login')
@@ -17,6 +17,12 @@ export const userPasswordValidation = body('password')
     .trim().notEmpty().withMessage('incorrect password')
     .isString().withMessage('incorrect password')
     .isLength({ min: 6, max: 20 }).withMessage('incorrect password')
+
+const userEmailValidation = body('email')
+.exists().withMessage('incorrect email')
+.trim().notEmpty().withMessage('incorrect email')
+.isString().withMessage('incorrect email')
+.matches(EMAIL_REGEX).withMessage('incorrect email')
 
 export const validationUserLogin = body('login').custom(async login => {
     return await usersService.findUserByLogin(login).then(function(user) {
@@ -33,7 +39,7 @@ usersRouter.get('/', async(req: Request, res: Response) => {
     const users = await usersService.getAllUsers(PageNumber, PageSize)
     return res.status(200).send(users)
 })
-usersRouter.post('/', authTokenMiddleware, userLoginValidation, userPasswordValidation, validationUserLogin, async(req: Request, res: Response) => {
+usersRouter.post('/', authTokenMiddleware, userLoginValidation, userEmailValidation, userPasswordValidation, validationUserLogin, async(req: Request, res: Response) => {
 
     const err = validationResult(req)
     const errors = err.array({ onlyFirstError: true }).map(elem => {
@@ -46,10 +52,10 @@ usersRouter.post('/', authTokenMiddleware, userLoginValidation, userPasswordVali
         return res.status(400).json({ errorsMessages: errors })
     }
 
-    const user = await usersService.createUser(req.body.login, req.body.password)
+    const user = await usersService.createUser(req.body.login, req.body.email, req.body.password)
     const newUser = {
         id: user.id,
-        login: user.login
+        login: user.accountData.login
     }
     return res.status(201).send(newUser)
 })

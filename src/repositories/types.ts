@@ -1,4 +1,4 @@
-import {ObjectId} from "mongodb";
+import {ObjectId, WithId} from "mongodb";
 
 export type BloggerDBType = {
     id: string
@@ -18,6 +18,7 @@ export type PostDBType = {
 export type UserDBType = {
     id: string
     login: string
+    email: string
     passwordHash: string
     passwordSalt: string
     createdAt: Date
@@ -30,4 +31,33 @@ export type CommentDBType = {
     userId: string | undefined
     userLogin: string | undefined
     addedAt: Date
+}
+
+export type UserAccountDBType = {
+    id: string
+    accountData: UserAccountType
+    emailConfirmation: EmailConfirmationType
+}
+
+export type EmailConfirmationType = {
+    isConfirmed: boolean
+    confirmationCode: string
+    expirationDate: Date
+    sentEmails?: SentEmailType[]
+}
+
+export type UserAccountType = {
+    login: string
+    email: string
+    passwordHash: string
+    passwordSalt: string
+    createdAt: Date
+}
+
+export type RegistrationDataType = {
+    ip: string
+}
+
+export type SentEmailType = {
+    sentDate: Date
 }

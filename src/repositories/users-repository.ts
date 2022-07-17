@@ -1,5 +1,5 @@
 import {usersCollection} from "./db";
-import {UserDBType} from "./types";
+import {UserAccountDBType, UserDBType} from "./types";
 import {ObjectId, WithId} from "mongodb";
 
 export const usersRepository = {
@@ -17,23 +17,23 @@ export const usersRepository = {
             items: users.map(user => {
                 return {
                     id: user.id,
-                    login: user.login
+                    login: user.accountData.login
                 }
             })
         }
     },
-    async getAllUsers(): Promise<WithId<UserDBType>[]> {
+    async getAllUsers(): Promise<WithId<UserAccountDBType>[]> {
         return usersCollection
             .find()
             .sort('createdAt', -1)
             .toArray()
     },
-    async createUser(user: UserDBType): Promise<UserDBType> {
+    async createUser(user: UserAccountDBType): Promise<UserAccountDBType> {
         const result = await usersCollection.insertOne(user)
         return user
     },
-    async findUserById(id: string): Promise<UserDBType | null> {
-        let user: UserDBType | null = await usersCollection.findOne({id: id})
+    async findUserById(id: string): Promise<UserAccountDBType | null> {
+        let user: UserAccountDBType | null = await usersCollection.findOne({id: id})
         if (user) {
             return user
         } else {
@@ -41,7 +41,7 @@ export const usersRepository = {
         }
     },
     async findByLogin(login: string) {
-        const user = await usersCollection.findOne({login: login})
+        const user = await usersCollection.findOne({'accountData.login': login})
         if (user) {
             return user
         } else {
@@ -57,9 +57,9 @@ export const usersRepository = {
         }
     },
     async updateConfirmation(_id: ObjectId) {
-        let result = await usersAccountsCollection.updateOne({_id}, {$set: {'emailConfirmation.isConfirmed': true}})
+        let result = await usersCollection.updateOne({_id}, {$set: {'emailConfirmation.isConfirmed': true}})
         return result.modifiedCount === 1
-    }
+    },
     async delete(id: string): Promise<boolean> {
         const result = await usersCollection.deleteOne({id: id})
         return result.deletedCount === 1

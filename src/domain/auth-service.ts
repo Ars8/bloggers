@@ -4,37 +4,23 @@ import { ObjectId } from 'mongodb'
 import { add } from 'date-fns'
 import { usersRepository } from '../repositories/users-repository'
 import { emailsManager } from '../managers/email-manager'
+import { usersService } from './users-service'
 
 export const authService = {
     async createUser(login: string, email: string, password: string) {
-        const passwordSalt = await bcrypt.genSalt(10)
-        const passwordHash = await this._generateHash(password, passwordSalt)
-        const user = {
-            _id: new ObjectId(),
-            accountData: {
-                userName: login,
-                email,
-                passwordHash,
-                createdAt: new Date(),
-            },
-            emailConfirmation: {
-                confirmationCode: uuidv4(),
-                expirationDate: add(new Date(), {
-                    hours: 1,
-                    minutes: 3
-                }),
-                isConfirmed: false
-            }
-        }
-        const createResult = await usersRepository.createUser(user)
-        try {
-            await emailsManager.sendEmailConfirmationMessage(user, createResult)
-        } catch (err) {
-            await usersRepository.deleteUser(user._id)
-            return null
-        }
         
-        return createResult
+        const user = await usersService.createUser(login, email, password)
+
+        if (user) {
+            try {
+                await emailsManager.sendEmailConfirmationMessage(user)
+            } catch (err) {
+                await usersRepository.delete(user.id)
+                return null
+            }
+        }        
+        
+        return user
     },
     async checkCredentials(login: string, password: string) {
         const user = await usersRepository.findByLogin(login)
@@ -44,8 +30,8 @@ export const authService = {
             return null
         }
         
-        const passwordHash = await this._generateHash(password, user.passwordSalt)
-        if (user.passwordHash !== passwordHash) {
+        const passwordHash = await this._generateHash(password, user.accountData.passwordSalt)
+        if (user.accountData.passwordHash !== passwordHash) {
             return false
         }
 

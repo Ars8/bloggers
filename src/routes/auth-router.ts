@@ -20,7 +20,7 @@ export const usersPasswordValidation = body('password')
 authRouter.post('/registration', usersLoginValidation, usersPasswordValidation, async(req: Request, res: Response) => {
     const user = await authService.createUser(req.body.login, req.body.email, req.body.password)
     if (user) {
-        res.status(201).send()
+        res.status(204).send()
     } else {
         res.status(400).send()
     }
@@ -56,5 +56,17 @@ authRouter.post('/confirm-email', usersLoginValidation, usersPasswordValidation,
         } else {
             res.send(400)
         }
+    }
+})
+
+authRouter.post('/resend-registration-code', usersLoginValidation, usersPasswordValidation, async(req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
+        const result = await authService.confirmEmail(req.body.email)
+        if (result) {
+            res.status(201).send()
+        } else {
+            res.send(400)
+        }
+        return 429
     }
 })

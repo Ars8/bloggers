@@ -5,17 +5,16 @@ export const emailAdapter = {
         let transporter = nodemailer.createTransport({
             service: "gmail",
             auth: {
-              user: testAccount.user, // generated ethereal user
-              pass: testAccount.pass, // generated ethereal password
+              user: process.env.NODEMAILER_USER,
+              pass: process.env.NODEMAILER_PASS,
             },
           });
         
-          // send mail with defined transport object
           let info = await transporter.sendMail({
-            from: 'Fransua', // sender address
-            to: email, // sender addresslist of receivers
-            subject: subject, // Subject line
-            html: message, // html body
+            from: '"Fransua bloggers" <fransuazakubov@gmail.com>',
+            to: email,
+            subject: subject,
+            html: message,
           });
     
           return info
