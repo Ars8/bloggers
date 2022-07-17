@@ -4,7 +4,7 @@ import {body, validationResult} from "express-validator";
 import {authTokenMiddleware} from "../middlewares/authTokenMiddleware";
 
 export const usersRouter = Router({})
-const EMAIL_REGEX = new RegExp("^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")
+const EMAIL_REGEX = new RegExp("^[\w\.]+@([\w-]+\.)+[\w-]{2,4}$")
 
 export const userLoginValidation = body('login')
     .exists().withMessage('incorrect login')
