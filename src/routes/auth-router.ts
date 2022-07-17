@@ -6,6 +6,7 @@ import { emailAdapter } from "../adapters/email-adapter";
 import { authService } from "../domain/auth-service";
 
 export const authRouter = Router({})
+const EMAIL_REGEX = new RegExp("^[\w\.]+@([\w-]+\.)+[\w-]{2,4}$")
 
 export const usersLoginValidation = body('login')
     .exists().withMessage('incorrect login')
@@ -17,7 +18,19 @@ export const usersPasswordValidation = body('password')
     .trim().notEmpty().withMessage('incorrect password')
     .isString().withMessage('incorrect password')
 
-authRouter.post('/registration', usersLoginValidation, usersPasswordValidation, async(req: Request, res: Response) => {
+export const codeValidation = body('code')
+    .exists().withMessage('incorrect code')
+    .trim().notEmpty().withMessage('incorrect code')
+    .isString().withMessage('incorrect code')
+
+const userEmailValidation = body('email')
+    .exists().withMessage('incorrect email')
+    .trim().notEmpty().withMessage('incorrect email')
+    .isString().withMessage('incorrect email')
+    .matches(EMAIL_REGEX).withMessage('incorrect email')
+    
+
+authRouter.post('/registration', usersLoginValidation, userEmailValidation, usersPasswordValidation, async(req: Request, res: Response) => {
     const user = await authService.createUser(req.body.login, req.body.email, req.body.password)
     if (user) {
         res.status(204).send()
@@ -48,11 +61,11 @@ authRouter.post('/login', usersLoginValidation, usersPasswordValidation, async(r
     }
 })
 
-authRouter.post('/confirm-email', usersLoginValidation, usersPasswordValidation, async(req: Request, res: Response) => {
+authRouter.post('/registration-confirmation', codeValidation, async(req: Request, res: Response) => {
     async (req: Request, res: Response) => {
         const result = await authService.confirmEmail(req.body.code)
         if (result) {
-            res.status(201).send()
+            res.status(204).send()
         } else {
             res.send(400)
         }

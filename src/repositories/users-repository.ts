@@ -56,8 +56,8 @@ export const usersRepository = {
             return null
         }
     },
-    async updateConfirmation(_id: ObjectId) {
-        let result = await usersCollection.updateOne({_id}, {$set: {'emailConfirmation.isConfirmed': true}})
+    async updateConfirmation(id: string) {
+        let result = await usersCollection.updateOne({id}, {$set: {'emailConfirmation.isConfirmed': true}})
         return result.modifiedCount === 1
     },
     async delete(id: string): Promise<boolean> {
