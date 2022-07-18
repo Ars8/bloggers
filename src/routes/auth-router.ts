@@ -43,7 +43,12 @@ const userEmailValidation = body('email')
         }
         )        
     }).withMessage('this email is already in use')
-    
+
+const EmailValidation = body('email')
+    .exists().withMessage('incorrect email')
+    .trim().notEmpty().withMessage('incorrect email')
+    .isString().withMessage('incorrect email')
+    .isEmail().withMessage('Eto email')
 
 authRouter.post('/registration', usersLoginValidation, userEmailValidation, usersPasswordValidation, async(req: Request, res: Response) => {
     
@@ -99,7 +104,7 @@ authRouter.post('/registration-confirmation', codeValidation, async(req: Request
     }
 })
 
-authRouter.post('/registration-email-resending', userEmailValidation, async(req: Request, res: Response) => {
+authRouter.post('/registration-email-resending', EmailValidation, async(req: Request, res: Response) => {
     async (req: Request, res: Response) => {
         const user = await authService.checkIsConfirmed(req.body.email)
         if (user?.emailConfirmation.isConfirmed === false) {
