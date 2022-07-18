@@ -49,6 +49,14 @@ const EmailValidation = body('email')
     .trim().notEmpty().withMessage('incorrect email')
     .isString().withMessage('incorrect email')
     .isEmail().withMessage('Eto email')
+    .custom(async email => {
+        return await authService.checkIsConfirmed(email).then(function(user) {
+            if (user?.emailConfirmation.isConfirmed === true) {
+                throw new Error('this email is already confirm')
+            }
+        }
+        )        
+    }).withMessage('this email is already in use')
 
 authRouter.post('/registration', usersLoginValidation, userEmailValidation, usersPasswordValidation, async(req: Request, res: Response) => {
     
