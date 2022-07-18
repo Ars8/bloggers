@@ -11,7 +11,7 @@ export const emailAdapter = {
           });
         
           let info = await transporter.sendMail({
-            from: '"Fransua blogger" <fransuazakubov@gmail.com>',
+            from: '"Fransua bloggers" <fransuazakubov@gmail.com>',
             to: email,
             subject: subject,
             html: message,
