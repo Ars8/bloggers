@@ -123,7 +123,7 @@ postsRouter.post('/:postId/comments', authMiddleware, commentsContentValidation,
     }
     const postIdFromDB = isPostId.id
     const userId = req.user.id
-    const userLogin = req.user.login
+    const userLogin = req.user.accountData.login
 
     if (postIdFromDB) {
         const newCommentPost = await commentsService.createComment(postIdFromDB, content, userId, userLogin)
