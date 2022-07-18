@@ -2,18 +2,16 @@ import {Request, Response, Router} from "express";
 import {usersService} from "../domain/users-service";
 import {jwtService} from "../application/jwt-service";
 import {body, validationResult} from "express-validator";
-import { emailAdapter } from "../adapters/email-adapter";
 import { authService } from "../domain/auth-service";
 
 export const authRouter = Router({})
-const EMAIL_REGEX = new RegExp("^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")
 
 export const usersLoginValidation = body('login')
     .exists().withMessage('incorrect login')
     .trim().notEmpty().withMessage('incorrect login')
     .isString().withMessage('incorrect login')
-    .custom(login => {
-        return authService.checkLogin(login).then(function(login) {
+    .custom(async login => {
+        return await authService.checkLogin(login).then(function(login) {
             if (login) {
                 throw new Error('this login is already in use')
             }
@@ -35,8 +33,8 @@ const userEmailValidation = body('email')
     .exists().withMessage('incorrect email')
     .trim().notEmpty().withMessage('incorrect email')
     .isString().withMessage('incorrect email')
-    .custom(email => {
-        return authService.checkEmail(email).then(function(email) {
+    .custom(async email => {
+        return await authService.checkEmail(email).then(function(email) {
             if (email) {
                 throw new Error('this email is already in use')
             }
