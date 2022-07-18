@@ -3,6 +3,6 @@ import { UserAccountDBType } from "../repositories/types"
 
 export const emailsManager = {
     async sendEmailConfirmationMessage(user: UserAccountDBType) {
-        await emailAdapter.sendEmail(user.accountData.email, "registration", "<a href=`https://bloggersars.herokuapp.com/registration-confirmation`></a>")
+        await emailAdapter.sendEmail(user.accountData.email, "registration", "<a href=`https://bloggersars.herokuapp.com/registration-confirmation?code=${user.accountData.confirmationCode}`></a>")
     }
 }
