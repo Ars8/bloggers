@@ -34,6 +34,12 @@ export const authService = {
         }
 
         return user
+    },    
+    async checkEmail(email: string) {
+        const user = await usersRepository.findByEmail(email)
+        if(!user) return false
+        
+        return user
     },
     async _generateHash(password: string, salt: string) {
         const hash = await bcrypt.hash(password, salt)
