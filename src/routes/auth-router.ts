@@ -107,7 +107,7 @@ authRouter.post('/registration-confirmation', codeValidation, async(req: Request
 authRouter.post('/registration-email-resending', EmailValidation, async(req: Request, res: Response) => {
     async (req: Request, res: Response) => {
         const user = await authService.checkIsConfirmed(req.body.email)
-        if (user?.emailConfirmation.isConfirmed === false) {
+        if (user && user?.emailConfirmation.isConfirmed === false) {
                 await emailsManager.reSendEmailConfirmationMessage(user)
                 res.status(201).send()
         } else {
