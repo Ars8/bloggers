@@ -35,7 +35,7 @@ authRouter.post('/registration', usersLoginValidation, userEmailValidation, user
     if (user) {
         res.status(204).send()
     } else {
-        res.status(400).send()
+        res.status(403).send()
     }
 })
 

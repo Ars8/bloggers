@@ -1,7 +1,4 @@
 import bcrypt from 'bcrypt'
-import {v4 as uuidv4} from 'uuid'
-import { ObjectId } from 'mongodb'
-import { add } from 'date-fns'
 import { usersRepository } from '../repositories/users-repository'
 import { emailsManager } from '../managers/email-manager'
 import { usersService } from './users-service'
