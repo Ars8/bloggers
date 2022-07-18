@@ -32,7 +32,7 @@ const userEmailValidation = body('email')
 
 authRouter.post('/registration', usersLoginValidation, userEmailValidation, usersPasswordValidation, async(req: Request, res: Response) => {
     const findUser = await authService.checkCredentials(req.body.login, req.body.password)
-    if(!findUser) {
+    if(findUser) {
         return res.status(400).send()
     }
     const user = await authService.createUser(req.body.login, req.body.email, req.body.password)
