@@ -35,7 +35,6 @@ const userEmailValidation = body('email')
     .exists().withMessage('incorrect email')
     .trim().notEmpty().withMessage('incorrect email')
     .isString().withMessage('incorrect email')
-    .normalizeEmail().isEmail()
     .custom(email => {
         return authService.checkEmail(email).then(function(email) {
             if (email) {
