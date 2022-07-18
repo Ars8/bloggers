@@ -19,7 +19,7 @@ export const usersLoginValidation = body('login')
             }
         }
         )        
-    }).withMessage('incorrect login')
+    }).withMessage('this login is already in use')
 
 export const usersPasswordValidation = body('password')
     .exists().withMessage('incorrect password')
@@ -43,7 +43,7 @@ const userEmailValidation = body('email')
             }
         }
         )        
-    }).withMessage('incorrect email')
+    }).withMessage('this email is already in use')
     
 
 authRouter.post('/registration', usersLoginValidation, userEmailValidation, usersPasswordValidation, async(req: Request, res: Response) => {
