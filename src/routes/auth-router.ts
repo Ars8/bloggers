@@ -51,7 +51,7 @@ const EmailValidation = body('email')
     .isEmail().withMessage('Eto email')
     .custom(async email => {
         return await authService.checkIsConfirmed(email).then(function(user) {
-            if (!user || user?.emailConfirmation.isConfirmed === true) {
+            if (user && user?.emailConfirmation.isConfirmed === true) {
                 throw new Error('this email is already confirm1')
             }
         }
