@@ -12,6 +12,7 @@ export const authService = {
             try {
                 await emailsManager.sendEmailConfirmationMessage(user)
             } catch (err) {
+                console.error(err)
                 await usersRepository.delete(user.id)
                 return null
             }
