@@ -56,7 +56,7 @@ const EmailValidation = body('email')
             }
         }
         )        
-    }).withMessage('this email is already in use')
+    }).withMessage('this email is already confirm')
 
 authRouter.post('/registration', usersLoginValidation, userEmailValidation, usersPasswordValidation, async(req: Request, res: Response) => {
     
