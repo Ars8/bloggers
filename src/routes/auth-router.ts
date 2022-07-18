@@ -6,7 +6,7 @@ import { emailAdapter } from "../adapters/email-adapter";
 import { authService } from "../domain/auth-service";
 
 export const authRouter = Router({})
-const EMAIL_REGEX = new RegExp("^[\w\.]+@([\w]+\.)+[\w-]{2,4}$")
+const EMAIL_REGEX = new RegExp("^[\/w\.]+@([\w]+\.)+[\w-]{2,4}$")
 
 export const usersLoginValidation = body('login')
     .exists().withMessage('incorrect login')
@@ -35,6 +35,7 @@ const userEmailValidation = body('email')
     .exists().withMessage('incorrect email')
     .trim().notEmpty().withMessage('incorrect email')
     .isString().withMessage('incorrect email')
+    .matches(EMAIL_REGEX).withMessage('incorrect email by regex part 3')
     .custom(email => {
         return authService.checkEmail(email).then(function(email) {
             if (email) {
