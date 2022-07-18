@@ -94,18 +94,18 @@ authRouter.post('/login', usersLoginValidation, usersPasswordValidation, async(r
 })
 
 authRouter.post('/registration-confirmation', codeValidation, async(req: Request, res: Response) => {
-    async (req: Request, res: Response) => {
+    
         const result = await authService.confirmEmail(req.body.code)
         if (result) {
             res.status(204).send()
         } else {
             res.send(400)
         }
-    }
+    
 })
 
 authRouter.post('/registration-email-resending', EmailValidation, async(req: Request, res: Response) => {
-    async (req: Request, res: Response) => {
+    
         const user = await authService.checkIsConfirmed(req.body.email)
         if (user && user?.emailConfirmation.isConfirmed === false) {
                 await emailsManager.reSendEmailConfirmationMessage(user)
@@ -113,5 +113,5 @@ authRouter.post('/registration-email-resending', EmailValidation, async(req: Req
         } else {
             res.send(400)
         }
-    }
+    
 })
