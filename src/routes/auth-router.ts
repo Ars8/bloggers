@@ -35,15 +35,14 @@ const userEmailValidation = body('email')
     .exists().withMessage('incorrect email')
     .trim().notEmpty().withMessage('incorrect email')
     .isString().withMessage('incorrect email')
-    .matches(EMAIL_REGEX).withMessage('incorrect email by regex part 3')
-    /* .custom(email => {
+    .custom(email => {
         return authService.checkEmail(email).then(function(email) {
             if (email) {
                 throw new Error('this email is already in use')
             }
         }
         )        
-    }).withMessage('this email is already in use') */
+    }).withMessage('this email is already in use')
     
 
 authRouter.post('/registration', usersLoginValidation, userEmailValidation, usersPasswordValidation, async(req: Request, res: Response) => {
