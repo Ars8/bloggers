@@ -33,6 +33,7 @@ const userEmailValidation = body('email')
     .exists().withMessage('incorrect email')
     .trim().notEmpty().withMessage('incorrect email')
     .isString().withMessage('incorrect email')
+    .isEmail().withMessage('Eto email')
     .custom(async email => {
         return await authService.checkEmail(email).then(function(email) {
             if (email) {
