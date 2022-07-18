@@ -5,7 +5,7 @@ const mongoUri = process.env.mongoUri || "mongodb://127.0.0.1:27017"
 
 export const client = new MongoClient(mongoUri);
 
-let db = client.db("social-net")
+export let db = client.db("social-net")
 
 export const usersCollection = db.collection<UserAccountDBType>('users')
 export const bloggersCollection = db.collection<BloggerDBType>('bloggers')
