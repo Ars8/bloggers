@@ -34,7 +34,12 @@ export const authService = {
         }
 
         return user
-    },    
+    },
+    async checkIsConfirmed(email: string) {
+        const user = await usersRepository.findByEmail(email)
+        
+        return user
+    },  
     async checkLogin(login: string) {
         const user = await usersRepository.findByLogin(login)
         if(!user) return false

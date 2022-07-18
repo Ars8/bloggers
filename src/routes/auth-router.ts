@@ -3,6 +3,7 @@ import {usersService} from "../domain/users-service";
 import {jwtService} from "../application/jwt-service";
 import {body, validationResult} from "express-validator";
 import { authService } from "../domain/auth-service";
+import { emailsManager } from "../managers/email-manager";
 
 export const authRouter = Router({})
 
@@ -98,14 +99,14 @@ authRouter.post('/registration-confirmation', codeValidation, async(req: Request
     }
 })
 
-authRouter.post('/resend-registration-code', usersLoginValidation, usersPasswordValidation, async(req: Request, res: Response) => {
+authRouter.post('/registration-email-resending', userEmailValidation, async(req: Request, res: Response) => {
     async (req: Request, res: Response) => {
-        const result = await authService.confirmEmail(req.body.email)
-        if (result) {
-            res.status(201).send()
+        const user = await authService.checkIsConfirmed(req.body.email)
+        if (user?.emailConfirmation.isConfirmed === false) {
+                await emailsManager.reSendEmailConfirmationMessage(user)
+                res.status(201).send()
         } else {
             res.send(400)
         }
-        return 429
     }
 })
