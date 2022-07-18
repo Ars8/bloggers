@@ -12,8 +12,8 @@ export const usersLoginValidation = body('login')
     .exists().withMessage('incorrect login')
     .trim().notEmpty().withMessage('incorrect login')
     .isString().withMessage('incorrect login')
-    .custom(async login => {
-        return await authService.checkLogin(login).then(function(login) {
+    .custom(login => {
+        return authService.checkLogin(login).then(function(login) {
             if (!login) {
                 throw new Error('this login is already in use')
             }
@@ -36,8 +36,8 @@ const userEmailValidation = body('email')
     .trim().notEmpty().withMessage('incorrect email')
     .isString().withMessage('incorrect email')
     .matches(EMAIL_REGEX).withMessage('incorrect email')
-    .custom(async email => {
-        return await authService.checkEmail(email).then(function(email) {
+    .custom(email => {
+        return authService.checkEmail(email).then(function(email) {
             if (!email) {
                 throw new Error('this email is already in use')
             }
@@ -58,7 +58,7 @@ authRouter.post('/registration', usersLoginValidation, userEmailValidation, user
     if (!err.isEmpty()) {
         return res.status(400).json({ errorsMessages: errors })
     }
-    
+
     const user = await authService.createUser(req.body.login, req.body.email, req.body.password)
     if (user) {
         res.status(204).send()
