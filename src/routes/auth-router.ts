@@ -14,7 +14,7 @@ export const usersLoginValidation = body('login')
     .isString().withMessage('incorrect login')
     .custom(login => {
         return authService.checkLogin(login).then(function(login) {
-            if (!login) {
+            if (login) {
                 throw new Error('this login is already in use')
             }
         }
@@ -38,7 +38,7 @@ const userEmailValidation = body('email')
     .matches(EMAIL_REGEX).withMessage('incorrect email')
     .custom(email => {
         return authService.checkEmail(email).then(function(email) {
-            if (!email) {
+            if (email) {
                 throw new Error('this email is already in use')
             }
         }
