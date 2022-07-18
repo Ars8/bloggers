@@ -1,7 +1,9 @@
 import bcrypt from 'bcrypt'
+import {v4 as uuidv4} from 'uuid'
 import { usersRepository } from '../repositories/users-repository'
 import { emailsManager } from '../managers/email-manager'
 import { usersService } from './users-service'
+import { UserAccountDBType } from '../repositories/types'
 
 export const authService = {
     async createUser(login: string, email: string, password: string) {
@@ -65,5 +67,10 @@ export const authService = {
 
         let result = await usersRepository.updateConfirmation(user.id)
         return result
+    },
+    async resendConfirmEmail(user: UserAccountDBType) {
+        const newConfirmationCode = uuidv4()
+        await emailsManager.reSendEmailConfirmationMessage(user, newConfirmationCode)
+
     }
 }

@@ -119,7 +119,7 @@ authRouter.post('/registration-email-resending', EmailValidation, async(req: Req
     
     const user = await authService.checkIsConfirmed(req.body.email)
     if (user && user?.emailConfirmation.isConfirmed === false) {
-            await emailsManager.reSendEmailConfirmationMessage(user)
+            await authService.resendConfirmEmail(user)
             res.status(204).send()
     } else {
         res.send(400)
