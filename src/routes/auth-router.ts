@@ -34,7 +34,7 @@ export const codeValidation = body('code')
     .custom(async code => {
         console.log(code)
         return await authService.checkCode(code).then(function(user) {
-            if (!user) {
+            if (user?.emailConfirmation.confirmationCode !== code) {
                 throw new Error('can not find this code')
             }
         }
