@@ -14,12 +14,12 @@ export const usersLoginValidation = body('login')
     .isLength({ min: 3, max: 10 }).withMessage('incorrect login')
     .custom(async login => {
         return await authService.checkLogin(login).then(function(login) {
-            if (login) {
-                throw new Error('this login is already in use')
+            if (!login) {
+                throw new Error('cannot find login')
             }
         }
         )        
-    }).withMessage('this login is already in use')
+    }).withMessage('cannot find login')
 
 export const usersPasswordValidation = body('password')
     .exists().withMessage('incorrect password')
