@@ -53,13 +53,18 @@ const EmailValidation = body('email')
             return await authService.checkIsConfirmed(email).then(function(user) {
                 if (!user) {
                     throw new Error('this user is not exist')
-                }
+                }         
+            }
+        )        
+    }).withMessage('this user is not exist')
+    .custom(async email => {
+            return await authService.checkIsConfirmed(email).then(function(user) {
                 if (user?.emailConfirmation.isConfirmed === true) {
-                    throw new Error('this email is already confirm1')
+                    throw new Error('this email is already confirm25')
                 }            
             }
         )        
-    }).withMessage('this email is already confirm1')
+    }).withMessage('this email is already confirm25')
 
 authRouter.post('/registration', usersLoginValidation, userEmailValidation, usersPasswordValidation, async(req: Request, res: Response) => {
     
