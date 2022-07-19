@@ -53,6 +53,12 @@ export const authService = {
         if(!user) return false
         
         return user
+    },    
+    async checkCode(code: string) {
+        const user = await usersRepository.findByCode(code)
+        if(!user) return false
+        
+        return user
     },
     async _generateHash(password: string, salt: string) {
         const hash = await bcrypt.hash(password, salt)
