@@ -125,7 +125,7 @@ authRouter.post('/registration-confirmation', codeValidation, async(req: Request
         if (result) {
             res.status(204).send()
         } else {
-            res.send(400)
+            res.send(403)
         }
     
 })
