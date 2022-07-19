@@ -61,21 +61,22 @@ const EmailValidation = body('email')
     .isEmail().withMessage('Eto email')
     .custom(async email => {
             return await authService.checkIsConfirmed(email).then(function(user) {
-                if (user?.emailConfirmation.isConfirmed === true) {
-                    throw new Error('this email is already confirm25')
-                }            
-            }
-        )        
-    }).withMessage('this email is already confirm541')
-    .custom(async email => {
-            return await authService.checkIsConfirmed(email).then(function(user) {
                 if (!user) {
                     throw new Error('this user is not exist')
                 }         
             }
         )        
     }).withMessage('this user is not exist')
-    
+
+const EmailValidationIsConfirmed = body('email')
+    .custom(async email => {
+            return await authService.checkIsConfirmed(email).then(function(user) {
+                if (user?.emailConfirmation.isConfirmed === true) {
+                    throw new Error('this email is already confirm541')
+                }            
+            }
+        )        
+    }).withMessage('this email is already confirm541')
 
 authRouter.post('/registration', usersLoginValidation, userEmailValidation, usersPasswordValidation, async(req: Request, res: Response) => {
     
@@ -142,7 +143,7 @@ authRouter.post('/registration-confirmation', codeValidation, async(req: Request
     
 })
 
-authRouter.post('/registration-email-resending', EmailValidation, async(req: Request, res: Response) => {
+authRouter.post('/registration-email-resending', EmailValidationIsConfirmed, EmailValidation, async(req: Request, res: Response) => {
 
     const err = validationResult(req)
     const errors = err.array({ onlyFirstError: true }).map(elem => {
