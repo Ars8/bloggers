@@ -54,9 +54,9 @@ const EmailValidation = body('email')
             if (user?.emailConfirmation.isConfirmed === true) {
                 throw new Error('this email is already confirm1')
             }
-            if (!user) {
+            /* if (!user) {
                 throw new Error('this user is not exist')
-            }
+            } */
         }
         )        
     }).withMessage('this email is already confirm1')
