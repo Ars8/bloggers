@@ -31,14 +31,14 @@ export const codeValidation = body('code')
     .exists().withMessage('incorrect code')
     .trim().notEmpty().withMessage('incorrect code')
     .isString().withMessage('incorrect code')
-    /* .custom(async code => {
+    .custom(async code => {
         return await authService.checkCode(code).then(function(user) {
             if (!user) {
                 throw new Error('can not find this code')
             }
         }
         )        
-    }).withMessage('this email is already in use') */
+    }).withMessage('this email is already in use')
 
 const userEmailValidation = body('email')
     .exists().withMessage('incorrect email')
