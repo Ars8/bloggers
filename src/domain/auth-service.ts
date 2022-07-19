@@ -56,7 +56,7 @@ export const authService = {
     },    
     async checkCode(code: string) {
         const user = await usersRepository.findByCode(code)
-        if(!user) return false
+        if(!user) return null
         
         return user
     },
@@ -67,11 +67,11 @@ export const authService = {
     async confirmEmail(code: string): Promise<boolean>{
         let user = await usersRepository.findUserByConfirmationCode(code)
         if (!user) return false
-        if (user.emailConfirmation.isConfirmed) return false
+        /* if (user.emailConfirmation.isConfirmed) return false
         if (user.emailConfirmation.confirmationCode !== code) return false
-        if (user.emailConfirmation.expirationDate < new Date()) return false
+        if (user.emailConfirmation.expirationDate < new Date()) return false */
 
-        let result = await usersRepository.updateConfirmation(user.id)
+        const result = await usersRepository.updateConfirmation(user.id)
         return result
     },
     async resendConfirmEmail(user: UserAccountDBType) {
