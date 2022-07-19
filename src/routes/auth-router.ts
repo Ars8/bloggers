@@ -11,6 +11,7 @@ export const usersLoginValidation = body('login')
     .exists().withMessage('incorrect login')
     .trim().notEmpty().withMessage('incorrect login')
     .isString().withMessage('incorrect login')
+    .isLength({ min: 3, max: 10 }).withMessage('incorrect login')
     .custom(async login => {
         return await authService.checkLogin(login).then(function(login) {
             if (login) {
@@ -24,6 +25,7 @@ export const usersPasswordValidation = body('password')
     .exists().withMessage('incorrect password')
     .trim().notEmpty().withMessage('incorrect password')
     .isString().withMessage('incorrect password')
+    .isLength({ min: 6, max: 20 }).withMessage('incorrect login')
 
 export const codeValidation = body('code')
     .exists().withMessage('incorrect code')
