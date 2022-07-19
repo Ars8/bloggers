@@ -50,14 +50,14 @@ const EmailValidation = body('email')
     .isString().withMessage('incorrect email')
     .isEmail().withMessage('Eto email')
     .custom(async email => {
-        return await authService.checkIsConfirmed(email).then(function(user) {
-            if (user?.emailConfirmation.isConfirmed === true) {
-                throw new Error('this email is already confirm1')
+            return await authService.checkIsConfirmed(email).then(function(user) {
+                if (!user) {
+                    throw new Error('this user is not exist')
+                }
+                if (user?.emailConfirmation.isConfirmed === true) {
+                    throw new Error('this email is already confirm1')
+                }            
             }
-            /* if (!user) {
-                throw new Error('this user is not exist')
-            } */
-        }
         )        
     }).withMessage('this email is already confirm1')
 
