@@ -136,7 +136,7 @@ authRouter.post('/registration-confirmation', codeValidation, async(req: Request
     }
     
     const result = await authService.confirmEmail(req.body.code)
-    if (result === true) {
+    if (result && result === true) {
         res.status(204).send()
     } else {
         res.send(403)
