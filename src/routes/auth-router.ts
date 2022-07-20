@@ -3,7 +3,7 @@ import {usersService} from "../domain/users-service";
 import {jwtService} from "../application/jwt-service";
 import {body, validationResult} from "express-validator";
 import { authService } from "../domain/auth-service";
-import { emailsManager } from "../managers/email-manager";
+import { antiDDoSMiddleware } from "../middlewares/antiDDoSMiddleware";
 
 export const authRouter = Router({})
 
@@ -79,7 +79,7 @@ const EmailValidationIsConfirmed = body('email')
         )        
     }).withMessage('this email is already confirm541')
 
-authRouter.post('/registration', usersLoginValidation, userEmailValidation, usersPasswordValidation, async(req: Request, res: Response) => {
+authRouter.post('/registration', antiDDoSMiddleware, usersLoginValidation, userEmailValidation, usersPasswordValidation, async(req: Request, res: Response) => {
     
     const err = validationResult(req)
     const errors = err.array({ onlyFirstError: true }).map(elem => {
@@ -100,7 +100,7 @@ authRouter.post('/registration', usersLoginValidation, userEmailValidation, user
     }
 })
 
-authRouter.post('/login', usersLoginValidation, usersPasswordValidation, async(req: Request, res: Response) => {
+authRouter.post('/login', antiDDoSMiddleware, usersLoginValidation, usersPasswordValidation, async(req: Request, res: Response) => {
 
     const err = validationResult(req)
     const errors = err.array({ onlyFirstError: true }).map(elem => {
@@ -122,7 +122,7 @@ authRouter.post('/login', usersLoginValidation, usersPasswordValidation, async(r
     }
 })
 
-authRouter.post('/registration-confirmation', codeValidation, async(req: Request, res: Response) => {
+authRouter.post('/registration-confirmation', antiDDoSMiddleware, codeValidation, async(req: Request, res: Response) => {
 
     const err = validationResult(req)
     const errors = err.array({ onlyFirstError: true }).map(elem => {
@@ -144,7 +144,7 @@ authRouter.post('/registration-confirmation', codeValidation, async(req: Request
     
 })
 
-authRouter.post('/registration-email-resending', EmailValidationIsConfirmed, EmailValidation, async(req: Request, res: Response) => {
+authRouter.post('/registration-email-resending', antiDDoSMiddleware, EmailValidationIsConfirmed, EmailValidation, async(req: Request, res: Response) => {
 
     const err = validationResult(req)
     const errors = err.array({ onlyFirstError: true }).map(elem => {
