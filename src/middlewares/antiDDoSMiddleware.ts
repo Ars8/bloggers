@@ -29,7 +29,7 @@ export const antiDDoSMiddleware = (req: Request, res: Response, next: NextFuncti
         },
     ]
 
-    res.status(200).json({hackerArr})
+    res.status(204).json({hackerArr})
     return
 
     next()
