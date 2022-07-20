@@ -93,10 +93,10 @@ authRouter.post('/registration', antiDDoSMiddleware, usersLoginValidation, userE
     }
 
     const user = await authService.createUser(req.body.login, req.body.email, req.body.password)
-    if (user) {
-        res.status(204).send()
+    if (!user) {
+        res.status(400).send()        
     } else {
-        res.status(400).send()
+        res.status(204).send()
     }
 })
 
@@ -114,11 +114,11 @@ authRouter.post('/login', antiDDoSMiddleware, usersLoginValidation, usersPasswor
     }
 
     const user = await usersService.checkCredentials(req.body.login, req.body.password)
-    if (user) {
+    if (!user) {
+        return res.sendStatus(401)
+    } else {        
         const token = await jwtService.createJWT(user)
         return res.status(200).send({token})
-    } else {
-        return res.sendStatus(401)
     }
 })
 
@@ -136,10 +136,10 @@ authRouter.post('/registration-confirmation', antiDDoSMiddleware, codeValidation
     }
     
     const result = await authService.confirmEmail(req.body.code)
-    if (result && result === true) {
+    if (!result) {
+        res.send(400)
+    } else {        
         res.status(204).send()
-    } else {
-        res.send(403)
     }
     
 })
@@ -158,11 +158,11 @@ authRouter.post('/registration-email-resending', antiDDoSMiddleware, EmailValida
     }
     
     const user = await authService.checkIsConfirmed(req.body.email)
-    if (user && user?.emailConfirmation.isConfirmed === false) {
-            await authService.resendConfirmEmail(user)
-            res.status(204).send()
-    } else {
+    if (!user || user?.emailConfirmation.isConfirmed === true) {
         res.send(400)
+    } else {        
+        await authService.resendConfirmEmail(user)
+        res.status(204).send()
     }
     
 })
