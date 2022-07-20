@@ -9,6 +9,8 @@ import {commentsRouter} from "./routes/comments-router";
 import { testingRouter } from './routes/testing-router';
 
 const app = express()
+app.set('trust proxy', true)
+app.enable('trust proxy')
 
 const port = process.env.PORT || 5000
 
