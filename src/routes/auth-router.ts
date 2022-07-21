@@ -60,16 +60,16 @@ const EmailValidation = body('email')
     .trim().notEmpty().withMessage('incorrect email')
     .isString().withMessage('incorrect email')
     .isEmail().withMessage('Eto email')
-    .custom(async email => {
+    /* .custom(async email => {
             return await authService.checkIsConfirmed(email).then(function(user) {
                 if (!user) {
                     throw new Error('this user is not exist')
                 }         
             }
         )        
-    }).withMessage('this user is not exist')
+    }).withMessage('this user is not exist') */
 
-const EmailValidationIsConfirmed = body('email')
+/* const EmailValidationIsConfirmed = body('email')
     .custom(async email => {
             return await authService.checkIsConfirmed(email).then(function(user) {
                 if (user?.emailConfirmation.isConfirmed === true) {
@@ -77,7 +77,7 @@ const EmailValidationIsConfirmed = body('email')
                 }            
             }
         )        
-    }).withMessage('this email is already confirm541')
+    }).withMessage('this email is already confirm541') */
 
 authRouter.post('/registration', antiDDoSMiddleware, usersLoginValidation, userEmailValidation, usersPasswordValidation, async(req: Request, res: Response) => {
     
@@ -144,7 +144,7 @@ authRouter.post('/registration-confirmation', antiDDoSMiddleware, codeValidation
     
 })
 
-authRouter.post('/registration-email-resending', antiDDoSMiddleware, EmailValidationIsConfirmed, EmailValidation, async(req: Request, res: Response) => {
+authRouter.post('/registration-email-resending', antiDDoSMiddleware, EmailValidation, async(req: Request, res: Response) => {
 
     const err = validationResult(req)
     const errors = err.array({ onlyFirstError: true }).map(elem => {
