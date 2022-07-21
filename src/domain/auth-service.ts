@@ -46,21 +46,21 @@ export const authService = {
     },  
     async checkLogin(login: string) {
         const user = await usersRepository.findByLogin(login)
-        if(!user) return false
+        if(!user) return null
         
         return user
     },    
     async checkEmail(email: string) {
         const user = await usersRepository.findByEmail(email)
-        if(!user) return false
+        if(!user) return null
         
         return user
     },    
     async checkCode(code: string) {
         const user = await usersRepository.findUserByConfirmationCode(code)
-        if (!user) return false
-        if (user.emailConfirmation.isConfirmed) return false
-        if (user.emailConfirmation.expirationDate < new Date()) return false
+        if (!user) return null
+        if (user.emailConfirmation.isConfirmed) return null
+        if (user.emailConfirmation.expirationDate < new Date()) return null
         
         return user
     },
@@ -80,6 +80,7 @@ export const authService = {
     async resendConfirmEmail(user: UserAccountDBType) {
         const newConfirmationCode = uuidv4()
         await emailsManager.reSendEmailConfirmationMessage(user, newConfirmationCode)
+        await usersRepository.updateConfirmationCode(user.id, newConfirmationCode)
 
     }
 }
