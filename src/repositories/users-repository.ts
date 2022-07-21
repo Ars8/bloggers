@@ -56,14 +56,6 @@ export const usersRepository = {
             return null
         }
     },
-    async findByCode(code: string) {
-        const user = await usersCollection.findOne({'emailConfirmation.confirmationCode': code})
-        if (user) {
-            return user
-        } else {
-            return null
-        }
-    },
     async findUserByConfirmationCode(emailConfirmationCode: string) {
         const user = await usersCollection.findOne({'emailConfirmation.confirmationCode': emailConfirmationCode})
         if (user) {

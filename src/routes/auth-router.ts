@@ -33,15 +33,15 @@ export const codeValidation = body('code')
     .exists().withMessage('incorrect code')
     .trim().notEmpty().withMessage('incorrect code')
     .isString().withMessage('incorrect code')
-    /* .custom(async code => {
+    .custom(async code => {
         console.log(code)
-        return await authService.confirmEmail(code).then(function(user) {
+        return await authService.checkCode(code).then(function(user) {
             if (!user) {
                 throw new Error('can not find this code')
             }
         }
         )        
-    }).withMessage('can not find this code') */
+    }).withMessage('can not find this code')
 
 const userEmailValidation = body('email')
     .exists().withMessage('incorrect email')

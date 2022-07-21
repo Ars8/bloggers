@@ -57,7 +57,7 @@ export const authService = {
         return user
     },    
     async checkCode(code: string) {
-        const user = await usersRepository.findByCode(code)
+        const user = await usersRepository.findUserByConfirmationCode(code)
         if(!user) return false
         
         return user
