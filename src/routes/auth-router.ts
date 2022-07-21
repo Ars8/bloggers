@@ -13,13 +13,13 @@ export const usersLoginValidation = body('login')
     .isString().withMessage('incorrect login')
     .isLength({ min: 3, max: 10 }).withMessage('incorrect login')
     .custom(async login => {
-        return await authService.checkLogin(login).then(function(login) {
-            if (login) {
-                throw new Error('cannot find login')
+        return await authService.checkLogin(login).then(function(user) {
+            if (!user) {
+                throw new Error('cannot find login change')
             }
         }
         )        
-    }).withMessage('cannot find login')
+    }).withMessage('cannot find login change')
 
 export const usersPasswordValidation = body('password')
     .exists().withMessage('incorrect password')
