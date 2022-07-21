@@ -166,7 +166,7 @@ authRouter.post('/login', antiDDoSMiddleware, usersLoginValidation, usersPasswor
     }
 
     const user = await usersService.checkCredentials(req.body.login, req.body.password)
-    if (!user) {
+    if (!user || user === undefined) {
         return res.sendStatus(401)
     } else {        
         const token = await jwtService.createJWT(user)
