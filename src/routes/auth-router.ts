@@ -12,14 +12,14 @@ export const usersLoginValidation = body('login')
     .trim().notEmpty().withMessage('incorrect login')
     .isString().withMessage('incorrect login')
     .isLength({ min: 3, max: 10 }).withMessage('incorrect login')
-    .custom(async login => {
+    /* .custom(async login => {
         return await authService.checkLogin(login).then(function(user) {
             if (user) {
                 throw new Error('cannot find login change')
             }
         }
         )        
-    }).withMessage('cannot find login change')
+    }).withMessage('cannot find login change') */
 
 export const usersPasswordValidation = body('password')
     .exists().withMessage('incorrect password')
@@ -31,7 +31,7 @@ export const codeValidation = body('code')
     .exists().withMessage('incorrect code')
     .trim().notEmpty().withMessage('incorrect code')
     .isString().withMessage('incorrect code')
-    .custom(async code => {
+    /* .custom(async code => {
         console.log(code)
         return await authService.confirmEmail(code).then(function(user) {
             if (!user) {
@@ -39,7 +39,7 @@ export const codeValidation = body('code')
             }
         }
         )        
-    }).withMessage('can not find this code')
+    }).withMessage('can not find this code') */
 
 const userEmailValidation = body('email')
     .exists().withMessage('incorrect email')
@@ -60,24 +60,24 @@ const EmailValidation = body('email')
     .trim().notEmpty().withMessage('incorrect email')
     .isString().withMessage('incorrect email')
     .isEmail().withMessage('Eto email')
-    .custom(async email => {
+    /* .custom(async email => {
             return await authService.checkIsConfirmed(email).then(function(user) {
                 if (!user) {
                     throw new Error('this user is not exist')
                 }         
             }
         )        
-    }).withMessage('this user is not exist')
+    }).withMessage('this user is not exist') */
 
 const EmailValidationIsConfirmed = body('email')
-    .custom(async email => {
+    /* .custom(async email => {
             return await authService.checkIsConfirmed(email).then(function(user) {
                 if (user?.emailConfirmation.isConfirmed === true) {
                     throw new Error('this email is already confirm541')
                 }            
             }
         )        
-    }).withMessage('this email is already confirm541')
+    }).withMessage('this email is already confirm541') */
 
 authRouter.post('/registration', antiDDoSMiddleware, usersLoginValidation, userEmailValidation, usersPasswordValidation, async(req: Request, res: Response) => {
     
@@ -91,6 +91,7 @@ authRouter.post('/registration', antiDDoSMiddleware, usersLoginValidation, userE
     if (!err.isEmpty()) {
         return res.status(400).json({ errorsMessages: errors })
     }
+    
     const check = await authService.checkEmail(req.body.email)
     if (check) {
         res.status(400).send()        
