@@ -58,6 +58,7 @@ export const authService = {
     },    
     async checkCode(code: string) {
         const user = await usersRepository.findByCode(code)
+        if(!user) return false
         
         return user
     },

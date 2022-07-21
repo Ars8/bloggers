@@ -14,7 +14,7 @@ export const usersLoginValidation = body('login')
     .isLength({ min: 3, max: 10 }).withMessage('incorrect login')
     .custom(async login => {
         return await authService.checkLogin(login).then(function(login) {
-            if (login) {
+            if (!login) {
                 throw new Error('cannot find login')
             }
         }
@@ -34,7 +34,7 @@ export const codeValidation = body('code')
     .custom(async code => {
         console.log(code)
         return await authService.checkCode(code).then(function(user) {
-            if (user?.emailConfirmation.confirmationCode !== code) {
+            if (!user) {
                 throw new Error('can not find this code')
             }
         }
