@@ -147,7 +147,7 @@ authRouter.post('/registration-email-resending', antiDDoSMiddleware, EmailValida
     }
     
     const user = await authService.checkIsConfirmed(req.body.email)
-    if (!user || user?.emailConfirmation.isConfirmed === true) {
+    if (!user) {
         res.send(400)
     } else {        
         await authService.resendConfirmEmail(user)

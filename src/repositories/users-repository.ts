@@ -51,6 +51,7 @@ export const usersRepository = {
     async findByEmail(email: string) {
         const user = await usersCollection.findOne({'accountData.email': email})
         if (user) {
+            console.log(user)
             return user
         } else {
             return null
