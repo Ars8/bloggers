@@ -72,14 +72,14 @@ const EmailValidation = body('email')
     }).withMessage('this user is not exist') */
 
 const EmailValidationIsConfirmed = body('email')
-    /* .custom(async email => {
+    .custom(async email => {
             return await authService.checkIsConfirmed(email).then(function(user) {
                 if (user?.emailConfirmation.isConfirmed === true) {
                     throw new Error('this email is already confirm541')
                 }            
             }
         )        
-    }).withMessage('this email is already confirm541') */
+    }).withMessage('this email is already confirm541')
 
 authRouter.post('/registration', antiDDoSMiddleware, usersLoginValidation, usersLoginExistValidation, userEmailValidation, usersPasswordValidation, async(req: Request, res: Response) => {
     
