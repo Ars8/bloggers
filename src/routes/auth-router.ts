@@ -14,7 +14,7 @@ export const usersLoginValidation = body('login')
     .isLength({ min: 3, max: 10 }).withMessage('incorrect login')
     .custom(async login => {
         return await authService.checkLogin(login).then(function(user) {
-            if (!user) {
+            if (user) {
                 throw new Error('cannot find login change')
             }
         }
