@@ -46,14 +46,14 @@ const userEmailValidation = body('email')
     .trim().notEmpty().withMessage('incorrect email')
     .isString().withMessage('incorrect email')
     .isEmail().withMessage('Eto email')
-    .custom(async email => {
+    /* .custom(async email => {
         return await authService.checkEmail(email).then(function(email) {
             if (email) {
                 throw new Error('this email is already in use')
             }
         }
         )        
-    }).withMessage('this email is already in use')
+    }).withMessage('this email is already in use') */
 
 const EmailValidation = body('email')
     .exists().withMessage('incorrect email')
@@ -90,6 +90,10 @@ authRouter.post('/registration', antiDDoSMiddleware, usersLoginValidation, userE
     })
     if (!err.isEmpty()) {
         return res.status(400).json({ errorsMessages: errors })
+    }
+    const check = await authService.checkEmail(req.body.email)
+    if (check) {
+        res.status(400).send()        
     }
 
     const user = await authService.createUser(req.body.login, req.body.email, req.body.password)
