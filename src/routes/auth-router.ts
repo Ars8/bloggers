@@ -72,6 +72,10 @@ const EmailValidation = body('email')
     }).withMessage('this user is not exist') */
 
 const EmailValidationIsConfirmed = body('email')
+    .exists().withMessage('incorrect email')
+    .trim().notEmpty().withMessage('incorrect email')
+    .isString().withMessage('incorrect email')
+    .isEmail().withMessage('Eto email')
     .custom(async email => {
             return await authService.checkIsConfirmed(email).then(function(user) {
                 if (user?.emailConfirmation.isConfirmed === true) {
@@ -129,7 +133,7 @@ authRouter.post('/registration-confirmation', antiDDoSMiddleware, codeValidation
     
 })
 
-authRouter.post('/registration-email-resending', antiDDoSMiddleware, EmailValidationIsConfirmed, EmailValidation, async(req: Request, res: Response) => {
+authRouter.post('/registration-email-resending', antiDDoSMiddleware, EmailValidationIsConfirmed, async(req: Request, res: Response) => {
 
     const err = validationResult(req)
     const errors = err.array({ onlyFirstError: true }).map(elem => {
