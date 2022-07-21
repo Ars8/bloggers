@@ -79,7 +79,7 @@ const EmailValidationIsConfirmed = body('email')
     .custom(async email => {
             return await authService.checkIsConfirmed(email).then(function(user) {
                 console.log(user)
-                if (user?.emailConfirmation.isConfirmed === true) {
+                if (user?.emailConfirmation.isConfirmed) {
                     throw new Error('this email is already confirm541')
                 }            
             }
