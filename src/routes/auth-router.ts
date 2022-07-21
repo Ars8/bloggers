@@ -107,28 +107,6 @@ authRouter.post('/registration', antiDDoSMiddleware, usersLoginValidation, users
     }
 })
 
-authRouter.post('/login', antiDDoSMiddleware, usersLoginValidation, usersPasswordValidation, async(req: Request, res: Response) => {
-
-    const err = validationResult(req)
-    const errors = err.array({ onlyFirstError: true }).map(elem => {
-        return {
-            message: elem.msg,
-            field: elem.param,
-        }
-    })
-    if (!err.isEmpty()) {
-        return res.status(400).json({ errorsMessages: errors })
-    }
-
-    const user = await usersService.checkCredentials(req.body.login, req.body.password)
-    if (!user) {
-        return res.sendStatus(401)
-    } else {        
-        const token = await jwtService.createJWT(user)
-        return res.status(200).send({token})
-    }
-})
-
 authRouter.post('/registration-confirmation', antiDDoSMiddleware, codeValidation, async(req: Request, res: Response) => {
 
     const err = validationResult(req)
@@ -172,4 +150,26 @@ authRouter.post('/registration-email-resending', antiDDoSMiddleware, EmailValida
         res.status(204).send()
     }
     
+})
+
+authRouter.post('/login', antiDDoSMiddleware, usersLoginValidation, usersPasswordValidation, async(req: Request, res: Response) => {
+
+    const err = validationResult(req)
+    const errors = err.array({ onlyFirstError: true }).map(elem => {
+        return {
+            message: elem.msg,
+            field: elem.param,
+        }
+    })
+    if (!err.isEmpty()) {
+        return res.status(400).json({ errorsMessages: errors })
+    }
+
+    const user = await usersService.checkCredentials(req.body.login, req.body.password)
+    if (!user) {
+        return res.sendStatus(401)
+    } else {        
+        const token = await jwtService.createJWT(user)
+        return res.status(200).send({token})
+    }
 })
