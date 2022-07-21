@@ -12,14 +12,16 @@ export const usersLoginValidation = body('login')
     .trim().notEmpty().withMessage('incorrect login')
     .isString().withMessage('incorrect login')
     .isLength({ min: 3, max: 10 }).withMessage('incorrect login')
-    /* .custom(async login => {
+
+export const usersLoginExistValidation = body('login')
+    .custom(async login => {
         return await authService.checkLogin(login).then(function(user) {
             if (user) {
                 throw new Error('cannot find login change')
             }
         }
         )        
-    }).withMessage('cannot find login change') */
+    }).withMessage('cannot find login change')
 
 export const usersPasswordValidation = body('password')
     .exists().withMessage('incorrect password')
@@ -79,7 +81,7 @@ const EmailValidationIsConfirmed = body('email')
         )        
     }).withMessage('this email is already confirm541') */
 
-authRouter.post('/registration', antiDDoSMiddleware, usersLoginValidation, userEmailValidation, usersPasswordValidation, async(req: Request, res: Response) => {
+authRouter.post('/registration', antiDDoSMiddleware, usersLoginValidation, usersLoginExistValidation, userEmailValidation, usersPasswordValidation, async(req: Request, res: Response) => {
     
     const err = validationResult(req)
     const errors = err.array({ onlyFirstError: true }).map(elem => {
