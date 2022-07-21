@@ -58,7 +58,9 @@ export const authService = {
     },    
     async checkCode(code: string) {
         const user = await usersRepository.findUserByConfirmationCode(code)
-        if(!user) return false
+        if (!user) return false
+        if (user.emailConfirmation.isConfirmed) return false
+        if (user.emailConfirmation.expirationDate < new Date()) return false
         
         return user
     },
