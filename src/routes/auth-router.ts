@@ -108,6 +108,7 @@ authRouter.post('/registration', antiDDoSMiddleware, usersLoginValidation, users
     if (!user) {
         res.status(400).send()        
     } else {
+        console.log(user)
         res.status(204).send()
     }
 })
