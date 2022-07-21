@@ -28,8 +28,8 @@ export const usersService = {
                 isConfirmed: false,
                 confirmationCode: uuidv4(),
                 expirationDate: add(new Date(), {
-                    hours: 1,
-                    minutes: 3
+                    hours: 72,
+                    minutes: 1
                 })
             }
         }
