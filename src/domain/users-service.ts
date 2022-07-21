@@ -33,7 +33,7 @@ export const usersService = {
                 })
             }
         }
-        console.log(newUser.emailConfirmation.confirmationCode)
+        /* console.log(newUser.emailConfirmation.confirmationCode) */
         return usersRepository.createUser(newUser)
     },
     async checkCredentials(login: string, password: string) {
