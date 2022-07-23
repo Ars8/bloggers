@@ -20,10 +20,7 @@ const parserMiddleware = bodyParser.json()
 
 app.use(parserMiddleware)
 app.use(cookieParser());
-app.use(cors({
-    credentials: true,
-    //origin: process.env.CLIENT_URL
-}))
+app.use(cors())
 app.use('/auth', authRouter)
 app.use('/users', usersRouter)
 app.use('/bloggers', bloggersRouter)
