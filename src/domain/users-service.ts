@@ -69,7 +69,7 @@ export const usersService = {
     },
     async refresh(refreshToken: string) {
         
-        const userData = await jwtService.validateRefreshToken(refreshToken)
+        const userData: any = await jwtService.validateRefreshToken(refreshToken)
 
         console.log(userData.exp, 'userServiceData', Date.now())
 

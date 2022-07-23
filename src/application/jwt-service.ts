@@ -26,19 +26,19 @@ export const jwtService = {
     },
     async validateRefreshToken(token: string) {
         try {
-            const userData: any = jwt.verify(token, process.env.JWT_REFRESH_SECRET || '1234')
+            const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET || '1234')
             
-            return userData;
+            return userData
         } catch (error) {
-            return null;
+            return null
         }
     },
     async findToken(refreshToken: string) {
         const tokenData = await tokensRepository.findRefreshToken(refreshToken)
-        return tokenData;
+        return tokenData
     },
     async removeToken(refreshToken: string) {
         const tokenData = await tokensRepository.deleteRefreshToken(refreshToken)
-        return tokenData;
+        return tokenData
     }
 }
