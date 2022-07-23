@@ -177,7 +177,7 @@ authRouter.post('/login', antiDDoSMiddleware, usersLoginValidation, usersPasswor
     if (!userData || userData === undefined) {
         return res.sendStatus(401)
     } else {        
-        res.cookie('refreshToken', userData.refreshToken, {expires: new Date(Date.now() + 20000), httpOnly: true, secure: true})
+        res.cookie('refreshToken', userData.refreshToken, {expires: new Date(Date.now() + 19000), httpOnly: true, secure: true})
         return res.status(200).send({accessToken: userData.accessToken})
     }
 })
@@ -192,7 +192,7 @@ authRouter.post('/refresh-token', async(req: Request, res: Response) => {
         if (!userData) {
             return res.send(401)
         }
-        res.cookie('refreshToken', userData.refreshToken, {expires: new Date(Date.now() + 20000), httpOnly: true, secure: true})
+        res.cookie('refreshToken', userData.refreshToken, {expires: new Date(Date.now() + 19000), httpOnly: true, secure: true})
         return res.status(200).send({accessToken: userData.accessToken})
 })
 
