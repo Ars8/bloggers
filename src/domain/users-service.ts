@@ -83,4 +83,8 @@ export const usersService = {
         await jwtService.saveToken(user.id, tokens.refreshToken);
         return {...tokens, user}
     },
+    async logout(refreshToken: string) {
+        const token = await jwtService.removeToken(refreshToken);
+        return token;
+    },
 }

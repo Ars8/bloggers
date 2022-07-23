@@ -15,4 +15,8 @@ export const tokensRepository = {
         
         return tokenData
     },
+    async deleteRefreshToken(refreshToken: string) {
+        const tokenData = await tokensCollection.deleteOne({refreshToken: refreshToken})
+        return tokenData.deletedCount === 1
+    },
 }

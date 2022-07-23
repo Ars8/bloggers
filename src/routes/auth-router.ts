@@ -5,6 +5,7 @@ import {body, validationResult} from "express-validator";
 import { authService } from "../domain/auth-service";
 import { antiDDoSMiddleware } from "../middlewares/antiDDoSMiddleware";
 import { UserDto } from "../dtos/user-dto";
+import { authMiddleware } from "../middlewares/authMiddleware";
 
 export const authRouter = Router({})
 
@@ -193,4 +194,33 @@ authRouter.post('/refresh-token', async(req: Request, res: Response) => {
         }
         res.cookie('refreshToken', userData.refreshToken, {httpOnly: true, secure: true})
         return res.status(200).send({accessToken: userData.accessToken})
+})
+
+authRouter.post('/logout', async(req: Request, res: Response) => {
+    try {
+        const {refreshToken} = req.cookies
+        if (!refreshToken) {
+            return res.send(401)
+        }
+        await usersService.logout(refreshToken)
+        res.clearCookie('refreshToken')
+        return res.status(204)
+    } catch (e) {
+        return res.send(401)
+    }
+})
+
+authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
+    try {
+        const userId = req.user?.id
+        if (!userId) return res.status(401)
+        const user = await usersService.findUserById(userId)
+        return res.status(200).send({
+            email: user?.accountData.email,
+            login: user?.accountData.login,
+            userId: user?.id
+        })
+    } catch (e) {
+        return res.status(401)
+    }
 })

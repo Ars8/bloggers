@@ -39,5 +39,9 @@ export const jwtService = {
     async findToken(refreshToken: string) {
         const tokenData = await tokensRepository.findRefreshToken(refreshToken)
         return tokenData;
+    },
+    async removeToken(refreshToken: string) {
+        const tokenData = await tokensRepository.deleteRefreshToken(refreshToken)
+        return tokenData;
     }
 }
