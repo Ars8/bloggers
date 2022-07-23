@@ -203,7 +203,7 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
             return res.send(401)
         }
         const isDeleted = await usersService.logout(refreshToken)
-        if (!isDeleted) return res.send(401)
+        
         res.clearCookie('refreshToken')
         return res.send(204)
     } catch (e) {
