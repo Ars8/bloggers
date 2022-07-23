@@ -71,7 +71,7 @@ export const usersService = {
         
         const userData: any = await jwtService.validateRefreshToken(refreshToken)
 
-        console.log(userData.exp, 'userServiceData', Date.now())
+        console.log(userData, 'userServiceData', Date.now())
 
         const tokenFromDb = await jwtService.findToken(refreshToken)
         if (!userData || !tokenFromDb) {
