@@ -40,6 +40,14 @@ export const usersRepository = {
             return null
         }
     },
+    async findUserByIdToken(id: string) {
+        const user = await usersCollection.findOne({id: id})
+        if (user) {
+            return user
+        } else {
+            return null
+        }
+    },
     async findByLogin(login: string) {
         const user = await usersCollection.findOne({'accountData.login': login})
         if (user) {

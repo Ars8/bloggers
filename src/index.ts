@@ -1,4 +1,5 @@
 import express, {Request, Response, NextFunction} from 'express';
+import cookieParser from 'cookie-parser';
 import bodyParser from "body-parser";
 import cors from 'cors'
 import {bloggersRouter} from "./routes/bloggers-router";
@@ -18,6 +19,7 @@ const port = process.env.PORT || 5000
 const parserMiddleware = bodyParser.json()
 
 app.use(parserMiddleware)
+app.use(cookieParser());
 app.use(cors({
     credentials: true,
     origin: process.env.CLIENT_URL

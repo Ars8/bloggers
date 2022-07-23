@@ -172,12 +172,25 @@ authRouter.post('/login', antiDDoSMiddleware, usersLoginValidation, usersPasswor
         return res.status(400).json({ errorsMessages: errors })
     }
 
-    const user = await usersService.checkCredentials(req.body.login, req.body.password)
-    if (!user || user === undefined) {
+    const userData = await usersService.login(req.body.login, req.body.password)
+    if (!userData || userData === undefined) {
         return res.sendStatus(401)
-    } else {  
-        const tokens = await jwtService.generateTokens(user.id)
-        res.cookie('refreshToken', tokens.refreshToken, {httpOnly: true, secure: true})
-        return res.status(200).send({accessToken: tokens.accessToken})
+    } else {        
+        res.cookie('refreshToken', userData.refreshToken, {httpOnly: true, secure: true})
+        return res.status(200).send({accessToken: userData.accessToken})
     }
+})
+
+authRouter.post('/refresh-token', async(req: Request, res: Response) => {
+
+        const {refreshToken} = req.cookies
+        if (!refreshToken) {
+            return res.send(401)
+        }
+        const userData = await usersService.refresh(refreshToken)
+        if (!userData) {
+            return res.send(401)
+        }
+        res.cookie('refreshToken', userData.refreshToken, {httpOnly: true, secure: true})
+        return res.status(200).send({accessToken: userData.accessToken})
 })

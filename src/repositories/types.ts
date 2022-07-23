@@ -67,3 +67,8 @@ export type UserDtoType = {
     email: UserAccountType['email']
     isConfirmed: EmailConfirmationType['isConfirmed']
 }
+
+export type TokensDBType = {
+    id: string
+    refreshToken: string
+}

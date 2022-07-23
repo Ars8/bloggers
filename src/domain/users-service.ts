@@ -3,6 +3,7 @@ import {v4 as uuidv4} from 'uuid'
 import { add } from 'date-fns'
 import {UserAccountDBType} from "../repositories/types";
 import {usersRepository} from "../repositories/users-repository";
+import { jwtService } from '../application/jwt-service';
 
 export const usersService = {
     async getAllUsers(PageNumber: number, PageSize: number) {
@@ -36,16 +37,20 @@ export const usersService = {
         console.log(newUser.emailConfirmation.confirmationCode)
         return usersRepository.createUser(newUser)
     },
-    async checkCredentials(login: string, password: string) {
+    async login(login: string, password: string) {
         const user = await usersRepository.findByLogin(login)
         if(!user) return null
         
         const passwordHash = await this._generateHash(password, user.accountData.passwordSalt)
         if (user.accountData.passwordHash !== passwordHash) {
             return null
-        } 
+        }
 
-        return user
+        const tokens = await jwtService.generateTokens(user.id)
+
+        await jwtService.saveToken(user.id, tokens.refreshToken);
+
+        return {...tokens, user}
     },
     async findUserByLogin(login: string) {
         const user = await usersRepository.findByLogin(login)
@@ -61,5 +66,21 @@ export const usersService = {
     },
     async deleteUser(id: string): Promise<boolean> {
         return await usersRepository.delete(id)
+    },
+    async refresh(refreshToken: string) {
+        
+        const userData = await jwtService.validateRefreshToken(refreshToken)
+        const tokenFromDb = await jwtService.findToken(refreshToken)
+        if (!userData || !tokenFromDb) {
+            return null
+        }
+        const user = await usersRepository.findUserByIdToken(userData)
+        if (!user) {
+            return null
+        }
+        const tokens = await jwtService.generateTokens(user.id);
+
+        await jwtService.saveToken(user.id, tokens.refreshToken);
+        return {...tokens, user}
     },
 }

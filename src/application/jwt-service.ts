@@ -1,10 +1,19 @@
 import {UserAccountDBType, UserDBType, UserDtoType} from "../repositories/types"
 import jwt from 'jsonwebtoken'
+import { tokensRepository } from "../repositories/tokens-repository"
 
 export const jwtService = {
     async createJWT(user: UserAccountDBType) {
         const token = jwt.sign({userId: user.id}, process.env.JWT_SECRET || '123', {expiresIn: '1h'})
         return token
+    },
+    async getUserIdByToken(token: string) {
+        try {
+            const result: any = jwt.verify(token, process.env.JWT_SECRET || '123')
+            return result.userId
+        } catch (error) {
+            return null
+        }
     },
     async generateTokens(payload: string) {
     
@@ -16,12 +25,19 @@ export const jwtService = {
             refreshToken
         }
     },
-    async getUserIdByToken(token: string) {
+    async saveToken(userId: string, refreshToken: string) {
+        await tokensRepository.saveToken(userId, refreshToken)
+    },
+    async validateRefreshToken(token: string) {
         try {
-            const result: any = jwt.verify(token, process.env.JWT_SECRET || '123')
-            return result.userId
+            const userData: any = jwt.verify(token, process.env.JWT_REFRESH_SECRET || '1234');
+            return userData;
         } catch (error) {
-            return null
+            return null;
         }
+    },
+    async findToken(refreshToken: string) {
+        const tokenData = await tokensRepository.findRefreshToken(refreshToken)
+        return tokenData;
     }
 }
