@@ -61,3 +61,9 @@ export type RegistrationDataType = {
 export type SentEmailType = {
     sentDate: Date
 }
+
+export type UserDtoType = {
+    id: string
+    email: UserAccountType['email']
+    isConfirmed: EmailConfirmationType['isConfirmed']
+}

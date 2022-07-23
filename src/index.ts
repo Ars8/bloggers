@@ -1,5 +1,6 @@
 import express, {Request, Response, NextFunction} from 'express';
 import bodyParser from "body-parser";
+import cors from 'cors'
 import {bloggersRouter} from "./routes/bloggers-router";
 import {postsRouter} from "./routes/posts-router";
 import {runDb} from "./repositories/db";
@@ -17,6 +18,10 @@ const port = process.env.PORT || 5000
 const parserMiddleware = bodyParser.json()
 
 app.use(parserMiddleware)
+app.use(cors({
+    credentials: true,
+    origin: process.env.CLIENT_URL
+}))
 app.use('/auth', authRouter)
 app.use('/users', usersRouter)
 app.use('/bloggers', bloggersRouter)

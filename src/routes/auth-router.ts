@@ -4,6 +4,7 @@ import {jwtService} from "../application/jwt-service";
 import {body, validationResult} from "express-validator";
 import { authService } from "../domain/auth-service";
 import { antiDDoSMiddleware } from "../middlewares/antiDDoSMiddleware";
+import { UserDto } from "../dtos/user-dto";
 
 export const authRouter = Router({})
 
@@ -174,8 +175,9 @@ authRouter.post('/login', antiDDoSMiddleware, usersLoginValidation, usersPasswor
     const user = await usersService.checkCredentials(req.body.login, req.body.password)
     if (!user || user === undefined) {
         return res.sendStatus(401)
-    } else {        
-        const token = await jwtService.createJWT(user)
-        return res.status(200).send({token})
+    } else {  
+        const tokens = await jwtService.generateTokens(user.id)
+        res.cookie('refreshToken', tokens.refreshToken, {httpOnly: true, secure: true})
+        return res.status(200).send({accessToken: tokens.accessToken})
     }
 })
