@@ -31,6 +31,7 @@ export const jwtService = {
     async validateRefreshToken(token: string) {
         try {
             const userData: any = jwt.verify(token, process.env.JWT_REFRESH_SECRET || '1234');
+            console.log(userData, 'userData')
             return userData;
         } catch (error) {
             return null;
