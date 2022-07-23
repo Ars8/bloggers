@@ -130,7 +130,7 @@ authRouter.post('/registration-confirmation', antiDDoSMiddleware, codeValidation
     
     const result = await authService.confirmEmail(req.body.code)
     if (!result) {
-        res.send(400)
+        res.sendStatus(400)
     } else {        
         res.status(204).send()
     }
@@ -152,7 +152,7 @@ authRouter.post('/registration-email-resending', antiDDoSMiddleware, EmailValida
     
     const user = await authService.checkIsConfirmed(req.body.email)
     if (!user) {
-        res.send(400)
+        res.sendStatus(400)
     } else {        
         await authService.resendConfirmEmail(user)
         res.status(204).send()
@@ -186,11 +186,11 @@ authRouter.post('/refresh-token', async(req: Request, res: Response) => {
 
         const {refreshToken} = req.cookies
         if (!refreshToken) {
-            return res.send(401)
+            return res.sendStatus(401)
         }
         const userData = await usersService.refresh(refreshToken)
         if (!userData) {
-            return res.send(401)
+            return res.sendStatus(401)
         }
         res.cookie('refreshToken', userData.refreshToken, {expires: new Date(Date.now() + 20000), httpOnly: true, secure: true})
         return res.status(200).send({accessToken: userData.accessToken})
@@ -200,21 +200,21 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
     try {
         const {refreshToken} = req.cookies
         if (!refreshToken) {
-            return res.send(401)
+            return res.sendStatus(401)
         }
         const isDeleted = await usersService.logout(refreshToken)
         
         res.clearCookie('refreshToken')
-        return res.send(204)
+        return res.sendStatus(204)
     } catch (e) {
-        return res.send(401)
+        return res.sendStatus(401)
     }
 })
 
 authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
     try {
         const userId = req.user?.id
-        if (!userId) return res.send(401)
+        if (!userId) return res.sendStatus(401)
         const user = await usersService.findUserById(userId)
         return res.status(200).send({
             email: user?.accountData.email,
@@ -222,6 +222,6 @@ authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
             userId: user?.id
         })
     } catch (e) {
-        return res.send(401)
+        return res.sendStatus(401)
     }
 })
