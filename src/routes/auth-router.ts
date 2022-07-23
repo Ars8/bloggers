@@ -204,7 +204,7 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
         }
         await usersService.logout(refreshToken)
         res.clearCookie('refreshToken')
-        return res.status(204)
+        return res.send(204)
     } catch (e) {
         return res.send(401)
     }
@@ -213,7 +213,7 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
 authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
     try {
         const userId = req.user?.id
-        if (!userId) return res.status(401)
+        if (!userId) return res.send(401)
         const user = await usersService.findUserById(userId)
         return res.status(200).send({
             email: user?.accountData.email,
@@ -221,6 +221,6 @@ authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
             userId: user?.id
         })
     } catch (e) {
-        return res.status(401)
+        return res.send(401)
     }
 })
