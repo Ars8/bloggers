@@ -17,8 +17,8 @@ export const jwtService = {
     },
     async generateTokens(payload: string) {
     
-        const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET || '123', {expiresIn: '10s'})
-        const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET || '1234', {expiresIn: '20s'})
+        const accessToken = jwt.sign({payload}, process.env.JWT_ACCESS_SECRET || '123', {expiresIn: '10s'})
+        const refreshToken = jwt.sign({payload}, process.env.JWT_REFRESH_SECRET || '1234', {expiresIn: '20s'})
 
         return {
             accessToken,
