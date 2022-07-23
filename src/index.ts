@@ -22,7 +22,7 @@ app.use(parserMiddleware)
 app.use(cookieParser());
 app.use(cors({
     credentials: true,
-    origin: process.env.CLIENT_URL
+    //origin: process.env.CLIENT_URL
 }))
 app.use('/auth', authRouter)
 app.use('/users', usersRouter)
