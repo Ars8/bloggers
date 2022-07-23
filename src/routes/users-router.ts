@@ -22,7 +22,7 @@ const userEmailValidation = body('email')
 .exists().withMessage('incorrect email')
 .trim().notEmpty().withMessage('incorrect email')
 .isString().withMessage('incorrect email')
-.matches(EMAIL_REGEX).withMessage('incorrect email')
+.isEmail().withMessage('Eto email')
 
 export const validationUserLogin = body('login').custom(async login => {
     return await usersService.findUserByLogin(login).then(function(user) {
