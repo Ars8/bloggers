@@ -79,6 +79,7 @@ export const usersService = {
         }
         
         const user = await usersRepository.findUserByIdToken(userData.payload)
+        console.log(user?.id, 'userServiceId')
         if (!user) {
             return null
         }
