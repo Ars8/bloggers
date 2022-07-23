@@ -70,6 +70,9 @@ export const usersService = {
     async refresh(refreshToken: string) {
         
         const userData = await jwtService.validateRefreshToken(refreshToken)
+
+        console.log(userData, 'userServiceData', Date.now())
+
         const tokenFromDb = await jwtService.findToken(refreshToken)
         if (!userData || !tokenFromDb) {
             return null
@@ -79,13 +82,13 @@ export const usersService = {
         if (!user) {
             return null
         }
-        const tokens = await jwtService.generateTokens(user.id);
+        const tokens = await jwtService.generateTokens(user.id)
 
-        await jwtService.saveToken(user.id, tokens.refreshToken);
+        await jwtService.saveToken(user.id, tokens.refreshToken)
         return {...tokens, user}
     },
     async logout(refreshToken: string) {
-        const token = await jwtService.removeToken(refreshToken);
+        const token = await jwtService.removeToken(refreshToken)
         return token;
     },
 }
