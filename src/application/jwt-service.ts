@@ -14,7 +14,7 @@ export const jwtService = {
     async generateTokens(payload: string) {
     
         const accessToken = jwt.sign({payload}, process.env.JWT_ACCESS_SECRET || '123', {expiresIn: '10s'})
-        const refreshToken = jwt.sign({payload}, process.env.JWT_REFRESH_SECRET || '1234', {expiresIn: '19s'})
+        const refreshToken = jwt.sign({payload}, process.env.JWT_REFRESH_SECRET || '1234', {expiresIn: '20s'})
 
         return {
             accessToken,
@@ -27,7 +27,7 @@ export const jwtService = {
     async validateRefreshToken(token: string) {
         try {
             const userData: any = jwt.verify(token, process.env.JWT_REFRESH_SECRET || '1234');
-            console.log(userData.payload, 'userData', Date.now());
+            console.log(userData, 'userData', Date.now());
             return userData;
         } catch (error) {
             return null;
