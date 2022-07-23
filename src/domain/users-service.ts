@@ -74,6 +74,7 @@ export const usersService = {
         if (!userData || !tokenFromDb) {
             return null
         }
+        
         const user = await usersRepository.findUserByIdToken(userData.payload)
         if (!user) {
             return null
