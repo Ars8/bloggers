@@ -71,7 +71,7 @@ export const usersService = {
         
         const userData: any = await jwtService.validateRefreshToken(refreshToken)
 
-        console.log(userData, 'userServiceData', Date.now())
+        //console.log(userData, 'userServiceData', Date.now())
 
         const tokenFromDb = await jwtService.findToken(refreshToken)
         if (!userData || !tokenFromDb) {
@@ -79,7 +79,9 @@ export const usersService = {
         }
         
         const user = await usersRepository.findUserByIdToken(userData.payload)
-        console.log(user?.id, 'userServiceId')
+
+        //console.log(user?.id, 'userServiceId')
+        
         if (!user) {
             return null
         }
