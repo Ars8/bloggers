@@ -203,15 +203,16 @@ authRouter.post('/refresh-token', async(req: Request, res: Response) => {
 })
 
 authRouter.post('/logout', async(req: Request, res: Response) => {
-    try {
+    
         const {refreshToken} = req.cookies
         const isVerify = await jwtService.validateRefreshToken(refreshToken)
         const token = await usersService.logout(refreshToken)
-        res.clearCookie('refreshToken')
+        if (!isVerify || !token) {
+            return res.sendStatus(401)
+        } else {
+            res.clearCookie('refreshToken')
         return res.sendStatus(204)
-    } catch (e) {
-        return res.sendStatus(401)
-    }
+        }
 })
 
 authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
