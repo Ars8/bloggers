@@ -228,12 +228,10 @@ authRouter.get('/me', async (req: Request, res: Response) => {
     try {
         const accessToken = req.headers.authorization?.split(' ')[1]
         if (!accessToken) return res.sendStatus(401)
-        const isVerify = await jwtService.validateRefreshToken(accessToken)
+        const isVerify = await jwtService.getUserIdByToken(accessToken)
         if (!isVerify) return res.sendStatus(401)
 
-        const userId = req.user?.id
-        if (!userId) return res.sendStatus(401)
-        const user = await usersService.findUserById(userId)
+        const user = await usersService.findUserById(isVerify.payload)
         if (!user) return res.sendStatus(401)
         return res.status(200).send({
             email: user?.accountData.email,
