@@ -232,16 +232,6 @@ authRouter.get('/me', async (req: Request, res: Response) => {
 
     const token = req.headers.authorization.split(' ')[1]
 
-    const userData = await jwtService.validateAccessToken(token)
-    
-    const user = await usersService.findUserById(userData.payload)
-    console.log(user)
-        
-    if (!user) return res.sendStatus(401)
-    return res.status(200).send({
-        email: user,
-        login: user,
-        userId: user
-    })
+    console.log(token)
     
 })
