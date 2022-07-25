@@ -227,20 +227,20 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
 authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
     try {
         const accessToken = req.headers.authorization?.split(' ')[1]
-        if (!accessToken) return res.sendStatus(401)
+        if (!accessToken) return res.sendStatus(402)
         const isVerify = await jwtService.validateRefreshToken(accessToken)
-        if (!isVerify) return res.sendStatus(401)
+        if (!isVerify) return res.sendStatus(403)
 
         const userId = req.user?.id
-        if (!userId) return res.sendStatus(401)
+        if (!userId) return res.sendStatus(404)
         const user = await usersService.findUserById(userId)
-        if (!user) return res.sendStatus(401)
+        if (!user) return res.sendStatus(405)
         return res.status(200).send({
             email: user?.accountData.email,
             login: user?.accountData.login,
             userId: user?.id
         })
     } catch (e) {
-        return res.sendStatus(401)
+        return res.sendStatus(406)
     }
 })
