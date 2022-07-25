@@ -2,11 +2,10 @@ import {tokensCollection} from "./db";
 
 export const tokensRepository = {
     async saveToken(id: string, refreshToken: string) {
-        const tokenData = await tokensCollection.findOne({id: id}, {projection: {_id: 0}})
-        if (tokenData) {
+        
             await tokensCollection.insertOne({id: id, refreshToken})
             return {id, refreshToken}
-        }
+        
         
     },
     async findRefreshToken(refreshToken: string) {
