@@ -226,9 +226,7 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
 
 authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
     try {
-        if(!req.user?.id) return res.sendStatus(401)
-
-        const user = await usersService.findUserById(req.user?.id)
+        const user = req.user
         if (!user) return res.sendStatus(401)
         return res.status(200).send({
             email: user?.accountData.email,
