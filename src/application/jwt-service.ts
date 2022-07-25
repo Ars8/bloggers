@@ -33,6 +33,14 @@ export const jwtService = {
             return null
         }
     },
+    async validateAccessToken(token: string) {
+        try {
+            const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET || '1234')
+            return userData
+        } catch (e) {
+            return null
+        }
+    },
     async findToken(refreshToken: string) {
         const tokenData = await tokensRepository.findRefreshToken(refreshToken)
         return tokenData
