@@ -190,13 +190,13 @@ authRouter.post('/refresh-token', async(req: Request, res: Response) => {
         }
 
         const isVerify = await jwtService.validateRefreshToken(refreshToken)
-        console.log(isVerify)
-        if (!isVerify) return res.sendStatus(401)
+        //console.log(isVerify)
+        if (!isVerify) return res.sendStatus(402)
         
         const userData = await usersService.refresh(refreshToken)
         //console.log(userData)
         if (!userData) {
-            return res.sendStatus(401)
+            return res.sendStatus(403)
         }
         res.cookie('refreshToken', userData.refreshToken, {expires: new Date(Date.now() + 20000), httpOnly: true, secure: true})
         return res.status(200).send({accessToken: userData.accessToken})
@@ -206,12 +206,12 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
     try {
         const {refreshToken} = req.cookies
         if (!refreshToken) {
-            return res.sendStatus(401)
+            return res.sendStatus(404)
         }
 
         const isVerify = await jwtService.validateRefreshToken(refreshToken)
-        console.log(isVerify)
-        if (!isVerify) return res.sendStatus(401)
+        //console.log(isVerify)
+        if (!isVerify) return res.sendStatus(405)
 
         const isDeleted = await usersService.logout(refreshToken)
 
@@ -220,7 +220,7 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
         res.clearCookie('refreshToken')
         return res.sendStatus(204)
     } catch (e) {
-        return res.sendStatus(401)
+        return res.sendStatus(406)
     }
 })
 
