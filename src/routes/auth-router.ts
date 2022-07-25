@@ -192,7 +192,7 @@ authRouter.post('/refresh-token', async(req: Request, res: Response) => {
         const isVerify = await jwtService.validateRefreshToken(refreshToken)
         console.log(isVerify)
         if (!isVerify) return res.sendStatus(401)
-
+        
         const userData = await usersService.refresh(refreshToken)
         //console.log(userData)
         if (!userData) {
@@ -203,16 +203,25 @@ authRouter.post('/refresh-token', async(req: Request, res: Response) => {
 })
 
 authRouter.post('/logout', async(req: Request, res: Response) => {
-    
+    try {
         const {refreshToken} = req.cookies
-        const isVerify = await jwtService.validateRefreshToken(refreshToken)
-        const token = await usersService.logout(refreshToken)
-        if (!refreshToken || !isVerify || !token) {
+        if (!refreshToken) {
             return res.sendStatus(401)
-        } else {
-            res.clearCookie('refreshToken')
-        return res.sendStatus(204)
         }
+
+        const isVerify = await jwtService.validateRefreshToken(refreshToken)
+        console.log(isVerify)
+        if (!isVerify) return res.sendStatus(401)
+
+        const isDeleted = await usersService.logout(refreshToken)
+
+        //console.log(isDeleted)
+        
+        res.clearCookie('refreshToken')
+        return res.sendStatus(204)
+    } catch (e) {
+        return res.sendStatus(401)
+    }
 })
 
 authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
