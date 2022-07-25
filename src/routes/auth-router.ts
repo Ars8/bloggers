@@ -189,6 +189,7 @@ authRouter.post('/refresh-token', async(req: Request, res: Response) => {
             return res.sendStatus(401)
         }
         const userData = await usersService.refresh(refreshToken)
+        console.log(userData)
         if (!userData) {
             return res.sendStatus(401)
         }
@@ -204,7 +205,7 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
         }
         const isDeleted = await usersService.logout(refreshToken)
 
-        console.log(isDeleted)
+        //console.log(isDeleted)
         
         res.clearCookie('refreshToken')
         return res.sendStatus(204)
