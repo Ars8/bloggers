@@ -224,9 +224,9 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
     }
 })
 
-authRouter.get('/me', async (req: Request, res: Response) => {
-    
-        if(!req.user?.id) return null
+authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
+    try {
+        if(!req.user?.id) return res.sendStatus(401)
 
         const user = await usersService.findUserById(req.user?.id)
         if (!user) return res.sendStatus(401)
@@ -235,5 +235,7 @@ authRouter.get('/me', async (req: Request, res: Response) => {
             login: user?.accountData.login,
             userId: user?.id
         })
-    
+    } catch (e) {
+        return res.sendStatus(401)
+    }
 })
