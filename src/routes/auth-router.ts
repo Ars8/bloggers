@@ -234,6 +234,7 @@ authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
         const userId = req.user?.id
         if (!userId) return res.sendStatus(401)
         const user = await usersService.findUserById(userId)
+        if (!user) return res.sendStatus(401)
         return res.status(200).send({
             email: user?.accountData.email,
             login: user?.accountData.login,
