@@ -207,7 +207,7 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
         const {refreshToken} = req.cookies
         const isVerify = await jwtService.validateRefreshToken(refreshToken)
         const token = await usersService.logout(refreshToken)
-        if (!isVerify || !token) {
+        if (!refreshToken || !isVerify || !token) {
             return res.sendStatus(401)
         } else {
             res.clearCookie('refreshToken')
