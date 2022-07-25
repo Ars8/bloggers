@@ -84,6 +84,8 @@ export const usersService = {
         
         if (!user) {
             return null
+        } else {
+            await jwtService.removeToken(refreshToken)
         }
         const tokens = await jwtService.generateTokens(user.id)
 
