@@ -191,12 +191,12 @@ authRouter.post('/refresh-token', async(req: Request, res: Response) => {
 
         const isVerify = await jwtService.validateRefreshToken(refreshToken)
         //console.log(isVerify)
-        if (!isVerify) return res.sendStatus(402)
+        if (!isVerify) return res.sendStatus(401)
         
         const userData = await usersService.refresh(refreshToken)
         //console.log(userData)
         if (!userData) {
-            return res.sendStatus(403)
+            return res.sendStatus(401)
         }
         res.cookie('refreshToken', userData.refreshToken, {expires: new Date(Date.now() + 20000), httpOnly: true, secure: true})
         return res.status(200).send({accessToken: userData.accessToken})
@@ -206,12 +206,12 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
     try {
         const {refreshToken} = req.cookies
         if (!refreshToken) {
-            return res.sendStatus(404)
+            return res.sendStatus(401)
         }
 
         const isVerify = await jwtService.validateRefreshToken(refreshToken)
         //console.log(isVerify)
-        if (!isVerify) return res.sendStatus(405)
+        if (!isVerify) return res.sendStatus(401)
 
         const isDeleted = await usersService.logout(refreshToken)
 
@@ -220,27 +220,27 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
         res.clearCookie('refreshToken')
         return res.sendStatus(204)
     } catch (e) {
-        return res.sendStatus(406)
+        return res.sendStatus(401)
     }
 })
 
-authRouter.get('/me', authMiddleware, async (req: Request, res: Response) => {
+authRouter.get('/me', async (req: Request, res: Response) => {
     try {
         const accessToken = req.headers.authorization?.split(' ')[1]
-        if (!accessToken) return res.sendStatus(402)
+        if (!accessToken) return res.sendStatus(401)
         const isVerify = await jwtService.validateRefreshToken(accessToken)
-        if (!isVerify) return res.sendStatus(403)
+        if (!isVerify) return res.sendStatus(401)
 
         const userId = req.user?.id
-        if (!userId) return res.sendStatus(404)
+        if (!userId) return res.sendStatus(401)
         const user = await usersService.findUserById(userId)
-        if (!user) return res.sendStatus(405)
+        if (!user) return res.sendStatus(401)
         return res.status(200).send({
             email: user?.accountData.email,
             login: user?.accountData.login,
             userId: user?.id
         })
     } catch (e) {
-        return res.sendStatus(406)
+        return res.sendStatus(401)
     }
 })
