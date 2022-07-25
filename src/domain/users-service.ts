@@ -94,6 +94,6 @@ export const usersService = {
     },
     async logout(refreshToken: string) {
         const token = await jwtService.removeToken(refreshToken)
-        return token;
+        return token
     },
 }
