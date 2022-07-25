@@ -226,7 +226,7 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
 
 authRouter.get('/me', async (req: Request, res: Response) => {
     try {
-        const accessToken = req.headers.authorization?.split(' ')[1]
+        const accessToken = req.body?.split(' ')[1]
         if (!accessToken || accessToken ===undefined) return res.sendStatus(401)
         const isVerify = await jwtService.getUserIdByToken(accessToken)
         if (!isVerify) return res.sendStatus(401)
