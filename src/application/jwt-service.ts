@@ -35,7 +35,7 @@ export const jwtService = {
     },
     async validateAccessToken(token: string) {
         try {
-            const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET || '1234')
+            const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET || '123')
             return userData
         } catch (e) {
             return null
