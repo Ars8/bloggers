@@ -243,7 +243,7 @@ authRouter.get('/me', async (req: Request, res: Response) => {
             email: user.accountData.email,
             login: user.accountData.login,
             userId: user.id
-        }s
+        }
     )
     return res.status(200).send(
         {
