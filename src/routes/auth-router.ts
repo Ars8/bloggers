@@ -218,7 +218,7 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
 
         console.log(check)
 
-        if (!check) return res.sendStatus(401)
+        if (check) return res.sendStatus(401)
         
         res.clearCookie('refreshToken')
         return res.sendStatus(204)
