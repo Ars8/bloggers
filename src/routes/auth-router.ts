@@ -192,6 +192,10 @@ authRouter.post('/refresh-token', async(req: Request, res: Response) => {
         const isVerify = await jwtService.validateRefreshToken(refreshToken)
        
         if (!isVerify) return res.sendStatus(401)
+
+        const check = await jwtService.findToken(refreshToken)
+
+        if (!check) return res.status(401).send({accessToken: "accessToken"})
         
         const userData = await usersService.refresh(refreshToken)
         
@@ -213,7 +217,10 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
 
         const isVerify = await jwtService.validateRefreshToken(refreshToken)
         
-        if (!isVerify) return res.sendStatus(401)  
+        if (!isVerify) return res.sendStatus(401)
+
+        const check = await jwtService.findToken(refreshToken)
+        if (!check) return res.status(401).send({accessToken: "accessToken"})
         
         await jwtService.removeToken(refreshToken)
         return res.sendStatus(204)
