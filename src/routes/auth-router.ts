@@ -213,12 +213,15 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
 
         const isVerify = await jwtService.validateRefreshToken(refreshToken)
         
-        if (!isVerify) return res.sendStatus(401)       
+        if (!isVerify) return res.sendStatus(401)  
+        
+        await jwtService.removeToken(refreshToken)
+        return res.sendStatus(204)
 
-        const check = await jwtService.getUserIdByToken(refreshToken)
+        /* const check = await jwtService.getUserIdByToken(refreshToken)
         console.log(check)
 
-        if (!check) return res.status(401).send({accessToken: "accessToken"})
+        if (!check) return res.status(401).send({accessToken: "accessToken"}) */
 
         /* res.clearCookie('refreshToken')
         return res.sendStatus(204) */
