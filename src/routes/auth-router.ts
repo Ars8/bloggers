@@ -210,7 +210,7 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
         }
 
         const isVerify = await jwtService.validateRefreshToken(refreshToken)
-        //console.log(isVerify)
+        console.log(isVerify)
         if (!isVerify) return res.sendStatus(401)
 
         const isDeleted = await usersService.logout(refreshToken)
@@ -234,17 +234,10 @@ authRouter.get('/me', async (req: Request, res: Response) => {
     const isVerifyAccessToken = await jwtService.validateAccessToken(token)
     if (!isVerifyAccessToken) return res.sendStatus(401)
 
-    
     const user = await usersService.findUserById(isVerifyAccessToken.payload)
 
     if (!user) return res.sendStatus(401)
-    console.log(
-        {
-            email: user.accountData.email,
-            login: user.accountData.login,
-            userId: user.id
-        }
-    )
+    
     return res.status(200).send(
         {
             email: user.accountData.email,
