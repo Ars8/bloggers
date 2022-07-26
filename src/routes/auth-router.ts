@@ -234,6 +234,6 @@ authRouter.get('/me', async (req: Request, res: Response) => {
     const isVerifyAccessToken = await jwtService.validateAccessToken(token)
     if (!isVerifyAccessToken) return res.sendStatus(401)
 
-    console.log(token)
+    console.log(isVerifyAccessToken)
     
 })

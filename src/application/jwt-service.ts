@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import { tokensRepository } from "../repositories/tokens-repository"
 
 export const jwtService = {
-    async getUserIdByToken(token: string) {
+    async getUserIdByToken(token: any) {
         try {
             const result: any = jwt.verify(token, process.env.JWT_SECRET || '123')
             return result.userId
