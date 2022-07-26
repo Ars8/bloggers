@@ -203,7 +203,7 @@ authRouter.post('/refresh-token', async(req: Request, res: Response) => {
 })
 
 authRouter.post('/logout', async(req: Request, res: Response) => {
-    try {
+    
         const {refreshToken} = req.cookies
         if (!refreshToken) {
             return res.sendStatus(401)
@@ -218,13 +218,10 @@ authRouter.post('/logout', async(req: Request, res: Response) => {
 
         console.log(check)
 
-        if (!check) return res.sendStatus(401)
+        if (!check) return res.status(401).send({accessToken: "accessToken"})
         res.clearCookie('refreshToken')
         return res.sendStatus(204)       
-        
-    } catch (e) {
-        return res.sendStatus(401)
-    }
+       
 })
 
 authRouter.get('/me', async (req: Request, res: Response) => {
