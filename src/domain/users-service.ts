@@ -79,14 +79,12 @@ export const usersService = {
         }
         
         const user = await usersRepository.findUserByIdToken(userData.payload)
-
-        //console.log(user?.id, 'userServiceId')
         
         if (!user) {
             return null
-        } else {
+        } /* else {
             await jwtService.removeToken(refreshToken)
-        }
+        } */
         const tokens = await jwtService.generateTokens(user.id)
 
         await jwtService.saveToken(user.id, tokens.refreshToken)
