@@ -71,8 +71,6 @@ export const usersService = {
         
         const userData: any = await jwtService.validateRefreshToken(refreshToken)
 
-        //console.log(userData, 'userServiceData', Date.now())
-
         const tokenFromDb = await jwtService.findToken(refreshToken)
         if (!userData || !tokenFromDb) {
             return null
@@ -82,9 +80,9 @@ export const usersService = {
         
         if (!user) {
             return null
-        } /* else {
+        } else {
             await jwtService.removeToken(refreshToken)
-        } */
+        }
         const tokens = await jwtService.generateTokens(user.id)
 
         await jwtService.saveToken(user.id, tokens.refreshToken)
