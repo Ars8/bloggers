@@ -198,7 +198,9 @@ authRouter.post('/refresh-token', async(req: Request, res: Response) => {
         if (!userData) {
             return res.sendStatus(401)
         }
+        
         res.cookie('refreshToken', userData.refreshToken, {expires: new Date(Date.now() + 20000), httpOnly: true, secure: true})
+        await jwtService.removeToken(refreshToken)
         return res.status(200).send({accessToken: userData.accessToken})
 })
 
